@@ -40,7 +40,7 @@
 
     if("GET_ALL" == $action){
         $db_data = array();
-        $sql = "SELECT * from $table ORDER BY id DESC";
+        $sql = "SELECT * from $table";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){

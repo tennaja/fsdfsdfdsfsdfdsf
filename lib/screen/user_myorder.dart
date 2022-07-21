@@ -7,6 +7,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_bekery/screen/user_myorderdetail.dart';
 
 class user_order extends StatefulWidget {
   const user_order({Key? key}) : super(key: key);
@@ -51,7 +52,13 @@ class _user_orderState extends State<user_order> {
                         Card(
                           elevation: 6,
                           child: ListTile(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return user_myorderdetail(
+                                    data['order_id'].toString());
+                              }));
+                            },
                             title: Text(
                                 'เวลา : ${DateFormat.yMMMd().add_jm().format(data['order_date'].toDate())}'),
                             subtitle: Row(

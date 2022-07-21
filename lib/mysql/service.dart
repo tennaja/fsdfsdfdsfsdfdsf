@@ -80,17 +80,20 @@ class Services {
       final response = await http.post(url, body: map);
       print("getUsers >> Response:: ${response.body}");
       if (response.statusCode == 200) {
-        List<User> list = parsePhotos(response.body);
+        List<User> list = parseResponse(response.body);
+
         return list;
       } else {
+        print("getUsers >> Response:: ${response.statusCode}");
         throw <User>[];
       }
     } catch (e) {
+      print(e);
       return <User>[];
     }
   }
 
-  static List<User> parsePhotos(String responseBody) {
+  static List<User> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<User>((json) => User.fromJson(json)).toList();
   }
