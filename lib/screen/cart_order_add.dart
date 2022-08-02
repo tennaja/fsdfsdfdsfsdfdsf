@@ -91,7 +91,7 @@ class _cart_order_addState extends State<cart_order_add> {
             .get()
             .then((QuerySnapshot querySnapshot) {
           _add_order(uuid, auth.currentUser!.email, data1['u_latitude'],
-              data1['u_longitude'], 'null', total1, 'ยังไม่ได้ขาย');
+              data1['u_longitude'], 'ยังไม่มีผู้รับ', total1, 'ยังไม่ได้ขาย');
           users.doc(uuid).set({
             'order_by': auth.currentUser!.email,
             'order_id': uuid,
@@ -101,7 +101,7 @@ class _cart_order_addState extends State<cart_order_add> {
             'total_price': total1,
             'order_date': DateTime.now(),
             'order_status': 'ยังไม่ได้ขาย',
-            'order_responsible_person': '',
+            'order_responsible_person': 'ยังไม่มีผู้รับ',
           }).then((value) {
             setState(() {
               total = 0;

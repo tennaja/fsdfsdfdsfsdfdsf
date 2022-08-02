@@ -2,7 +2,7 @@
 
     $servername = "localhost";
     $username = "web5_project";
-    $password = "TvATHCBMpc";
+    $password = "MjTfxBBmt";
     $dbname = "web5_project";
     $table = "user";
 
@@ -51,6 +51,74 @@
         }else{
             echo "error";
         }
+        $conn->close();
+        return;
+    }
+
+    if("GET_ALL_PRODUCT" == $action){
+        $db_data = array();
+        $sql = "SELECT * from product ";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GET_ALL_SOURCE" == $action){
+        $db_data = array();
+        $sql = "SELECT * from source ";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GET_ADMIN_BASKET" == $action){
+        $db_data = array();
+        $sql = "SELECT *
+        FROM basket
+        INNER JOIN product
+        ON basket.basket_product_id = product.product_id;";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("ADD_BASKET" == $action){
+        $basket_product_id = $_POST['basket_product_id'];
+        $basket_product_quantity = $_POST['basket_product_quantity'];
+        $basket_product_pricetotal = $_POST['basket_product_pricetotal'];
+        $source_id = $_POST['source_id'];
+
+        $sql = "INSERT INTO basket (basket_product_id, basket_product_quantity, basket_product_pricetotal,basket_product_source) VALUES ('$basket_product_id','$basket_product_quantity','$basket_product_pricetotal','$source_id')";
+        $result = $conn->query($sql);
+        echo "success";
+        
         $conn->close();
         return;
     }
@@ -119,6 +187,7 @@
 
     }
 
+
     if("ADD_PRODUCT" == $action){
         $product_name = $_POST['product_name'];
         $product_detail = $_POST['product_detail'];
@@ -148,5 +217,42 @@
         $conn->close();
         return;
     }
+
+    if("_ADD_IMPORTPRODUCT_DETAIL" == $action){
+        $Import_order_id = $_POST['Import_order_id'];
+        $basket_product_id = $_POST['basket_product_id'];
+        $basket_product_quantity = $_POST['basket_product_quantity'];
+        $basket_product_pricetotal = $_POST['basket_product_pricetotal'];
+        $DateTime = $_POST['DateTime'];
+
+        $sql = "INSERT INTO import_order_detail(Import_order_id,basket_product_id,basket_product_quantity,basket_product_pricetotal,DateTime) VALUES ('$Import_order_id','$basket_product_id','$basket_product_quantity','$basket_product_pricetotal','$DateTime')";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("_ADD_IMPORTPRODUCT" == $action){
+        $Import_order_id = $_POST['Import_order_id'];
+        $Import_product_pricetotal = $_POST['Import_totalprice'];
+        $Import_date = $_POST['DateTime'];
+        $Import_status = 'สินค้ายังไม่ครบ';
+
+        $sql = "INSERT INTO import_order(Import_order_id,Import_product_pricetotal,Import_date,Import_status) VALUES ('$Import_order_id','$Import_product_pricetotal','$Import_date','$Import_status')";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+
+    }
+
+    if("DELETE_BASKET" == $action){ 
+        $sql = "DELETE FROM basket";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
 
 ?>

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/screen/order_rice.dart';
+import 'package:project_bekery/screen/order_rice_sql.dart';
 import 'cart_order_add.dart';
 import 'float_add_order.dart';
 import 'home.dart';
@@ -124,11 +125,16 @@ class Orderpage extends StatelessWidget {
                     enlargeCenterPage: true,
                     scrollDirection: Axis.horizontal,
                   )),
-              Container(
+              /*Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [Text("ข้าวสาร"), Text("ทั้งหมด")],
                 ),
+              ),*/
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                height: 225.0,
+                child: order_rice('ข้าวสาร'),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
@@ -138,33 +144,12 @@ class Orderpage extends StatelessWidget {
                   children: [
                     Row(
                       children: <Widget>[
-                        order_rice('ข้าวสาร'),
+                        data_product_sql(),
                       ],
                     )
                   ],
                 ),
               ),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("เครื่องปรุง"), Text("ทั้งหมด")],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                height: 225.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        order_rice('เครื่องปรุง'),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(),
             ],
           ),
         ),

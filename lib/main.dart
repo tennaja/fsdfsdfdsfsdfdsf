@@ -1,7 +1,7 @@
 // ignore_for_file: unused_import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:project_bekery/screen/admin_userlist.dart';
+import 'package:project_bekery/screen/admin_import_product.dart';
 import 'package:project_bekery/screen/home.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -24,6 +24,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: DataTableDemo());
+        home: admin_import_source());
   }
 }

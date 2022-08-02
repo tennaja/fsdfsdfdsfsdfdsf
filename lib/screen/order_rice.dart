@@ -29,7 +29,8 @@ class _order_riceState extends State<order_rice> {
           return Text("Loading");
         }
 
-        return Row(
+        return ListView(
+          scrollDirection: Axis.horizontal,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
@@ -49,89 +50,85 @@ class _order_riceState extends State<order_rice> {
                     ),
                   ),
                   Center(
-                    child: Expanded(
-                        child: Image.network(
+                    child: Image.network(
                       data['product_image'],
                       width: 100,
                       height: 100,
                       fit: BoxFit.fitWidth,
-                    )),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 20,
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: Text(
-                              data['product_name'],
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            data['product_name'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 5),
-                                child: Text(
-                                    '฿ ${data['product_price'].toString()}'),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child:
+                                  Text('฿ ${data['product_price'].toString()}'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: Text(
+                                '${data['product_price'].toString()} ขายแล้ว',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black.withOpacity(0.7)),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 5),
-                                child: Text(
-                                  '${data['product_price'].toString()} ขายแล้ว',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black.withOpacity(0.7)),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(bottom: 5, top: 5),
-                                child: Container(
-                                    height: 30,
-                                    width: 145,
-                                    child: OutlinedButton(
-                                        child: Row(
-                                          children: const [
-                                            Text(
-                                              "รายละเอียดสินค้า",
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                            Icon(
-                                              Icons.manage_search,
-                                              size: 10,
-                                              color: Colors.black,
-                                            )
-                                          ],
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return productdetail(
-                                              data['product_id'].toString(),
-                                            );
-                                          }));
-                                        })),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5, top: 5),
+                              child: Container(
+                                  height: 30,
+                                  width: 145,
+                                  child: OutlinedButton(
+                                      child: Row(
+                                        children: const [
+                                          Text(
+                                            "รายละเอียดสินค้า",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          Icon(
+                                            Icons.manage_search,
+                                            size: 10,
+                                            color: Colors.black,
+                                          )
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return productdetail(
+                                            data['product_id'].toString(),
+                                          );
+                                        }));
+                                      })),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],

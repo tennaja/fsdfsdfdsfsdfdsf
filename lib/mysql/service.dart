@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:project_bekery/model/adminbasket.dart';
+import 'package:project_bekery/model/product_model.dart';
+import '../model/source_model.dart';
 import 'user.dart';
 
 class Services {
@@ -26,6 +29,44 @@ class Services {
 
       final response = await http.post(url, body: map);
       print("addOrderdtail >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      print('error ${e}');
+      return 'error';
+    }
+  }
+
+  Future<String> add_importproduct(
+      Import_order_id, Import_totalprice, DateTime) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "_ADD_IMPORTPRODUCT";
+      map["Import_order_id"] = Import_order_id;
+      map["Import_totalprice"] = Import_totalprice;
+      map["DateTime"] = DateTime;
+
+      final response = await http.post(url, body: map);
+      print("add_importproduct >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      print('error ${e}');
+      return 'error';
+    }
+  }
+
+  Future<String> add_importproduct_detail(Import_order_id, basket_product_id,
+      basket_product_quantity, basket_product_pricetotal, DateTime) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "_ADD_IMPORTPRODUCT_DETAIL";
+      map["Import_order_id"] = Import_order_id;
+      map["basket_product_id"] = basket_product_id;
+      map["basket_product_quantity"] = basket_product_quantity;
+      map["basket_product_pricetotal"] = basket_product_pricetotal;
+      map["DateTime"] = DateTime;
+
+      final response = await http.post(url, body: map);
+      print("add_importproduct_detail >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       print('error ${e}');
@@ -73,6 +114,47 @@ class Services {
     }
   }
 
+  Future<String> add_order_import(import_order_id, import_order_by,
+      import_order_total, import_order_date, import_order_status) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "ADD_IMPORT_ORDER";
+      map["import_order_id"] = import_order_id;
+      map["import_order_by"] = import_order_by;
+      map["import_order_total"] = import_order_total;
+      map["import_order_date"] = import_order_date;
+      map["import_order_status"] = import_order_status;
+      final response = await http.post(url, body: map);
+      print("add_order >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      print('error : ${e}');
+      return 'error';
+    }
+  }
+
+  Future<String> import_producttobasket(basket_product_id,
+      basket_product_quantity, basket_product_price, source_id) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "ADD_BASKET";
+      print('product ID --------> ${basket_product_id}');
+      map["basket_product_id"] = basket_product_id.toString();
+      map["basket_product_quantity"] = basket_product_quantity.toString();
+      var totalprice = int.parse(basket_product_price.toString()) *
+          int.parse(basket_product_quantity.toString());
+      map["basket_product_pricetotal"] = totalprice.toString();
+      map["source_id"] = source_id.toString();
+
+      final response = await http.post(url, body: map);
+      print("add_order >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      print('error : ${e}');
+      return 'error';
+    }
+  }
+
   Future<List<User>> getUsers() async {
     try {
       var map = <String, dynamic>{};
@@ -91,6 +173,81 @@ class Services {
       print(e);
       return <User>[];
     }
+  }
+
+  Future<List<Product>> getProduct() async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_ALL_PRODUCT";
+      final response = await http.post(url, body: map);
+      print("getProduct >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Product> list = parseResponseProduct(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Product>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Product>[];
+    }
+  }
+
+  Future<List<source>> getSource() async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_ALL_SOURCE";
+      final response = await http.post(url, body: map);
+      print("getSource >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<source> list = parseResponsesource(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <source>[];
+      }
+    } catch (e) {
+      print(e);
+      return <source>[];
+    }
+  }
+
+  Future<List<Basket>> getadminbasket() async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_ADMIN_BASKET";
+      final response = await http.post(url, body: map);
+      print("getadminbasket >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Basket> list = parseResponsebasket(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <source>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Basket>[];
+    }
+  }
+
+  static List<Basket> parseResponsebasket(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Basket>((json) => Basket.fromJson(json)).toList();
+  }
+
+  static List<source> parseResponsesource(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<source>((json) => source.fromJson(json)).toList();
+  }
+
+  static List<Product> parseResponseProduct(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Product>((json) => Product.fromJson(json)).toList();
   }
 
   static List<User> parseResponse(String responseBody) {
@@ -159,6 +316,18 @@ class Services {
       map["user_id"] = user_id;
       final response = await http.post(url, body: map);
       print("deleteUser >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> deletebasket() async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "DELETE_BASKET";
+      final response = await http.post(url, body: map);
+      print("deletebasket >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       return 'error';
