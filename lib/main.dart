@@ -31,5 +31,5 @@ class MyApp extends StatelessWidget {
   goto branch
   make feature1
   make feature2
-  merge 
+  merge sad;
 }
