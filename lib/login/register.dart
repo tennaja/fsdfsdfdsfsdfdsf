@@ -86,6 +86,8 @@ class _RegisterPageState extends State<RegisterPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               return Scaffold(
                 body: Container(
+                  width: double.infinity,
+                  height: double.infinity,
                   color: Colors.pinkAccent.withOpacity(0.2),
                   child: SingleChildScrollView(
                     child: Container(

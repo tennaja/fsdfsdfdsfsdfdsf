@@ -1,5 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:project_bekery/widgets/app_column.dart';
+import 'package:project_bekery/widgets/app_icon.dart';
+import 'package:project_bekery/widgets/big_text.dart';
+import 'package:project_bekery/widgets/colors.dart';
+import 'package:project_bekery/widgets/exandable_text_widget.dart';
 import 'dart:async';
 
 import '../login/profire_model/customer_model.dart';
@@ -9,8 +16,8 @@ import '../mysql/user.dart';
 import 'order_rice_sql.dart';
 
 class data_product_sql extends StatefulWidget {
-  //
-  data_product_sql() : super();
+  final String where;
+  const data_product_sql(this.where) : super();
 
   @override
   data_product_sqlState createState() => data_product_sqlState();
@@ -43,8 +50,8 @@ class data_product_sqlState extends State<data_product_sql> {
   }
 
   _getProduct() {
-    print("function working");
-    Services().getProduct().then((product) {
+    print('ข้อมูล : ${widget.where}');
+    Services().getonlyProduct(widget.where).then((product) {
       print(
           "------------------------------------------------------------------------");
       setState(() {
@@ -65,6 +72,7 @@ class data_product_sqlState extends State<data_product_sql> {
       itemCount: _filterproduct != null ? (_filterproduct?.length ?? 0) : 0,
       itemBuilder: (_, index) => Center(
         child: order_rice_sql(
+            _filterproduct![index].product_id.toString(),
             _filterproduct![index].product_name.toString(),
             _filterproduct![index].product_detail.toString(),
             _filterproduct![index].product_image.toString(),
@@ -78,7 +86,8 @@ class data_product_sqlState extends State<data_product_sql> {
 }
 
 class order_rice_sql extends StatefulWidget {
-  final product_name,
+  final product_id,
+      product_name,
       product_detail,
       product_image,
       product_price,
@@ -86,6 +95,7 @@ class order_rice_sql extends StatefulWidget {
       export_product,
       import_product;
   order_rice_sql(
+      this.product_id,
       this.product_name,
       this.product_detail,
       this.product_image,
@@ -182,14 +192,18 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                                 ],
                               ),
                               onPressed: () {
-                                /*
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return productdetail(
-                                      data['product_id'].toString(),
-                                    );
-                                  }));
-                                */
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return product_detail_sql(
+                                      widget.product_id.toString(),
+                                      widget.product_name.toString(),
+                                      widget.product_image.toString(),
+                                      widget.product_detail.toString(),
+                                      widget.product_price.toString(),
+                                      widget.product_quantity.toString(),
+                                      widget.export_product.toString(),
+                                      widget.import_product.toString());
+                                }));
                               })),
                     ),
                   ],
@@ -199,6 +213,229 @@ class _order_rice_sqlState extends State<order_rice_sql> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class product_detail_sql extends StatefulWidget {
+  final product_id,
+      product_name,
+      product_image,
+      product_detail,
+      product_price,
+      product_quantity,
+      export_product,
+      import_product;
+  const product_detail_sql(
+      this.product_id,
+      this.product_name,
+      this.product_image,
+      this.product_detail,
+      this.product_price,
+      this.product_quantity,
+      this.export_product,
+      this.import_product,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  State<product_detail_sql> createState() => _product_detail_sqlState();
+}
+
+class _product_detail_sqlState extends State<product_detail_sql> {
+  @override
+  Widget build(BuildContext context) {
+    int quantity = 1;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: Container(
+        color: Colors.orangeAccent.withOpacity(0.5),
+        child: Stack(
+          children: [
+            Positioned(
+                left: 0,
+                right: 0,
+                child: Container(
+                  width: double.maxFinite,
+                  height: height / 2.4,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(widget.product_image))),
+                )),
+            Positioned(
+                top: height / 18.76,
+                left: height / 42.2,
+                right: height / 42.2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: AppIcon(icon: Icons.arrow_back_ios)),
+                    GestureDetector(
+                        onTap: () {},
+                        child: AppIcon(icon: Icons.shopping_cart_outlined))
+                  ],
+                )),
+            Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                top: height / 2.4 - 30,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: height / 42.2,
+                    right: height / 42.2,
+                    top: height / 42.2,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(height / 42.2),
+                          topLeft: Radius.circular(height / 42.2)),
+                      color: Colors.white),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppColumn(text: "${widget.product_name}"),
+                      SizedBox(
+                        height: height / 42.2,
+                      ),
+                      Bigtext(
+                        text: "แนะนำ",
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        height: height / 42.2,
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: ExpandableTextWidget(
+                              text: "${widget.product_detail}"),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: height / 5.0,
+        padding: EdgeInsets.only(
+            top: height / 28.13,
+            bottom: height / 28.13,
+            left: height / 42.2,
+            right: height / 42.2),
+        decoration: BoxDecoration(
+            color: Colors.red[50],
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(height / 42.2 * 2),
+                topRight: Radius.circular(height / 42.2 * 2))),
+        child: Import_quantity(widget.product_id, widget.product_price),
+      ),
+    );
+  }
+}
+
+class Import_quantity extends StatefulWidget {
+  final product_id, product_price;
+  const Import_quantity(this.product_id, this.product_price, {Key? key})
+      : super(key: key);
+
+  @override
+  State<Import_quantity> createState() => _Import_quantityState();
+}
+
+class _Import_quantityState extends State<Import_quantity> {
+  int quantity = 1;
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        InkWell(
+            child: const SizedBox(
+              width: 20,
+              height: 20,
+              child: Center(
+                  child: Icon(
+                Icons.remove,
+                size: 20,
+              )),
+            ),
+            onTap: () {
+              setState(() {
+                quantity--;
+              });
+            }),
+        SizedBox(
+          width: height / 84.4 / 2,
+        ),
+        Bigtext(
+          text: quantity.toString(),
+          color: Colors.black,
+        ),
+        SizedBox(
+          width: height / 84.4 / 2,
+        ),
+        InkWell(
+            child: const SizedBox(
+              width: 20,
+              height: 20,
+              child: Center(child: Icon(Icons.add, size: 20)),
+            ),
+            onTap: () {
+              setState(() {
+                quantity++;
+              });
+            }),
+        SizedBox(
+          width: 10,
+        ),
+        InkWell(
+          onTap: () async {
+            String email = await SessionManager().get("email");
+            print(email);
+            int totalprice = int.parse(widget.product_price) * quantity;
+            Services()
+                .user_add_basket(
+                    widget.product_id, quantity, totalprice.toString(), email)
+                .then((value) {
+              Fluttertoast.showToast(
+                  msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Color.fromARGB(255, 0, 255, 13),
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+              Navigator.of(context).pop();
+            });
+          },
+          child: Container(
+              padding: EdgeInsets.only(
+                  top: height / 42.2,
+                  bottom: height / 42.2,
+                  left: height / 42.2,
+                  right: height / 42.2),
+              child: Bigtext(
+                text: "200 บาท | เพิ่มลงตระกร้า ",
+                color: Colors.white,
+                size: 16,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(height / 42.2),
+                color: AppColors.MainColor,
+              )),
+        ),
+      ],
     );
   }
 }

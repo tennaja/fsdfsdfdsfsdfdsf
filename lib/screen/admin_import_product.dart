@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:project_bekery/model/adminbasket.dart';
 import 'package:project_bekery/model/product_model.dart';
+import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/screen/quantity.dart';
 import 'package:project_bekery/widgets/app_column.dart';
 import 'package:project_bekery/widgets/app_icon.dart';
@@ -61,30 +62,7 @@ class _admin_import_sourceState extends State<admin_import_source> {
               color: Colors.black,
             ),
             onPressed: () {
-              showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('ออกจากระบบ'),
-                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text("ไม่"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginPage()),
-                              (_) => false,
-                            );
-                          },
-                          child: const Text("ใช่"),
-                        ),
-                      ],
-                    );
-                  });
+              Navigator.of(context).pop();
             },
           ),
           backgroundColor: Colors.white.withOpacity(0.1),
@@ -113,6 +91,8 @@ class _admin_import_sourceState extends State<admin_import_source> {
           ],
         ),
         body: Container(
+          width: double.infinity,
+          height: double.infinity,
           color: Colors.orangeAccent.withOpacity(0.5),
           child: ListView.builder(
               scrollDirection: Axis.vertical,
@@ -206,7 +186,7 @@ class _import_product_menuState extends State<import_product_menu> {
             ),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return Admincraftimprotproduct();
+                return Admincraftimprotproduct(widget.source_id);
               }));
               // do somethingNavigator.push(context,
             },
@@ -218,7 +198,7 @@ class _import_product_menuState extends State<import_product_menu> {
         child: GridView.builder(
           itemCount: _filterproduct != null ? (_filterproduct?.length ?? 0) : 0,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, childAspectRatio: 0.9),
+              crossAxisCount: 2, childAspectRatio: 0.79),
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: import_prodeuc_menu(
@@ -315,21 +295,13 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
                       padding: const EdgeInsets.only(left: 5),
                       child: Text('ราคา : ${widget.product_price}'),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: Text(
-                        'เหลือสินค้า: ${widget.product_quantity.toString()}',
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.black.withOpacity(0.7)),
-                      ),
-                    ),
                   ],
                 ),
                 Row(
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsets.only(bottom: 5, top: 5, left: 20),
+                          const EdgeInsets.only(bottom: 5, top: 5, left: 5),
                       child: Container(
                           alignment: Alignment.bottomCenter,
                           height: 30,
@@ -618,7 +590,8 @@ class _Import_quantityState extends State<Import_quantity> {
 }
 
 class Admincraftimprotproduct extends StatefulWidget {
-  const Admincraftimprotproduct({Key? key}) : super(key: key);
+  final String source_id;
+  const Admincraftimprotproduct(this.source_id, {Key? key}) : super(key: key);
 
   @override
   State<Admincraftimprotproduct> createState() =>
@@ -675,13 +648,28 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
     }
     print("ราคารวมรายการ : ${Import_totalprice}");
 
-    Services().add_importproduct(Import_order_id.toString(),
-        Import_totalprice.toString(), DateTime.now().toString());
+    Services().add_importproduct(
+        Import_order_id.toString(),
+        Import_totalprice.toString(),
+        DateTime.now().toString(),
+        widget.source_id.toString());
     print('-----------จบการส่งข้อมูล-------------');
     setState(() {
       Import_totalprice = 0;
     });
-    Services().deletebasket().then((value) => {Navigator.of(context).pop()});
+    Services().deletebasket().then((value) => {
+          Fluttertoast.showToast(
+              msg: "สั่งซื้อเสร็จสิ้น",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Color.fromARGB(255, 4, 255, 0),
+              textColor: Colors.white,
+              fontSize: 16.0),
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return admin_WelcomeScreen();
+          })),
+        });
   }
 
   @override

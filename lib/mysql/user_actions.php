@@ -7,6 +7,7 @@
     $table = "user";
 
     $action = $_POST["action"];
+    $where = $_POST["where"];
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -72,9 +73,65 @@
         return;
     }
 
+    if("GET_ONLY_PRODUCT" == $action){
+        $db_data = array();
+        $sql = "SELECT * FROM product WHERE product_type_id = $where";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
     if("GET_ALL_SOURCE" == $action){
         $db_data = array();
         $sql = "SELECT * from source ";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GET_IMPORT_PRODUCT" == $action){
+        $db_data = array();
+        $sql = "SELECT *
+        FROM import_order
+        INNER JOIN source
+        ON import_order.Import_source_id = source.source_id where import_order.Import_status = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+
+    if("GET_IMPORT_PRODUCTDETAI" == $action){
+        $db_data = array();
+        $sql = "SELECT import_order.Import_order_id,import_order.Import_product_pricetotal,product.product_name,product.product_image,product.product_price,import_order_detail.basket_product_quantity,import_order_detail.basket_product_pricetotal FROM import_order INNER JOIN source ON import_order.Import_source_id = source.source_id INNER JOIN import_order_detail ON import_order.Import_order_id = import_order_detail.Import_order_id INNER JOIN product ON import_order_detail.basket_product_id = product.product_id
+        WHERE import_order.Import_order_id = '$where' ";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -109,6 +166,45 @@
         return;
     }
 
+
+    if("GET_EXPORT_PRODUCT" == $action){
+        $db_data = array();
+        $sql = "SELECT * FROM user_order";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GET_ORDER_DETAIL" == $action){
+        $db_data = array();
+        $sql = "SELECT user_order.order_id,user_order.order_by,user_order.order_responsible_person,user_order.total_price,user_order.order_status,user_order_detail.product_amount,product.product_name,product.product_image,product.product_price FROM user_order
+        INNER JOIN user_order_detail
+        ON user_order.order_id = user_order_detail.order_id
+        INNER JOIN product
+        ON user_order_detail.product_id = product.product_id";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
     if("ADD_BASKET" == $action){
         $basket_product_id = $_POST['basket_product_id'];
         $basket_product_quantity = $_POST['basket_product_quantity'];
@@ -116,6 +212,20 @@
         $source_id = $_POST['source_id'];
 
         $sql = "INSERT INTO basket (basket_product_id, basket_product_quantity, basket_product_pricetotal,basket_product_source) VALUES ('$basket_product_id','$basket_product_quantity','$basket_product_pricetotal','$source_id')";
+        $result = $conn->query($sql);
+        echo "success";
+        
+        $conn->close();
+        return;
+    }
+
+    if("ADD_USER_BASKET" == $action){
+        $basket_product_id = $_POST['basket_product_id'];
+        $basket_product_quantity = $_POST['basket_product_quantity'];
+        $basket_product_pricetotal = $_POST['basket_product_pricetotal'];
+        $source_id = $_POST['email'];
+
+        $sql = "INSERT INTO user_basket (user_basket_product_id, user_basket_quantity, user_basket_pricetotal,user_basket_email) VALUES ('$basket_product_id','$basket_product_quantity','$basket_product_pricetotal','$source_id')";
         $result = $conn->query($sql);
         echo "success";
         
@@ -158,9 +268,51 @@
         
     }
 
+    if("UPDATE_USER" == $action){
+        $username = $_POST['username'];
+        $usersurname = $_POST['usersurname'];
+        $useremail = $_POST['useremail'];
+        $userrole = $_POST['userrole'];
+        $userphone = $_POST['userphone'];
+        $sql = "UPDATE user SET user_name='$username',user_surname='$usersurname',user_phone='$userphone',user_email='$useremail',user_role='$userrole' WHERE user_id = $where";
+        if($conn->query($sql) === TRUE){
+            echo "success";
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+        
+    }
+
+
     if('DELETE_EMP' == $action){
         $user_id = $_POST['user_id'];
         $sql = "DELETE FROM $table WHERE id = $user_id ";
+        if($conn->query($sql) === TRUE){
+            echo "success";
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if('DELETE_ORDER' == $action){
+        $where = $_POST['where'];
+        $sql = "DELETE FROM import_order WHERE import_order.Import_order_id = '$where'";
+        if($conn->query($sql) === TRUE){
+            echo "success";
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if('DELETE_ORDERDETAIL' == $action){
+        $where = $_POST['where'];
+        $sql = "DELETE FROM import_order_detail WHERE import_order_detail.Import_order_id = '$where'";
         if($conn->query($sql) === TRUE){
             echo "success";
         }else{
@@ -182,6 +334,24 @@
         $sql = "INSERT INTO user_order(order_id,order_by,user_latitude,user_longitude,order_responsible_person,total_price,order_status) VALUES ('$order_id','$order_by','$user_latitude','$user_longitude','$order_responsible_person','$total_price','$order_status')";
         $result = $conn->query($sql);
         echo "success";
+        $conn->close();
+        return;
+
+    }
+    if("_LOGIN_ACTION" == $action){   
+        $db_data = array();
+        $useremail = $_POST['useremail'];
+        $password = $_POST['password'];
+        $sql = "SELECT * FROM user WHERE user.user_email = '$useremail' AND user.user_password = '$password'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
         $conn->close();
         return;
 
@@ -237,8 +407,9 @@
         $Import_product_pricetotal = $_POST['Import_totalprice'];
         $Import_date = $_POST['DateTime'];
         $Import_status = 'สินค้ายังไม่ครบ';
+        $source_id = $_POST['source_id'];
 
-        $sql = "INSERT INTO import_order(Import_order_id,Import_product_pricetotal,Import_date,Import_status) VALUES ('$Import_order_id','$Import_product_pricetotal','$Import_date','$Import_status')";
+        $sql = "INSERT INTO import_order(Import_order_id,Import_product_pricetotal,Import_date,Import_status,Import_source_id) VALUES ('$Import_order_id','$Import_product_pricetotal','$Import_date','$Import_status','$source_id')";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();
@@ -248,6 +419,14 @@
 
     if("DELETE_BASKET" == $action){ 
         $sql = "DELETE FROM basket";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("ORDER_SUBMIT" == $action){ 
+        $sql = "UPDATE import_order SET Import_status= 'ส่งแล้ว' WHERE Import_order_id = '$where'";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();

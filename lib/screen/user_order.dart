@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/screen/order_rice.dart';
 import 'package:project_bekery/screen/order_rice_sql.dart';
@@ -134,7 +135,16 @@ class Orderpage extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 height: 225.0,
-                child: order_rice('ข้าวสาร'),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        data_product_sql('2'),
+                      ],
+                    )
+                  ],
+                ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
@@ -144,7 +154,7 @@ class Orderpage extends StatelessWidget {
                   children: [
                     Row(
                       children: <Widget>[
-                        data_product_sql(),
+                        data_product_sql('3'),
                       ],
                     )
                   ],

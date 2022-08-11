@@ -2,10 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:project_bekery/login/profire_model/customer_model.dart';
 import 'package:project_bekery/login/register.dart';
+import 'package:project_bekery/mysql/service.dart';
+import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/screen/rider_welcome.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
 
@@ -118,49 +121,77 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () {
                                   if (fromKey.currentState!.validate()) {
                                     fromKey.currentState!.save();
-                                    FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(customer.email)
-                                        .get()
-                                        .then((DocumentSnapshot
-                                            documentSnapshot) {
-                                      try {
-                                        if (documentSnapshot.exists) {
-                                          print('documentSnapshot.exists');
-                                          if (documentSnapshot.get("Role") ==
-                                              "customer") {
-                                            print('Role = Customer');
-                                            try {
-                                              FirebaseAuth.instance
-                                                  .signInWithEmailAndPassword(
-                                                      email: customer.email,
-                                                      password:
-                                                          customer.password)
-                                                  .then((value) {
-                                                try {
-                                                  Fluttertoast.showToast(
-                                                      msg: "Login success",
-                                                      toastLength:
-                                                          Toast.LENGTH_SHORT,
-                                                      gravity:
-                                                          ToastGravity.BOTTOM,
-                                                      timeInSecForIosWeb: 1,
-                                                      backgroundColor:
-                                                          Colors.green,
-                                                      textColor: Colors.white,
-                                                      fontSize: 16.0);
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    // ignore: prefer_const_constructors
-                                                    return const user_WelcomeScreen();
-                                                  }));
-                                                } on PlatformException catch (e) {
+                                    print('${customer.email}');
+                                    print('${customer.password}');
+                                    Services()
+                                        .Loginuser(
+                                            customer.email, customer.password)
+                                        .then((value) async => {
+                                              print(value.length),
+                                              if (value.isNotEmpty)
+                                                {
+                                                  await SessionManager().set(
+                                                      "email",
+                                                      '${customer.email}'),
+                                                  print(value[0].user_role),
                                                   print(
-                                                      "---------------ERROR-----------------");
+                                                      'Sesion : ${await SessionManager().get("email")}'),
+                                                  if (value[0].user_role ==
+                                                      'customer')
+                                                    {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return user_WelcomeScreen();
+                                                      })),
+                                                    }
+                                                  else if (value[0].user_role ==
+                                                      'rider')
+                                                    {
+                                                      print(SessionManager()
+                                                          .get("email")),
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return rider_WelcomeScreen();
+                                                      })),
+                                                    }
+                                                  else if (value[0].user_role ==
+                                                      'admin')
+                                                    {
+                                                      print(SessionManager()
+                                                          .get("email")),
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return admin_WelcomeScreen();
+                                                      })),
+                                                    }
+                                                  else
+                                                    {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "ไม่มีข้อมูลของตำแหน่ง",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .BOTTOM,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0),
+                                                    }
+                                                }
+                                              else
+                                                {
                                                   Fluttertoast.showToast(
-                                                      msg: "${e.message}",
+                                                      msg:
+                                                          "ไม่มีข้อมูลผู้ใช้ในระบบ",
                                                       toastLength:
                                                           Toast.LENGTH_SHORT,
                                                       gravity:
@@ -169,140 +200,9 @@ class _LoginPageState extends State<LoginPage> {
                                                       backgroundColor:
                                                           Colors.red,
                                                       textColor: Colors.white,
-                                                      fontSize: 16.0);
+                                                      fontSize: 16.0),
                                                 }
-                                              });
-                                              // ignore: empty_catches, unused_catch_clause, nullable_type_in_catch_clause
-                                            } on PlatformException catch (e) {
-                                              print(e.code);
-                                              Fluttertoast.showToast(
-                                                  msg: "${e.message}",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0);
-                                            }
-                                          } else if (documentSnapshot
-                                                  .get("Role") ==
-                                              "admin") {
-                                            print('Role = Admin');
-                                            try {
-                                              FirebaseAuth.instance
-                                                  .signInWithEmailAndPassword(
-                                                      email: customer.email,
-                                                      password:
-                                                          customer.password)
-                                                  .then((value) {
-                                                Fluttertoast.showToast(
-                                                    msg: "Login success",
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity:
-                                                        ToastGravity.BOTTOM,
-                                                    timeInSecForIosWeb: 1,
-                                                    backgroundColor:
-                                                        Colors.green,
-                                                    textColor: Colors.white,
-                                                    fontSize: 16.0);
-                                                Navigator.pushReplacement(
-                                                    context, MaterialPageRoute(
-                                                        builder: (context) {
-                                                  // ignore: prefer_const_constructors
-                                                  return const user_WelcomeScreen();
-                                                }));
-                                              });
-                                              // ignore: empty_catches, unused_catch_clause, nullable_type_in_catch_clause
-                                            } on PlatformException catch (e) {
-                                              print(e.code);
-                                              Fluttertoast.showToast(
-                                                  msg: "${e.message}",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0);
-                                            }
-                                          } else if (documentSnapshot
-                                                  .get("Role") ==
-                                              "rider") {
-                                            print('Role = Rider');
-                                            try {
-                                              FirebaseAuth.instance
-                                                  .signInWithEmailAndPassword(
-                                                      email: customer.email,
-                                                      password:
-                                                          customer.password)
-                                                  .then((value) {
-                                                Fluttertoast.showToast(
-                                                    msg: "Login success",
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity:
-                                                        ToastGravity.BOTTOM,
-                                                    timeInSecForIosWeb: 1,
-                                                    backgroundColor:
-                                                        Colors.green,
-                                                    textColor: Colors.white,
-                                                    fontSize: 16.0);
-                                                Navigator.pushReplacement(
-                                                    context, MaterialPageRoute(
-                                                        builder: (context) {
-                                                  // ignore: prefer_const_constructors
-                                                  return const rider_WelcomeScreen();
-                                                }));
-                                              });
-                                              // ignore: empty_catches, unused_catch_clause, nullable_type_in_catch_clause
-                                            } on PlatformException catch (e) {
-                                              print(e.code);
-                                              Fluttertoast.showToast(
-                                                  msg: "${e.message}",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0);
-                                            }
-                                          } else {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "สิทธ์ในการเข้าถึงไม่ถูกต้อง",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                          }
-                                        } else if (documentSnapshot.exists) {
-                                          Fluttertoast.showToast(
-                                              msg: "ไม่มีข้อมูลผู้ใช้ในระบบ",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.red,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0);
-                                        }
-                                      } on PlatformException catch (e) {
-                                        print(e.code);
-                                        Fluttertoast.showToast(
-                                            msg: "${e.message}",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.red,
-                                            textColor: Colors.white,
-                                            fontSize: 16.0);
-                                      }
-                                    });
-                                    //if (check == true) {
+                                            });
                                   } else {
                                     Fluttertoast.showToast(
                                         msg: "ไม่มีข้อมูลผู้ใช้ในระบบ",
