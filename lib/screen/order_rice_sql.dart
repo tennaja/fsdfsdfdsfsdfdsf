@@ -170,11 +170,11 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5, top: 5),
                       child: Container(
-                          alignment: Alignment.bottomCenter,
                           height: 30,
                           width: 145,
                           child: OutlinedButton(
@@ -402,21 +402,36 @@ class _Import_quantityState extends State<Import_quantity> {
         InkWell(
           onTap: () async {
             String email = await SessionManager().get("email");
-            print(email);
-            int totalprice = int.parse(widget.product_price) * quantity;
-            Services()
-                .user_add_basket(
-                    widget.product_id, quantity, totalprice.toString(), email)
-                .then((value) {
-              Fluttertoast.showToast(
-                  msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Color.fromARGB(255, 0, 255, 13),
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-              Navigator.of(context).pop();
+            Services().checkuserbasket(widget.product_id).then((value) {
+              if (value.isNotEmpty) {
+                Fluttertoast.showToast(
+                    msg: "มีสิ้นค้าในตระกร้าแล้ว",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              } else {
+                print('Product_price : ${(widget.product_price.toString())}');
+                print('Quantity : ${quantity.toString()}');
+                int totalprice = int.parse(widget.product_price) * quantity;
+                print('Totalprice : ${totalprice.toString()}');
+                Services()
+                    .user_add_basket(widget.product_id, quantity,
+                        totalprice.toString(), email)
+                    .then((value) {
+                  Fluttertoast.showToast(
+                      msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Color.fromARGB(255, 0, 255, 13),
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                  Navigator.of(context).pop();
+                });
+              }
             });
           },
           child: Container(

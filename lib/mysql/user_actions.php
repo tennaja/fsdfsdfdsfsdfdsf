@@ -56,6 +56,24 @@
         return;
     }
 
+    if("GET_ONLY_USER" == $action){
+        $db_data = array();
+        $sql = "SELECT * from $table where user_email = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+
     if("GET_ALL_PRODUCT" == $action){
         $db_data = array();
         $sql = "SELECT * from product ";
@@ -146,12 +164,76 @@
         return;
     }
 
+    if("GET_USER_PRODUCTDETAI" == $action){
+        $db_data = array();
+        $sql = "SELECT user_order.order_id,user_order.order_by,user_order.order_responsible_person,user_order.total_price,user_order.order_status,user_order_detail.product_amount,product.product_name,product.product_image,product.product_price FROM user_order 
+        INNER JOIN user_order_detail 
+        ON user_order.order_id = user_order_detail.order_id
+        INNER JOIN product
+        ON user_order_detail.product_id = product.product_id
+        WHERE user_order.order_id = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+
     if("GET_ADMIN_BASKET" == $action){
         $db_data = array();
         $sql = "SELECT *
         FROM basket
         INNER JOIN product
         ON basket.basket_product_id = product.product_id;";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GET_USER_BASKET" == $action){
+        $db_data = array();
+        $sql = "SELECT * FROM user_basket
+        INNER JOIN product
+        ON user_basket.user_basket_product_id = product.product_id
+        WHERE user_basket.user_basket_email = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+
+    if("CHECK_USER_BASKET" == $action){
+        $db_data = array();
+        $sql = "SELECT * FROM user_basket
+        INNER JOIN product
+        ON user_basket.user_basket_product_id = product.product_id
+        WHERE product.product_id = '$where'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -184,13 +266,82 @@
         return;
     }
 
+    if("GET_ONLY_EXPORT_PRODUCT" == $action){
+        $db_data = array();
+        $order_status = $_POST['order_status'];
+        $sql = "SELECT * FROM user_order where order_by = '$where' AND order_status = '$order_status'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("RIDER_GET_EXPORT_PRODUCT" == $action){
+        $db_data = array();
+        $sql = "SELECT * FROM user_order where order_status = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("RIDER_GET_ONLYEXPORT_PRODUCT" == $action){
+        $db_data = array();
+        $sql = "SELECT * FROM user_order where order_responsible_person = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("RIDER_GET_LOCATION_ORDER" == $action){
+        $db_data = array();
+        $sql = "SELECT * FROM user_order where order_id = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
     if("GET_ORDER_DETAIL" == $action){
         $db_data = array();
         $sql = "SELECT user_order.order_id,user_order.order_by,user_order.order_responsible_person,user_order.total_price,user_order.order_status,user_order_detail.product_amount,product.product_name,product.product_image,product.product_price FROM user_order
-        INNER JOIN user_order_detail
+        INNER JOIN user_order_detail 
         ON user_order.order_id = user_order_detail.order_id
-        INNER JOIN product
-        ON user_order_detail.product_id = product.product_id";
+        INNER JOIN product 
+        ON user_order_detail.product_id = product.product_id where user_order.order_id = '$where'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -284,6 +435,19 @@
         return;
         
     }
+    if("UPDATE_MAP_USER" == $action){
+        $latitude = $_POST['latitude'];
+        $longitude = $_POST['longitude'];
+        $sql = "UPDATE user SET user_latitude ='$latitude',user_longitude='$longitude' WHERE user_email = '$where'";
+        if($conn->query($sql) === TRUE){
+            echo "success";
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+        
+    }
 
 
     if('DELETE_EMP' == $action){
@@ -326,12 +490,13 @@
         $order_id = $_POST['order_id'];
         $order_by = $_POST['order_by'];
         $user_latitude = $_POST['user_latitude'];
-        $user_longitude = $_POST['user_latitude'];
+        $user_longitude = $_POST['user_longitude'];
         $order_responsible_person = $_POST['order_responsible_person'];
         $total_price = $_POST['total_price'];
         $order_status = $_POST['order_status'];
+        $date = $_POST['date'];
 
-        $sql = "INSERT INTO user_order(order_id,order_by,user_latitude,user_longitude,order_responsible_person,total_price,order_status) VALUES ('$order_id','$order_by','$user_latitude','$user_longitude','$order_responsible_person','$total_price','$order_status')";
+        $sql = "INSERT INTO user_order(order_id,order_by,user_latitude,user_longitude,order_responsible_person,total_price,order_status,order_date) VALUES ('$order_id','$order_by','$user_latitude','$user_longitude','$order_responsible_person','$total_price','$order_status','$date')";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();
@@ -425,8 +590,43 @@
         return;
     }
 
+    if("DELETE_USER_BASKET" == $action){ 
+        $sql = "DELETE FROM user_basket WHERE user_basket.user_basket_email = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("DELETE_ONLY_BASKET" == $action){ 
+        $sql = "DELETE FROM user_basket WHERE user_basket.user_basket_id = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
     if("ORDER_SUBMIT" == $action){ 
         $sql = "UPDATE import_order SET Import_status= 'ส่งแล้ว' WHERE Import_order_id = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("RIDER_UPDATE_ORDER" == $action){ 
+        $where2 = $_POST['where2'];
+        $where3 = $_POST['where3'];
+        $sql = "UPDATE user_order SET order_responsible_person = '$where',order_status= '$where2' WHERE order_id = '$where3'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("PRODUCT_QUANTITY_UPDATE" == $action){ 
+        $where2 = $_POST['where2'];
+        $sql = "UPDATE product SET product_quantity = product_quantity  - '$where2', export_product = export_product + '$where2'  WHERE product_id = '$where'";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();

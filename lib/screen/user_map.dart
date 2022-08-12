@@ -5,8 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:project_bekery/mysql/service.dart';
 
 class user_MapsPage extends StatefulWidget {
   const user_MapsPage({Key? key}) : super(key: key);
@@ -90,15 +93,6 @@ class _MapsPageState extends State<user_MapsPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           setPolylines();
-          _usersCollection
-              .doc("${auth.currentUser!.email}")
-              .update({
-                'u_latitude': userLocation.latitude,
-                'u_longitude': userLocation.longitude
-              })
-              .then((value) => print("User Updated"))
-              .catchError((error) => print("Failed to update user: $error"));
-          print("${auth.currentUser!.email}");
           mapController.animateCamera(CameraUpdate.newLatLngZoom(
               LatLng(userLocation.latitude, userLocation.longitude), 18));
           showDialog(
@@ -118,33 +112,23 @@ class _MapsPageState extends State<user_MapsPage> {
   }
 
   void setPolylines() async {
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      'AIzaSyC_P2HO1gBwXbfe1XXlKDlC-3RomyMnORA',
-      PointLatLng(userLocation.latitude, userLocation.longitude),
-      PointLatLng(_destLatitude, _destLongitude),
-      travelMode: TravelMode.driving,
-    );
-
-    if (result.status == 'OK' || result.points.isNotEmpty) {
-      print('-----------------------------------------------ok');
-      result.points.forEach((PointLatLng point) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
-      setState(() {
-        _polylines.add(Polyline(
-            width: 10,
-            polylineId: PolylineId('polyLine'),
-            color: Color(0xFF08A5CB),
-            points: polylineCoordinates));
-      });
-    } else {
-      print('----------------------------------------------ไม่โอเคร');
-      print(userLocation.latitude);
-      print(userLocation.longitude);
-      print('---------------------------------------');
-      print(_destLatitude);
-      print(_destLongitude);
-      print(result.toString());
-    }
+    print('------WORKING-------');
+    String user_email = await SessionManager().get("email");
+    print(userLocation.latitude.toString());
+    print(userLocation.longitude.toString());
+    print(user_email.toString());
+    Services()
+        .update_map_user(userLocation.latitude.toString(),
+            userLocation.longitude.toString(), user_email.toString())
+        .then((value) => {
+              Fluttertoast.showToast(
+                  msg: "แก้ไขข้อมูลเรียบร้อย",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Color.fromARGB(255, 9, 255, 0),
+                  textColor: Colors.white,
+                  fontSize: 16.0),
+            });
   }
 }

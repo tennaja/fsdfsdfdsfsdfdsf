@@ -61,7 +61,7 @@ class _rider_myorderdetailState extends State<rider_myorderdetail> {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return rider_target_map(
-                              data['latitude'], data['longitude']);
+                              data['latitude'], data['longitude'], 'dfdf');
                         }));
                       },
                       label: Text("ดูแผนที่"),

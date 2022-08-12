@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:get/get.dart';
 import 'package:project_bekery/login/profire_model/customer_model.dart';
 import 'package:project_bekery/mysql/service.dart';
 
@@ -267,19 +268,71 @@ class _RegisterPageState extends State<RegisterPage> {
                                       fromKey.currentState!.save();
                                       // ignore: avoid_print
                                       try {
+                                        Services()
+                                            .getonlyUser(customer.email)
+                                            .then((value) {
+                                          print('USER ---> ${value.length}');
+                                          if (value.isNotEmpty) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "มีผู้ใช้อีเมลนี้มีผู้ใช้แล้ว",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 255, 0, 0),
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                          } else if (customer.password.length <=
+                                              5) {
+                                            Fluttertoast.showToast(
+                                                msg: "รหัสผ่านสั้นเกินไป",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 255, 0, 0),
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                          } else if (customer.phone.length !=
+                                              10) {
+                                            Fluttertoast.showToast(
+                                                msg: "เบอร์โทรไม่ตรงตามแบบ",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 255, 0, 0),
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                          } else {
+                                            _addEmployee(
+                                                customer.name,
+                                                customer.surname,
+                                                customer.phone,
+                                                customer.email,
+                                                customer.password);
+
+                                            Fluttertoast.showToast(
+                                                msg: "Register success",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.green,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                            Navigator.pop(context);
+                                          }
+                                        });
+
+                                        /*
                                         await FirebaseAuth.instance
                                             .createUserWithEmailAndPassword(
                                                 email: customer.email,
                                                 password: customer.password)
                                             .then((result) {
-                                          _addEmployee(
-                                              customer.name,
-                                              customer.surname,
-                                              customer.phone,
-                                              customer.email,
-                                              customer.password);
-                                          customer.id = result.user!.uid;
-                                        });
+                                         
+                                         
                                         final FirebaseAuth auth =
                                             FirebaseAuth.instance;
                                         var list = [];
@@ -307,7 +360,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                               textColor: Colors.white,
                                               fontSize: 16.0);
                                           Navigator.pop(context);
-                                        });
+                                        });*/
 
                                         // ignore: empty_catches, unused_catch_clause
                                       } on FirebaseAuthException catch (e) {

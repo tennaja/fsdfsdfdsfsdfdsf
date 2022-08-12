@@ -5,12 +5,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:project_bekery/mysql/service.dart';
 
 class rider_target_map extends StatefulWidget {
   final double taget_latitude, taget_longitude;
-  const rider_target_map(this.taget_latitude, this.taget_longitude, {Key? key})
+  final order_id;
+  const rider_target_map(
+      this.taget_latitude, this.taget_longitude, this.order_id,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -113,7 +119,23 @@ class _rider_target_mapState extends State<rider_target_map> {
           Container(
             width: 250,
             child: FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () async {
+                String email = await SessionManager().get("email");
+                Services()
+                    .rider_update_order(
+                        email, 'ส่งเรียบร้อย', widget.order_id.toString())
+                    .then((value) => {
+                          Navigator.pop(context),
+                          Fluttertoast.showToast(
+                              msg: "ยืนยันการส่ง",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Color.fromARGB(255, 34, 255, 0),
+                              textColor: Colors.white,
+                              fontSize: 16.0),
+                        });
+              },
               label: Text("ยืนยันตำแหน่ง"),
               icon: Icon(Icons.near_me),
             ),

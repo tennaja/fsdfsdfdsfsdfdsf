@@ -4,298 +4,251 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:project_bekery/model/user_basket.dart';
+import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
 import 'package:uuid/uuid.dart';
 import 'package:project_bekery/mysql/service.dart';
 
 class cart_order_add extends StatefulWidget {
-  const cart_order_add({Key? key}) : super(key: key);
+  final String email;
+  const cart_order_add(this.email, {Key? key}) : super(key: key);
 
   @override
   _cart_order_addState createState() => _cart_order_addState();
 }
 
-_add_order(order_id, order_by, user_latitude, user_longitude,
-    order_responsible_person, total_price, order_status) {
-  Services().add_order(
-      order_id.toString(),
-      order_by.toString(),
-      user_latitude.toString(),
-      user_longitude.toString(),
-      order_responsible_person.toString(),
-      total_price.toString(),
-      order_status.toString());
-  print('!!funtion ativate!!');
-}
-
-_addOrderdtail(order_id, product_id, product_amount, product_per_price, total) {
-  print(order_id);
-  print(product_id);
-  print(product_amount);
-  print(product_per_price);
-  print(total);
-  Services().addOrderdtail(order_id.toString(), product_id.toString(),
-      product_amount.toString(), product_per_price, total.toString());
-  print('!!funtion ativate!!');
-}
-
 class _cart_order_addState extends State<cart_order_add> {
-  final auth = FirebaseAuth.instance;
-  Future<void> createorder(data, l) async {
-    var uuid = Uuid().v1().toString();
-    int total = 0;
-    int total1 = 0;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(auth.currentUser!.email)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        Map<String, dynamic> data1 =
-            documentSnapshot.data() as Map<String, dynamic>;
+  List<User>? _user;
+  List<User_Basket>? userbasket;
+  late int length;
+  int totalprice = 0;
+  @override
+  void initState() {
+    super.initState();
+    userbasket = [];
+    _getBasket();
+    _getonlyuser();
+  }
 
-        for (int i = 0; i < l; i++) {
-          _addOrderdtail(
-              uuid,
-              data1['user_cart'][i]['product_id'],
-              data1['user_cart'][i]['product_quantity'],
-              data1['user_cart'][i]['product_price'],
-              data1['user_cart'][i]['total_price']);
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(auth.currentUser!.email)
-              .update({
-            'user_cart': FieldValue.arrayRemove([
-              {
-                'product_id': data1['user_cart'][i]['product_id'],
-                'product_name': data1['user_cart'][i]['product_name'],
-                'product_price': data1['user_cart'][i]['product_price'],
-                'product_quantity': data1['user_cart'][i]['product_quantity'],
-                'total_price': data1['user_cart'][i]['total_price']
-              }
-            ]),
-          });
-
-          total = data1['user_cart'][i.toInt()]['total_price'];
-          total1 += total;
-
-          print('-------------------------------------');
-          print(data1['user_cart'][i.toInt()]['total_price']);
-          print('Sum is : ${total1}');
-        }
-        CollectionReference users =
-            FirebaseFirestore.instance.collection('order');
-        FirebaseFirestore.instance
-            .collection('order')
-            .get()
-            .then((QuerySnapshot querySnapshot) {
-          _add_order(uuid, auth.currentUser!.email, data1['u_latitude'],
-              data1['u_longitude'], 'ยังไม่มีผู้รับ', total1, 'ยังไม่ได้ขาย');
-          users.doc(uuid).set({
-            'order_by': auth.currentUser!.email,
-            'order_id': uuid,
-            'latitude': data1['u_latitude'],
-            'longitude': data1['u_longitude'],
-            'order_detail': data,
-            'total_price': total1,
-            'order_date': DateTime.now(),
-            'order_status': 'ยังไม่ได้ขาย',
-            'order_responsible_person': 'ยังไม่มีผู้รับ',
-          }).then((value) {
-            setState(() {
-              total = 0;
-              total1 = 0;
-            });
-          });
-        });
-      } else {
-        print('Document does not exist on the database');
-      }
+  _getBasket() {
+    print("function working");
+    Services().getuserbasket(widget.email.toString()).then((basket) {
+      setState(() {
+        userbasket = basket;
+        length = basket.length;
+      });
+      _gettotalprice(length);
+      print("Length ${basket.length}");
     });
+  }
+
+  _getonlyuser() {
+    print("function working");
+    Services().geyonlyuser(widget.email.toString()).then((user) {
+      setState(() {
+        _user = user;
+      });
+      print("Length ${user.length}");
+      print(_user![0].user_latitude);
+      print(_user![0].user_longitude);
+    });
+  }
+
+  _getImportorder(length) {
+    int Import_totalprice = 0;
+    var Import_order_id = Uuid().v1();
+    print('length data for loop === ${length}');
+    print('-----------รายการที่จะส่ง-------------');
+    print('---รหัสสินค้า [${Import_order_id}]---');
+    for (int i = 0; i < length; i++) {
+      print('รายการที่[${i}]');
+      print(
+          'รหัสรายการสิ้นค้า ----> [${userbasket![i].user_basket_product_id.toString()}]');
+      print(
+          'จำนวนสิ้นค้า ----> [${userbasket![i].user_basket_quantity.toString()}]');
+      print(
+          'ราคารวม ----> [${userbasket![i].user_basket_pricetotal.toString()}]');
+      print('วันเวลาที่สั่ง ----> [${DateTime.now()}]');
+      setState(() {
+        Import_totalprice +=
+            int.parse(userbasket![i].user_basket_pricetotal.toString());
+      });
+      Services().addOrderdtail(
+        Import_order_id.toString(),
+        userbasket![i].user_basket_product_id.toString(),
+        userbasket![i].user_basket_quantity.toString(),
+        userbasket![i].product_price.toString(),
+        userbasket![i].user_basket_pricetotal.toString(),
+      );
+
+      Services().product_quantity_update(
+          userbasket![i].user_basket_product_id.toString(),
+          userbasket![i].user_basket_quantity.toString());
+    }
+    print("ราคารวมรายการ : ${Import_totalprice}");
+    print(
+        'userLocation : ${_user![0].user_latitude}  ,  ${_user![0].user_longitude}');
+    Services().add_order(
+        Import_order_id.toString(),
+        widget.email.toString(),
+        _user![0].user_latitude.toString(),
+        _user![0].user_longitude.toString(),
+        'ยังไม่มีคนรับผิดชอบ'.toString(),
+        Import_totalprice.toString(),
+        'ยังไม่มีใครรับ',
+        DateTime.now().toString());
+    print('-----------จบการส่งข้อมูล-------------');
+    setState(() {
+      Import_totalprice = 0;
+    });
+    Services().deleteuserbasket(widget.email).then((value) => {
+          Fluttertoast.showToast(
+              msg: "สั่งซื้อเสร็จสิ้น",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Color.fromARGB(255, 4, 255, 0),
+              textColor: Colors.white,
+              fontSize: 16.0),
+          Navigator.pop(context),
+        });
+  }
+
+  _gettotalprice(length) {
+    totalprice = 0;
+    for (int i = 0; i < length; i++) {
+      setState(() {
+        totalprice +=
+            int.parse(userbasket![i].user_basket_pricetotal.toString());
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(auth.currentUser!.email).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
-
-        if (snapshot.hasData && !snapshot.data!.exists) {
-          return Text('Admin_cart');
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
-          if (data["user_cart"]?.length < 1) {
-            return Scaffold(
-              extendBodyBehindAppBar: true,
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                backgroundColor: Colors.white.withOpacity(0.1),
-                elevation: 0,
-                title: Center(
-                    child: const Text(
-                  'ตระกร้าสินค้า',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold),
-                )),
+    return Scaffold(
+        floatingActionButton: Container(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            width: 250,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                _getImportorder(length);
+              },
+              label: Text("ยืนยันการสั่งซื้อ"),
+              icon: Icon(Icons.shopping_bag),
+              backgroundColor: Color(0xffFD8F52),
+            ),
+          ),
+        ),
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          backgroundColor: Colors.white.withOpacity(0.1),
+          elevation: 0,
+          title: Center(
+              child: const Text(
+            'รายการสินค้า',
+            style: TextStyle(
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          )),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.refresh,
+                color: Color.fromARGB(255, 0, 0, 0),
               ),
-              body: Container(
-                color: Colors.orangeAccent.withOpacity(0.5),
-              ),
-            );
-          }
-          return Scaffold(
-              extendBodyBehindAppBar: true,
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                title: Center(
-                  child: const Text(
-                    'ตระกร้าสินค้า',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                backgroundColor: Colors.white.withOpacity(0.1),
-                elevation: 0,
-              ),
-              body: Container(
-                color: Colors.orangeAccent.withOpacity(0.5),
-                child: Column(
-                  children: [
-                    ListView.builder(
+              onPressed: () {
+                _getBasket();
+              },
+            )
+          ],
+        ),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Color(0xffFFBD71).withOpacity(0.5),
+          child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount:
-                          data != null ? (data["user_cart"]?.length ?? 0) : 0,
-                      itemBuilder: (_, index) => Card(
-                        margin: EdgeInsets.all(5),
-                        child: ListTile(
-                          title: Text(data['user_cart'][index]['product_name']
-                              .toString()),
-                          subtitle: Text(data['user_cart'][index]['total_price']
-                              .toString()),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    print(
-                                        data['user_cart'][index]['product_id']);
-                                    print(data['user_cart'][index]
-                                        ['product_price']);
-                                    FirebaseFirestore.instance
-                                        .collection('product')
-                                        .doc(data['user_cart'][index]
-                                            ['product_id'])
-                                        .update({
-                                      'product_quantity': FieldValue.increment(
-                                          data['user_cart'][index]
-                                              ['product_quantity']),
-                                      'export_product': FieldValue.increment(
-                                        -data['user_cart'][index]
-                                            ['product_quantity'],
-                                      ),
-                                    }).then((value) {
-                                      FirebaseFirestore.instance
-                                          .collection('users')
-                                          .doc(auth.currentUser!.email)
-                                          .update({
-                                        'user_cart': FieldValue.arrayRemove([
-                                          {
-                                            'product_id': data['user_cart']
-                                                [index]['product_id'],
-                                            'product_name': data['user_cart']
-                                                [index]['product_name'],
-                                            'product_price': data['user_cart']
-                                                [index]['product_price'],
-                                            'product_quantity':
-                                                data['user_cart'][index]
-                                                    ['product_quantity'],
-                                            'total_price': data['user_cart']
-                                                [index]['total_price']
-                                          }
-                                        ]),
-                                      });
-                                    }).then((value) {
-                                      setState(() {});
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "ลบเรียบร้อย ${data['user_cart'][index]['product_id']}",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor:
-                                              Color.fromARGB(255, 255, 1, 1),
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                    });
-                                  },
-                                  icon: Icon(Icons.delete)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 250,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(),
-                          child: Text('อัปโหลดข้อมูล'),
-                          onPressed: () {
-                            createorder(
-                                    data['user_cart'], data['user_cart'].length)
-                                .then((value) {
-                              Fluttertoast.showToast(
-                                  msg: "ซื้อสินค้าเสร็จสิน",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor:
-                                      Color.fromARGB(255, 0, 251, 0),
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                              Navigator.pop(context);
-                            });
-                          }),
-                    ),
-                  ],
-                ),
-              ));
-        }
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Loading'),
-          ),
-        );
-      },
-    );
+                          userbasket != null ? (userbasket?.length ?? 0) : 0,
+                      itemBuilder: (_, index) => Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                leading: Image(
+                                    image: NetworkImage(userbasket![index]
+                                        .product_image
+                                        .toString())),
+                                title: Text(
+                                    userbasket![index].product_name.toString()),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
+                                    Text(
+                                        'ราคารวม : ${userbasket![index].user_basket_pricetotal.toString()}'),
+                                  ],
+                                ),
+                                tileColor: Color(0xffFD8F52),
+                                trailing: IconButton(
+                                    onPressed: () {
+                                      Services()
+                                          .deleteonlybasket(
+                                              userbasket![index].user_basket_id)
+                                          .then((value) => {
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor:
+                                                        Color.fromARGB(
+                                                            255, 255, 0, 0),
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0),
+                                                _getBasket(),
+                                              });
+                                    },
+                                    icon: Icon(Icons.delete)),
+                                onTap: () {},
+                              ),
+                            ),
+                          )),
+                  Divider(color: Colors.black),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        'ราคารวม : ${totalprice.toString()}',
+                        style: TextStyle(fontSize: 16),
+                      )
+                    ],
+                  )
+                ],
+              )),
+        ));
   }
 }

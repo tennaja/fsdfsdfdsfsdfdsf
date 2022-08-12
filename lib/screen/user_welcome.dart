@@ -103,21 +103,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'แผนที่',
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.orangeAccent,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.assignment_outlined),
             label: 'ประวัติการซื้อ',
-            backgroundColor: Colors.purple,
+            backgroundColor: Colors.orangeAccent,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.group),
             label: 'โปรไฟล์',
-            backgroundColor: Colors.pink,
+            backgroundColor: Colors.orangeAccent,
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Color.fromARGB(255, 0, 0, 0),
         onTap: _onItemTapped,
       ),
     );

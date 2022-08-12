@@ -107,7 +107,7 @@ class _admin_orderallState extends State<admin_orderall> {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return admin_oderall_detail(
-                                  _Export_product![index].order_by.toString(),
+                                  _Export_product![index].order_id.toString(),
                                   _Export_product![index]
                                       .total_price
                                       .toString(),
@@ -125,9 +125,9 @@ class _admin_orderallState extends State<admin_orderall> {
 }
 
 class admin_oderall_detail extends StatefulWidget {
-  final String order_by, total_price, order_responsible_person;
+  final String order_id, total_price, order_responsible_person;
   const admin_oderall_detail(
-      this.order_by, this.total_price, this.order_responsible_person,
+      this.order_id, this.total_price, this.order_responsible_person,
       {Key? key})
       : super(key: key);
 
@@ -146,7 +146,7 @@ class _admin_oderall_detailState extends State<admin_oderall_detail> {
 
   _getImport_product() {
     print("function working");
-    Services().getorder_detail().then((value) {
+    Services().getorder_detail(widget.order_id).then((value) {
       setState(() {
         _orderdetail = value;
       });
@@ -174,7 +174,7 @@ class _admin_oderall_detailState extends State<admin_oderall_detail> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        Text('${widget.order_by}'),
+                        Text('${widget.order_id}'),
                         SizedBox(height: 20),
                         Text(
                             'คนรับผิดชอบงาน :  ${widget.order_responsible_person}'),

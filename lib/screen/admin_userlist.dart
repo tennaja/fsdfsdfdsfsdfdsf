@@ -111,7 +111,7 @@ class _admin_UserlistState extends State<admin_Userlist> {
                                   user?[index].user_phone,
                                   user?[index].user_email,
                                   user?[index].user_password,
-                                  user?[index].user_laitiude,
+                                  user?[index].user_latitude,
                                   user?[index].user_longitude,
                                   user?[index].user_role);
                             }));
