@@ -105,22 +105,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_shopping_cart),
-            label: 'ร้านค้า',
-            backgroundColor: Colors.orangeAccent,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'แผนที่',
-            backgroundColor: Colors.orangeAccent,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment_outlined),
-            label: 'ประวัติการซื้อ',
+            icon: Icon(Icons.import_contacts),
+            label: 'สินค้านำเข้า',
             backgroundColor: Colors.orangeAccent,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.group),
+            label: 'รายชื่อผู้ใช้',
+            backgroundColor: Colors.orangeAccent,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.document_scanner),
+            label: 'ประวัติการซื้อ',
+            backgroundColor: Colors.orangeAccent,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.production_quantity_limits),
             label: 'โปรไฟล์',
             backgroundColor: Colors.orangeAccent,
           ),

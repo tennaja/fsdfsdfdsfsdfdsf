@@ -100,22 +100,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.add_shopping_cart),
             label: 'ร้านค้า',
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.orangeAccent,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'แผนที่',
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.orangeAccent,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.assignment_outlined),
             label: 'ประวัติการซื้อ',
-            backgroundColor: Colors.purple,
+            backgroundColor: Colors.orangeAccent,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.group),
             label: 'โปรไฟล์',
-            backgroundColor: Colors.pink,
+            backgroundColor: Colors.orangeAccent,
           ),
         ],
         currentIndex: _selectedIndex,

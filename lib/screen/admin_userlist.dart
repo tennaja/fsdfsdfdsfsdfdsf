@@ -25,11 +25,11 @@ class _admin_UserlistState extends State<admin_Userlist> {
   void initState() {
     super.initState();
     user = [];
-    _getuserdata();
+    _getuserdata('customer');
   }
 
-  _getuserdata() {
-    Services().getUsers().then((datauser) => {
+  _getuserdata(where) {
+    Services().getUsers(where).then((datauser) => {
           setState(() {
             user = datauser;
           }),
@@ -81,7 +81,30 @@ class _admin_UserlistState extends State<admin_Userlist> {
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
-          actions: <Widget>[],
+          actions: <Widget>[
+            PopupMenuButton(
+              icon: Icon(
+                Icons.filter_alt_outlined,
+                color: Colors.black,
+              ),
+              onSelected: (value) {
+                print('สถานะ : ${value.toString()}');
+                _getuserdata(value.toString());
+              },
+              itemBuilder: (BuildContext bc) {
+                return const [
+                  PopupMenuItem(
+                    child: Text("แสดงข้อมูลลูกค้า"),
+                    value: 'customer',
+                  ),
+                  PopupMenuItem(
+                    child: Text("แสดงข้อมูลคนส่ง"),
+                    value: 'rider',
+                  )
+                ];
+              },
+            )
+          ],
         ),
         body: Container(
           width: double.infinity,
@@ -97,6 +120,8 @@ class _admin_UserlistState extends State<admin_Userlist> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
                           title: Text(
                               'ชื่อสมาชิก : ${user?[index].user_name}  ${user?[index].user_surname}'),
                           subtitle: Text('ตำแหน่ง : ${user?[index].user_role}'),

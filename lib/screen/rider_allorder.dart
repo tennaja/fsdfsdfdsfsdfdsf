@@ -104,19 +104,27 @@ class _rider_allorderState extends State<rider_allorder> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return user_order_detail(
+                                    user_order![index].order_id.toString(),
+                                    user_order![index].total_price.toString());
+                              }));
+                            },
+                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
                           title: Text(
                               '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
                           subtitle: Text(
                               'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
                           tileColor: Colors.orangeAccent,
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return user_order_detail(
-                                  user_order![index].order_id.toString(),
-                                  user_order![index].total_price.toString());
-                            }));
-                          },
                         ),
                       ),
                     )),
@@ -169,7 +177,7 @@ class _import_order_detailState extends State<user_order_detail> {
               print('email rider : ${email}');
               print('Order : ${widget.import_order_id}');
               Services()
-                  .rider_update_order(email.toString(), 'มีคนรับแล้ว',
+                  .rider_update_order(email.toString(), 'ของกำลังส่ง',
                       widget.import_order_id.toString())
                   .then((value) => {
                         Navigator.pop(context),
@@ -185,6 +193,7 @@ class _import_order_detailState extends State<user_order_detail> {
             },
             label: Text("ยืนยันการส่ง"),
             icon: Icon(Icons.near_me),
+            backgroundColor: Colors.orangeAccent,
           ),
         ),
         appBar: AppBar(
@@ -192,66 +201,71 @@ class _import_order_detailState extends State<user_order_detail> {
           backgroundColor: Colors.blueAccent,
         ),
         backgroundColor: Colors.grey[100],
-        body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Container(
-                  height: 600,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text('${widget.import_order_id}'),
-                        SizedBox(height: 20),
-                        ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: _Import_product != null
-                              ? (_Import_product?.length ?? 0)
-                              : 0,
-                          itemBuilder: (_, index) => Container(
-                            margin: EdgeInsets.all(5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                        'ชื่อสินค้า : ${_Import_product![index].product_name}'),
-                                    Text(
-                                        'จำนวน : ${_Import_product![index].product_amount}'),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                        'ราคาต่อชิ้น : ${_Import_product![index].product_price}'),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                              ],
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.orangeAccent.withOpacity(0.5),
+          child: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: 600,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text('${widget.import_order_id}'),
+                          SizedBox(height: 20),
+                          ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: _Import_product != null
+                                ? (_Import_product?.length ?? 0)
+                                : 0,
+                            itemBuilder: (_, index) => Container(
+                              margin: EdgeInsets.all(5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          'ชื่อสินค้า : ${_Import_product![index].product_name}'),
+                                      Text(
+                                          'จำนวน : ${_Import_product![index].product_amount}'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                          'ราคาต่อชิ้น : ${_Import_product![index].product_price}'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                                'ราคารวม : ${widget.Import_product_pricetotal}'),
-                          ],
-                        ),
-                      ],
+                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                  'ราคารวม : ${widget.Import_product_pricetotal}'),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )),
+                )),
+          ),
         ));
   }
 }

@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/product_model.dart';
 import 'package:project_bekery/mysql/service.dart';
+import 'package:project_bekery/screen/float_add_order.dart';
 
 class admin_allproduct extends StatefulWidget {
   const admin_allproduct({Key? key}) : super(key: key);
@@ -20,12 +21,12 @@ class _admin_allproductState extends State<admin_allproduct> {
   void initState() {
     super.initState();
     _product = [];
-    _getProduct();
+    _getProduct('SELECT * from product');
   }
 
-  _getProduct() {
+  _getProduct(sql) {
     print("function working");
-    Services().getProduct().then((product) {
+    Services().getProduct(sql).then((product) {
       setState(() {
         _product = product;
       });
@@ -75,11 +76,52 @@ class _admin_allproductState extends State<admin_allproduct> {
           elevation: 0,
           title: Center(
               child: Text(
-            'รายชื่อสมาชิก',
+            'รายชื่อสินค้าในคลัง',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           )),
-          actions: <Widget>[],
+          actions: <Widget>[
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return add_product_order();
+                    }));
+                  },
+                ),
+                PopupMenuButton(
+                  icon: Icon(
+                    Icons.filter_alt_outlined,
+                    color: Colors.black,
+                  ),
+                  onSelected: (value) {
+                    print('สถานะ : ${value.toString()}');
+                    _getProduct(value);
+                  },
+                  itemBuilder: (BuildContext bc) {
+                    return const [
+                      PopupMenuItem(
+                        child: Text("สินค้าใกล้หมด"),
+                        value:
+                            'SELECT * FROM `product` ORDER BY product_quantity ASC',
+                      ),
+                      PopupMenuItem(
+                        child: Text("สินค้าขายดี"),
+                        value:
+                            'SELECT * FROM `product` ORDER BY export_product DESC',
+                      ),
+                    ];
+                  },
+                )
+              ],
+            )
+          ],
         ),
         body: Container(
           width: double.infinity,
@@ -96,8 +138,11 @@ class _admin_allproductState extends State<admin_allproduct> {
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
                           leading: Image(
-                              image: NetworkImage(
-                                  _product![index].product_image.toString())),
+                            image: NetworkImage(
+                                _product![index].product_image.toString()),
+                            width: 50,
+                            height: 50,
+                          ),
                           title: Text(
                               'ชื่อสินค้า : ${_product![index].product_name}'),
                           subtitle: Row(

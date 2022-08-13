@@ -199,10 +199,11 @@ class Services {
     }
   }
 
-  Future<List<User>> getUsers() async {
+  Future<List<User>> getUsers(where) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = _GET_ALL_ACTION;
+      map["where"] = where;
 
       final response = await http.post(url, body: map);
       print("getUsers >> Response:: ${response.body}");
@@ -284,10 +285,11 @@ class Services {
     }
   }
 
-  Future<List<Product>> getProduct() async {
+  Future<List<Product>> getProduct(sql) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = "GET_ALL_PRODUCT";
+      map["sql"] = sql;
       final response = await http.post(url, body: map);
       print("getProduct >> Response:: ${response.body}");
       if (response.statusCode == 200) {
@@ -489,10 +491,11 @@ class Services {
         .toList();
   }
 
-  Future<List<Export_product>> gatallExport_product() async {
+  Future<List<Export_product>> gatallExport_product(where) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = "GET_EXPORT_PRODUCT";
+      map["where"] = where;
       final response = await http.post(url, body: map);
       print("gatallproduct >> Response:: ${response.body}");
       if (response.statusCode == 200) {
@@ -857,6 +860,20 @@ class Services {
       return response.body;
     } catch (e) {
       return 'error';
+    }
+  }
+
+  Future<String> cancel_order(where1) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "CANCLE_ORDER";
+      map["where"] = where1; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("product_quantity_update >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return '${e}';
     }
   }
 }

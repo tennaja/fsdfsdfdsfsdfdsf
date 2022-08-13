@@ -4,12 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/export_product.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/mysql/service.dart';
@@ -40,6 +43,7 @@ class _user_orderState extends State<user_order> {
   _getImport_product(order_status) async {
     user_email = await SessionManager().get("email");
     print("User : ${user_email}");
+    print('Order_status : ${order_status}');
     Services()
         .gatonlyExport_product(user_email.toString(), order_status.toString())
         .then((value) {
@@ -62,7 +66,30 @@ class _user_orderState extends State<user_order> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              showDialog<bool>(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('ออกจากระบบ'),
+                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("ไม่"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              CupertinoPageRoute(
+                                  builder: (context) => LoginPage()),
+                              (_) => false,
+                            );
+                          },
+                          child: const Text("ใช่"),
+                        ),
+                      ],
+                    );
+                  });
             },
           ),
           actions: <Widget>[
@@ -89,6 +116,10 @@ class _user_orderState extends State<user_order> {
                   PopupMenuItem(
                     child: Text("รายการที่ยกเลิก"),
                     value: 'รายการที่ยกเลิก',
+                  ),
+                  PopupMenuItem(
+                    child: Text("ของกำลังส่ง"),
+                    value: 'ของกำลังส่ง',
                   )
                 ];
               },
@@ -331,9 +362,23 @@ class user_order_detaill_cancelState extends State<user_order_detail_cancel> {
               width: 250,
               child: FloatingActionButton.extended(
                 icon: Icon(Icons.cancel),
-                backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                backgroundColor: Colors.orangeAccent,
                 heroTag: '1',
-                onPressed: () {},
+                onPressed: () {
+                  Services()
+                      .cancel_order(widget.import_order_id)
+                      .then((value) => {
+                            Fluttertoast.showToast(
+                                msg: "ยกเลิกการสั่งเรียบร้อย",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                                textColor: Colors.white,
+                                fontSize: 16.0),
+                            Navigator.pop(context),
+                          });
+                },
                 label: Text('ยกเลิกการสั่งสินค้า'),
               ),
             ),
@@ -346,7 +391,7 @@ class user_order_detaill_cancelState extends State<user_order_detail_cancel> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
           backgroundColor: Colors.orangeAccent.withOpacity(0.5),

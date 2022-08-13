@@ -103,6 +103,8 @@ class _admin_import_sourceState extends State<admin_import_source> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
                         title: Text(_source![index].source_name.toString()),
                         subtitle: Text(
                             'รหัสแหล่งที่มา : ${_source![index].source_id.toString()}'),
@@ -145,7 +147,7 @@ class _import_product_menuState extends State<import_product_menu> {
 
   _getProduct() {
     print("function working");
-    Services().getProduct().then((product) {
+    Services().getProduct('SELECT * from product').then((product) {
       setState(() {
         _product = product;
 

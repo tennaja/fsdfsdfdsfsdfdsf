@@ -21,12 +21,12 @@ class _admin_orderallState extends State<admin_orderall> {
     initializeDateFormatting();
     super.initState();
     _Export_product = [];
-    _getImport_product();
+    _getImport_product('ยังไม่มีใครรับ');
   }
 
-  _getImport_product() {
+  _getImport_product(where) {
     print("function working");
-    Services().gatallExport_product().then((value) {
+    Services().gatallExport_product(where).then((value) {
       setState(() {
         _Export_product = value;
 
@@ -60,25 +60,35 @@ class _admin_orderallState extends State<admin_orderall> {
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
           actions: <Widget>[
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.content_paste_sharp,
-                    color: Color.fromARGB(255, 0, 0, 0),
+            PopupMenuButton(
+              icon: Icon(
+                Icons.filter_alt_outlined,
+                color: Colors.black,
+              ),
+              onSelected: (value) {
+                print('สถานะ : ${value.toString()}');
+                _getImport_product(value);
+              },
+              itemBuilder: (BuildContext bc) {
+                return const [
+                  PopupMenuItem(
+                    child: Text("ยังไม่มีใครรับ"),
+                    value: 'ยังไม่มีใครรับ',
                   ),
-                  onPressed: () {
-                    _getImport_product();
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Color.fromARGB(255, 0, 0, 0),
+                  PopupMenuItem(
+                    child: Text("ส่งเรียบร้อย"),
+                    value: 'ส่งเรียบร้อย',
                   ),
-                  onPressed: () {},
-                )
-              ],
+                  PopupMenuItem(
+                    child: Text("รายการที่ยกเลิก"),
+                    value: 'รายการที่ยกเลิก',
+                  ),
+                  PopupMenuItem(
+                    child: Text("ของกำลังส่ง"),
+                    value: 'ของกำลังส่ง',
+                  )
+                ];
+              },
             )
           ],
         ),
@@ -98,6 +108,8 @@ class _admin_orderallState extends State<admin_orderall> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
                           title: Text(
                               'ราคารวม : ${_Export_product![index].total_price.toString()}'),
                           subtitle: Text(

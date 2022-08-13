@@ -30,10 +30,9 @@ class _add_product_orderState extends State<add_product_order> {
   late String product_pice;
   late String product_img;
   String selecttype = '';
-  String dropdownValue = 'One';
+  String dropdownValue = 'ประเภทข้าวสาร';
 
-  Future pickImage() async {
-    print("-----------------------------------------------------------------");
+  Future pickImage_carmera() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.camera);
       if (image == null) return;
@@ -59,6 +58,8 @@ class _add_product_orderState extends State<add_product_order> {
     final snapshot = await task!.whenComplete(() {});
     final urlDownload = await snapshot.ref.getDownloadURL();
     print('Download url : $urlDownload');
+
+/*
     FirebaseFirestore.instance
         .collection('product')
         .get()
@@ -83,7 +84,7 @@ class _add_product_orderState extends State<add_product_order> {
           "product_price":data[''];
         }])*/
       });
-    });
+    });*/
   }
 
   @override
@@ -91,75 +92,240 @@ class _add_product_orderState extends State<add_product_order> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('เพิ่มรายการสิ้นค้า'),
-        backgroundColor: Colors.black,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+        elevation: 0,
+        title: Center(
+            child: const Text(
+          'เพิ่มรายการสินค้า',
+          style: TextStyle(
+              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+        )),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          child: Column(
-            children: [
-              image != null
-                  ? Image.file(
-                      image!,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    )
-                  : SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Image.asset('assets/images/upload.png'),
-                    ),
-              SizedBox(
-                width: 25,
-                height: 25,
-              ),
-              SizedBox(
-                width: 150,
-                height: 35,
-                child: ElevatedButton(
-                  child: Text('อัปโหลดรูปภาพ'),
-                  onPressed: () => pickImage(),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.orangeAccent.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: Column(
+              children: [
+                image != null
+                    ? Image.file(
+                        image!,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      )
+                    : SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Image.asset('assets/images/upload.png'),
+                      ),
+                SizedBox(
+                  width: 25,
+                  height: 25,
                 ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("ชื่อสิ้นค้า"),
-                  TextFormField(
-                    onChanged: (value) {
-                      product_name = value;
+                SizedBox(
+                  width: 150,
+                  height: 35,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orangeAccent,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32.0)),
+                      minimumSize: Size(100, 40), //////// HERE
+                    ),
+                    child: Text('อัปโหลดรูปภาพ'),
+                    onPressed: () {
+                      pickImage_carmera();
                     },
                   ),
-                  SizedBox(
-                    height: 15,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        onSaved: (name) {},
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          label: Text('ชื่อสินค้า'),
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        onSaved: (detail) {},
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          label: Text('รายละเอียดสินค้า'),
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 150,
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              onSaved: (price) {},
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                label: Text('ราคา'),
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 150,
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              onSaved: (price) {},
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                label: Text('จำนวน'),
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          //background color of dropdown button
+                          border: Border.all(
+                              color: Colors.black38,
+                              width: 1), //border of dropdown button
+                          borderRadius: BorderRadius.circular(
+                              30), //border raiuds of dropdown button
+                        ),
+                        child: DropdownButton(
+                          value: dropdownValue,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          },
+                          // ignore: prefer_const_literals_to_create_immutables
+
+                          items: <String>[
+                            'ประเภทข้าวสาร',
+                            'ประเภทของใช้',
+                            'ประเภทเครื่องปรุง'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: SizedBox(
+                                width: 200, // for example
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Text(value),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          icon: Padding(
+                              //Icon at tail, arrow bottom is default icon
+                              padding: EdgeInsets.only(right: 20),
+                              child: Icon(Icons.arrow_downward)),
+                          iconEnabledColor:
+                              Color.fromARGB(255, 0, 0, 0), //Icon color
+
+                          //dropdown background color
+                          underline: Container(), //remove underline
+                          isExpanded: true, //make true to make width 100%
+                        ),
+                      )
+                      /*
+                      Text("ชื่อสิ้นค้า"),
+                      TextFormField(
+                        onChanged: (value) {
+                          product_name = value;
+                        },
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text("ราคาสิ้นค้า"),
+                      TextFormField(
+                        onChanged: (value) {
+                          product_pice = value;
+                        },
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),*/
+                    ],
                   ),
-                  Text("ราคาสิ้นค้า"),
-                  TextFormField(
-                    onChanged: (value) {
-                      product_pice = value;
-                    },
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    //background color of dropdown button
+                    border: Border.all(
+                        color: Colors.black38,
+                        width: 1), //border of dropdown button
+                    borderRadius: BorderRadius.circular(
+                        30), //border raiuds of dropdown button
                   ),
-                  SizedBox(
-                    height: 30,
+                  child: SizedBox(
+                    width: 300,
+                    height: 35,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.orangeAccent,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(32.0)),
+                          minimumSize: Size(100, 40), //////// HERE
+                        ),
+                        child: Text('อัปโหลดข้อมูล'),
+                        onPressed: () => uploadimage()),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: 150,
-                height: 35,
-                child: ElevatedButton(
-                    child: Text('อัปโหลดข้อมูล'),
-                    onPressed: () => uploadimage()),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

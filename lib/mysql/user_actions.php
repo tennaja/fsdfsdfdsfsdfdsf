@@ -41,7 +41,7 @@
 
     if("GET_ALL" == $action){
         $db_data = array();
-        $sql = "SELECT * from $table";
+        $sql = "SELECT * from $table where user_role = '$where'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -75,8 +75,9 @@
 
 
     if("GET_ALL_PRODUCT" == $action){
+        
         $db_data = array();
-        $sql = "SELECT * from product ";
+        $sql = $_POST["sql"];
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -251,7 +252,7 @@
 
     if("GET_EXPORT_PRODUCT" == $action){
         $db_data = array();
-        $sql = "SELECT * FROM user_order";
+        $sql = "SELECT * FROM user_order where order_status = '$where'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -627,6 +628,14 @@
     if("PRODUCT_QUANTITY_UPDATE" == $action){ 
         $where2 = $_POST['where2'];
         $sql = "UPDATE product SET product_quantity = product_quantity  - '$where2', export_product = export_product + '$where2'  WHERE product_id = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("CANCLE_ORDER" == $action){ 
+        $sql = "UPDATE user_order SET order_status = 'รายการที่ยกเลิก' WHERE order_id = '$where'";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();

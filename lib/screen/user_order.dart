@@ -81,26 +81,6 @@ class Orderpage extends StatelessWidget {
         ],
       ),
       resizeToAvoidBottomInset: false,
-      floatingActionButton: SizedBox(
-        width: 50,
-        height: 50,
-        child: FittedBox(
-          child: FloatingActionButton(
-            backgroundColor: Color.fromRGBO(30, 246, 30, 10),
-            child: Center(
-              child: Icon(
-                Icons.add_circle_rounded,
-                size: 50,
-              ),
-            ),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return add_product_order();
-              }));
-            },
-          ),
-        ),
-      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,

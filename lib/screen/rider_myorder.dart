@@ -1,17 +1,19 @@
 // ignore_for_file: unused_import
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'dart:convert';
+
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:project_bekery/login/login.dart';
+import 'package:location/location.dart';
 import 'package:project_bekery/model/export_product.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/mysql/service.dart';
@@ -110,19 +112,27 @@ class _rider_myorderState extends State<rider_myorder> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return user_order_detail(
+                                    user_order![index].order_id.toString(),
+                                    user_order![index].total_price.toString());
+                              }));
+                            },
+                          ),
                           title: Text(
                               '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
                           subtitle: Text(
                               'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
                           tileColor: Colors.orangeAccent,
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return user_order_detail(
-                                  user_order![index].order_id.toString(),
-                                  user_order![index].total_price.toString());
-                            }));
-                          },
                         ),
                       ),
                     )),
@@ -143,6 +153,8 @@ class user_order_detail extends StatefulWidget {
 
 class _import_order_detailState extends State<user_order_detail> {
   List<Export_product_detail>? _Import_product;
+  Location location = Location();
+
   @override
   void initState() {
     super.initState();
@@ -173,27 +185,26 @@ class _import_order_detailState extends State<user_order_detail> {
             SizedBox(
               width: 150,
               child: FloatingActionButton.extended(
+                backgroundColor: Colors.orangeAccent,
                 heroTag: '1',
-                onPressed: () {
+                onPressed: () async {
+                  String email = await SessionManager().get("email");
                   Services()
-                      .rider_getlocation_order(
+                      .rider_update_order(email.toString(), 'ส่งเรียบร้อย',
                           widget.import_order_id.toString())
-                      .then((value) {
-                    List<Export_product>? user_order;
-                    user_order = [];
-                    user_order = value;
-                    print(
-                        'userLocation : ${user_order[0].user_latitude} ,  ${user_order[0].user_longitude}');
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return rider_target_map(
-                          double.parse(user_order![0].user_latitude.toString()),
-                          double.parse(user_order[0].user_longitude.toString()),
-                          user_order[0].order_id.toString());
-                    }));
-                  });
+                      .then((value) => {
+                            Navigator.pop(context),
+                            Fluttertoast.showToast(
+                                msg: "ยืนยันการส่งเรียบร้อย",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Color.fromARGB(255, 0, 255, 4),
+                                textColor: Colors.white,
+                                fontSize: 16.0),
+                          });
                 },
-                label: Text("ดูแผนที่"),
+                label: Text("ยืนยันการสั่งซื้อ"),
                 icon: Icon(Icons.near_me),
               ),
             ),
@@ -203,6 +214,7 @@ class _import_order_detailState extends State<user_order_detail> {
             SizedBox(
               width: 150,
               child: FloatingActionButton.extended(
+                backgroundColor: Colors.orangeAccent,
                 heroTag: '2',
                 onPressed: () {
                   Services()
@@ -227,70 +239,135 @@ class _import_order_detailState extends State<user_order_detail> {
           ],
         ),
         appBar: AppBar(
-          title: Text('รายละเอียดการสั่งซื้อ'),
-          backgroundColor: Colors.blueAccent,
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.map,
+                color: Colors.black,
+              ),
+              onPressed: () async {
+                double? user_latitude, user_longitude;
+                location.requestService().then((value) {
+                  print('requestService : ${value}');
+                });
+                location.serviceEnabled().then((value) {
+                  print('serviceEnabled : ${value}');
+                });
+                final availableMaps = await MapLauncher.installedMaps;
+                print(availableMaps);
+                location.getLocation().then((value) {
+                  print('user_latitude : ${value.latitude}');
+                  print('user_longitude : ${value.longitude}');
+                  setState(() {
+                    user_latitude = value.latitude;
+                    user_longitude = value.longitude;
+                  });
+                  Services()
+                      .rider_getlocation_order(
+                          widget.import_order_id.toString())
+                      .then((value) async {
+                    List<Export_product>? user_order;
+                    user_order = [];
+                    user_order = value;
+                    await availableMaps.first.showDirections(
+                        destination: Coords(
+                            double.parse(
+                                user_order[0].user_latitude.toString()),
+                            double.parse(
+                                user_order[0].user_longitude.toString())),
+                        origin: Coords(
+                          user_latitude!,
+                          user_longitude!,
+                        ));
+                  });
+                });
+              },
+            ),
+          ],
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+          elevation: 0,
+          title: Center(
+              child: const Text(
+            'รายละเอียดการสั่งซื้อ',
+            style: TextStyle(
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          )),
         ),
         backgroundColor: Colors.grey[100],
-        body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Container(
-                  height: 600,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text('${widget.import_order_id}'),
-                        SizedBox(height: 20),
-                        ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: _Import_product != null
-                              ? (_Import_product?.length ?? 0)
-                              : 0,
-                          itemBuilder: (_, index) => Container(
-                            margin: EdgeInsets.all(5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                        'ชื่อสินค้า : ${_Import_product![index].product_name}'),
-                                    Text(
-                                        'จำนวน : ${_Import_product![index].product_amount}'),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                        'ราคาต่อชิ้น : ${_Import_product![index].product_price}'),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                              ],
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.orangeAccent.withOpacity(0.5),
+          child: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: 600,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text('${widget.import_order_id}'),
+                          SizedBox(height: 20),
+                          ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: _Import_product != null
+                                ? (_Import_product?.length ?? 0)
+                                : 0,
+                            itemBuilder: (_, index) => Container(
+                              margin: EdgeInsets.all(5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          'ชื่อสินค้า : ${_Import_product![index].product_name}'),
+                                      Text(
+                                          'จำนวน : ${_Import_product![index].product_amount}'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                          'ราคาต่อชิ้น : ${_Import_product![index].product_price}'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                                'ราคารวม : ${widget.Import_product_pricetotal}'),
-                          ],
-                        ),
-                      ],
+                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                  'ราคารวม : ${widget.Import_product_pricetotal}'),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )),
+                )),
+          ),
         ));
   }
 }

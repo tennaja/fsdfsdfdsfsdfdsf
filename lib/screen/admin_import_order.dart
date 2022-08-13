@@ -89,7 +89,7 @@ class _admin_import_orderState extends State<admin_import_order> {
               child: const Text(
             'รายการนำเข้าสินค้า',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           )),
           actions: <Widget>[
             Row(
@@ -138,6 +138,8 @@ class _admin_import_orderState extends State<admin_import_order> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
                           title: Text(
                               '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Import_product![index].Import_date}'))}'),
                           subtitle: Text(
@@ -217,33 +219,6 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
-          actions: <Widget>[
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.content_paste_sharp,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                  onPressed: () {
-                    _getImport_product();
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return admin_import_source();
-                    }));
-                  },
-                )
-              ],
-            )
-          ],
         ),
         body: Container(
           width: double.infinity,
@@ -261,6 +236,8 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
                           title: Text(
                               'วันที่สั่ง : ${_Import_product![index].Import_date.toString()}'),
                           subtitle: Text(
