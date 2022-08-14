@@ -31,7 +31,7 @@ class _user_profileState extends State<user_profile> {
 
   _getuserdata() async {
     user_email = await SessionManager().get("email");
-    Services().getonlyUser(user_email.toString()).then((datauser) => {
+    Art_Services().getonlyUser(user_email.toString()).then((datauser) => {
           setState(() {
             user = datauser;
           }),
@@ -62,7 +62,7 @@ class _user_profileState extends State<user_profile> {
                   fromKey.currentState!.save();
                   print(
                       'ID : ${user![0].user_id}\n Name : ${user![0].user_name}\n Surname : ${user![0].user_surname} \n Email : ${user![0].user_email}\n Phone : ${user![0].user_phone}');
-                  Services()
+                  Art_Services()
                       .update_user(user![0].user_id, username, usersurname,
                           useremail, 'customer', userphone)
                       .then((value) => {
@@ -92,21 +92,6 @@ class _user_profileState extends State<user_profile> {
               icon: Icon(Icons.settings),
             ),
           ),
-          SizedBox(
-            width: 20,
-          ),
-          SizedBox(
-            width: 150,
-            child: FloatingActionButton.extended(
-              backgroundColor: Colors.red,
-              heroTag: '2',
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              label: Text("ลบข้อมูลผู้ใช้"),
-              icon: Icon(Icons.delete),
-            ),
-          ),
         ],
       ),
       appBar: AppBar(
@@ -116,7 +101,30 @@ class _user_profileState extends State<user_profile> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            showDialog<bool>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('ออกจากระบบ'),
+                    content: const Text('ต้องการที่จะออกจากระบบไหม?'),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text("ไม่"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            CupertinoPageRoute(
+                                builder: (context) => LoginPage()),
+                            (_) => false,
+                          );
+                        },
+                        child: const Text("ใช่"),
+                      ),
+                    ],
+                  );
+                });
           },
         ),
         backgroundColor: Colors.white.withOpacity(0.1),

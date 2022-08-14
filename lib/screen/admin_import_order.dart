@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:project_bekery/login/login.dart';
@@ -12,6 +13,7 @@ import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/admin_import_product.dart';
 import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/screen/float_add_order.dart';
+import 'package:http/http.dart' as http;
 
 class admin_import_order extends StatefulWidget {
   const admin_import_order({Key? key}) : super(key: key);
@@ -35,7 +37,7 @@ class _admin_import_orderState extends State<admin_import_order> {
 
   _getImport_product() {
     print("function working");
-    Services().getimport_product('สินค้ายังไม่ครบ').then((Import_product) {
+    Art_Services().getimport_product('สินค้ายังไม่ครบ').then((Import_product) {
       setState(() {
         _Import_product = Import_product;
 
@@ -172,6 +174,25 @@ class adminhistoryimport extends StatefulWidget {
   State<adminhistoryimport> createState() => _adminhistoryimportState();
 }
 
+_updateImport(
+  product_name,
+  import_product,
+) async {
+  try {
+    var url = Uri.parse('http://119.59.97.4/~web5/user_actions.php');
+    print('funtion working....');
+    var map = <String, dynamic>{};
+    map["action"] = "ADD_PRODUCT";
+    map['sql'] =
+        "UPDATE product SET  product_quantity = product_quantity + ${import_product},import_product = import_product + ${import_product} WHERE product_name = '${product_name}'";
+    final response = await http.post(url, body: map);
+    print("AddProduct >> Response:: ${response.body}");
+    return response.body;
+  } catch (e) {
+    return 'error';
+  }
+}
+
 class _adminhistoryimportState extends State<adminhistoryimport> {
   List<Import_product>? _Import_product;
   List<Import_product>? _filterImport_product;
@@ -186,7 +207,8 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
 
   _getImport_product() {
     print("function working");
-    Services().getimport_product('ส่งแล้ว').then((Import_product) {
+    String where = 'ส่งแล้ว';
+    Art_Services().getimport_product(where).then((Import_product) {
       setState(() {
         _Import_product = Import_product;
 
@@ -208,7 +230,7 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
           backgroundColor: Colors.white.withOpacity(0.1),
@@ -276,7 +298,7 @@ class import_order_detail extends StatefulWidget {
 
 class _import_order_detailState extends State<import_order_detail> {
   List<Import_detail>? _Import_product;
-  List<Import_detail>? _filterImport_product;
+  int? datalength;
   @override
   void initState() {
     super.initState();
@@ -286,11 +308,13 @@ class _import_order_detailState extends State<import_order_detail> {
 
   _getImport_product() {
     print("function working");
-    Services().getimport_detail(widget.import_order_id).then((Import_detail) {
+    Art_Services()
+        .getimport_detail(widget.import_order_id)
+        .then((Import_detail) {
       setState(() {
         _Import_product = Import_detail;
 
-        _filterImport_product = Import_detail;
+        datalength = Import_detail.length;
       });
 
       print('จำนวข้อมูล : ${Import_detail.length}');
@@ -309,7 +333,15 @@ class _import_order_detailState extends State<import_order_detail> {
                 backgroundColor: Colors.green,
                 heroTag: '1',
                 onPressed: () {
-                  Services()
+                  for (var i = 0; i < datalength!; i++) {
+                    _updateImport(
+                      _Import_product![i].product_name.toString(),
+                      int.parse(_Import_product![i]
+                          .basket_product_quantity
+                          .toString()),
+                    );
+                  }
+                  Art_Services()
                       .submit_order(widget.import_order_id)
                       .then((value) => {
                             Navigator.push(context,
@@ -340,10 +372,10 @@ class _import_order_detailState extends State<import_order_detail> {
                 backgroundColor: Colors.red,
                 heroTag: '2',
                 onPressed: () {
-                  Services()
+                  Art_Services()
                       .deleteorderdetail(widget.import_order_id)
                       .then((value) => {
-                            Services()
+                            Art_Services()
                                 .deleteorder(widget.import_order_id)
                                 .then((value) => {
                                       Navigator.push(context,

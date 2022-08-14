@@ -34,7 +34,7 @@ class _cart_order_addState extends State<cart_order_add> {
 
   _getBasket() {
     print("function working");
-    Services().getuserbasket(widget.email.toString()).then((basket) {
+    Art_Services().getuserbasket(widget.email.toString()).then((basket) {
       setState(() {
         userbasket = basket;
         length = basket.length;
@@ -46,7 +46,7 @@ class _cart_order_addState extends State<cart_order_add> {
 
   _getonlyuser() {
     print("function working");
-    Services().geyonlyuser(widget.email.toString()).then((user) {
+    Art_Services().geyonlyuser(widget.email.toString()).then((user) {
       setState(() {
         _user = user;
       });
@@ -75,7 +75,7 @@ class _cart_order_addState extends State<cart_order_add> {
         Import_totalprice +=
             int.parse(userbasket![i].user_basket_pricetotal.toString());
       });
-      Services().addOrderdtail(
+      Art_Services().addOrderdtail(
         Import_order_id.toString(),
         userbasket![i].user_basket_product_id.toString(),
         userbasket![i].user_basket_quantity.toString(),
@@ -83,14 +83,14 @@ class _cart_order_addState extends State<cart_order_add> {
         userbasket![i].user_basket_pricetotal.toString(),
       );
 
-      Services().product_quantity_update(
+      Art_Services().product_quantity_update(
           userbasket![i].user_basket_product_id.toString(),
           userbasket![i].user_basket_quantity.toString());
     }
     print("ราคารวมรายการ : ${Import_totalprice}");
     print(
         'userLocation : ${_user![0].user_latitude}  ,  ${_user![0].user_longitude}');
-    Services().add_order(
+    Art_Services().add_order(
         Import_order_id.toString(),
         widget.email.toString(),
         _user![0].user_latitude.toString(),
@@ -103,7 +103,7 @@ class _cart_order_addState extends State<cart_order_add> {
     setState(() {
       Import_totalprice = 0;
     });
-    Services().deleteuserbasket(widget.email).then((value) => {
+    Art_Services().deleteuserbasket(widget.email).then((value) => {
           Fluttertoast.showToast(
               msg: "สั่งซื้อเสร็จสิ้น",
               toastLength: Toast.LENGTH_SHORT,
@@ -245,9 +245,12 @@ class _cart_order_addState extends State<cart_order_add> {
                                       borderRadius:
                                           BorderRadius.circular(10.0)),
                                   leading: Image(
-                                      image: NetworkImage(userbasket![index]
-                                          .product_image
-                                          .toString())),
+                                    image: NetworkImage(userbasket![index]
+                                        .product_image
+                                        .toString()),
+                                    width: 50,
+                                    height: 50,
+                                  ),
                                   title: Text(userbasket![index]
                                       .product_name
                                       .toString()),
@@ -299,7 +302,7 @@ class _cart_order_addState extends State<cart_order_add> {
                                                                   .orangeAccent),
                                                     ),
                                                     onPressed: () {
-                                                      Services()
+                                                      Art_Services()
                                                           .deleteonlybasket(
                                                               userbasket![index]
                                                                   .user_basket_id)

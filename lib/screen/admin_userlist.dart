@@ -4,7 +4,6 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
 import 'package:project_bekery/login/login.dart';
@@ -29,7 +28,7 @@ class _admin_UserlistState extends State<admin_Userlist> {
   }
 
   _getuserdata(where) {
-    Services().getUsers(where).then((datauser) => {
+    Art_Services().getUsers(where).then((datauser) => {
           setState(() {
             user = datauser;
           }),
@@ -199,7 +198,7 @@ class _admin_userdetailState extends State<admin_userdetail> {
                   fromKey.currentState!.save();
                   print(
                       'ID : ${widget.user_id}\n Name : ${username}\n Surname : ${usersurname} \n Email : ${useremail}\n Role : ${dropdownValue}\n Phone : ${userphone}');
-                  Services()
+                  Art_Services()
                       .update_user(widget.user_id, username, usersurname,
                           useremail, dropdownValue, userphone)
                       .then((value) => {

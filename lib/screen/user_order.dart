@@ -92,12 +92,24 @@ class Orderpage extends StatelessWidget {
             children: [
               CarouselSlider(
                   items: [
-                    Image.network(
-                        'https://www.igetweb.com/themes_v2/portal/assets/img/hero-promotion/promotion-2-detail.jpg'),
-                    Image.network(
-                        'https://www.igetweb.com/themes_v2/portal/assets/img/hero-promotion/promotion-1-detail.jpg'),
-                    Image.network(
-                        'https://www.friendtellpro.com/wp-content/uploads/2020/09/5f4f86c5N7a6e748c.jpg.dpg_.jpeg')
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return data_product_sql_more('1');
+                        }));
+                      },
+                      child: Image.network(
+                          'https://www.igetweb.com/themes_v2/portal/assets/img/hero-promotion/promotion-2-detail.jpg'),
+                    ),
+                    InkWell(
+                      child: Image.network(
+                          'https://www.igetweb.com/themes_v2/portal/assets/img/hero-promotion/promotion-1-detail.jpg'),
+                    ),
+                    InkWell(
+                      child: Image.network(
+                          'https://www.friendtellpro.com/wp-content/uploads/2020/09/5f4f86c5N7a6e748c.jpg.dpg_.jpeg'),
+                    )
                   ],
                   options: CarouselOptions(
                     height: 150,
@@ -265,7 +277,7 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
 
   _getProduct() {
     print('ข้อมูล : ${widget.where}');
-    Services().getonlyProduct(widget.where).then((product) {
+    Art_Services().getonlyProduct(widget.where).then((product) {
       print(
           "------------------------------------------------------------------------");
       setState(() {
@@ -348,14 +360,17 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: order_rice_sql(
-                _filterproduct![index].product_id.toString(),
-                _filterproduct![index].product_name.toString(),
-                _filterproduct![index].product_detail.toString(),
-                _filterproduct![index].product_image.toString(),
-                _filterproduct![index].product_price.toString(),
-                _filterproduct![index].product_quantity.toString(),
-                _filterproduct![index].export_product.toString(),
-                _filterproduct![index].import_product.toString()),
+              _filterproduct![index].product_id.toString(),
+              _filterproduct![index].product_name.toString(),
+              _filterproduct![index].product_detail.toString(),
+              _filterproduct![index].product_image.toString(),
+              _filterproduct![index].product_price.toString(),
+              _filterproduct![index].product_quantity.toString(),
+              _filterproduct![index].export_product.toString(),
+              _filterproduct![index].import_product.toString(),
+              _filterproduct![index].product_type_id.toString(),
+              _filterproduct![index].product_promotion.toString(),
+            ),
           ),
         ),
       ),

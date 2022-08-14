@@ -7,6 +7,8 @@ class Product {
   String? product_quantity;
   String? export_product;
   String? import_product;
+  String? product_type_id;
+  String? product_promotion;
 
   Product(
       {required this.product_id,
@@ -16,19 +18,22 @@ class Product {
       required this.product_price,
       required this.product_quantity,
       required this.export_product,
-      required this.import_product});
+      required this.import_product,
+      required this.product_type_id,
+      required this.product_promotion});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      product_id: json['product_id'],
-      product_name: json['product_name'],
-      product_detail: json['product_detail'],
-      product_image: json['product_image'],
-      product_price: json['product_price'],
-      product_quantity: json['product_quantity'],
-      export_product: json['export_product'],
-      import_product: json['import_product'],
-    );
+        product_id: json['product_id'],
+        product_name: json['product_name'],
+        product_detail: json['product_detail'],
+        product_image: json['product_image'],
+        product_price: json['product_price'],
+        product_quantity: json['product_quantity'],
+        export_product: json['export_product'],
+        import_product: json['import_product'],
+        product_type_id: json['product_type_id'],
+        product_promotion: json['product_promotion']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -40,5 +45,7 @@ class Product {
         'product_quantity': product_quantity,
         'export_product': export_product,
         'import_product': import_product,
+        'product_type_id': product_type_id,
+        'product_promotion': product_promotion,
       };
 }

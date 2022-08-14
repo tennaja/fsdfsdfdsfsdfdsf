@@ -43,7 +43,9 @@ class _rider_myorderState extends State<rider_myorder> {
   _getImport_product() async {
     user_email = await SessionManager().get("email");
     print("User : ${user_email}");
-    Services().rider_getonlyExport_product(user_email.toString()).then((value) {
+    Art_Services()
+        .rider_getonlyExport_product(user_email.toString())
+        .then((value) {
       setState(() {
         user_order = value;
       });
@@ -164,7 +166,7 @@ class _import_order_detailState extends State<user_order_detail> {
 
   _getImport_product() {
     print("function working");
-    Services()
+    Art_Services()
         .getuserorder_detail(widget.import_order_id)
         .then((Import_detail) {
       setState(() {
@@ -189,7 +191,7 @@ class _import_order_detailState extends State<user_order_detail> {
                 heroTag: '1',
                 onPressed: () async {
                   String email = await SessionManager().get("email");
-                  Services()
+                  Art_Services()
                       .rider_update_order(email.toString(), 'ส่งเรียบร้อย',
                           widget.import_order_id.toString())
                       .then((value) => {
@@ -217,7 +219,7 @@ class _import_order_detailState extends State<user_order_detail> {
                 backgroundColor: Colors.orangeAccent,
                 heroTag: '2',
                 onPressed: () {
-                  Services()
+                  Art_Services()
                       .rider_update_order('ยังไม่มีคนรับผิดชอบ',
                           'ยังไม่มีใครรับ', widget.import_order_id.toString())
                       .then((value) => {
@@ -262,7 +264,7 @@ class _import_order_detailState extends State<user_order_detail> {
                     user_latitude = value.latitude;
                     user_longitude = value.longitude;
                   });
-                  Services()
+                  Art_Services()
                       .rider_getlocation_order(
                           widget.import_order_id.toString())
                       .then((value) async {

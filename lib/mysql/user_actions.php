@@ -137,7 +137,6 @@
             while($row = $result->fetch_assoc()){
                 $db_data[] = $row;
             }
-
             echo json_encode($db_data);
         }else{
             echo "error";
@@ -524,21 +523,7 @@
     }
 
 
-    if("ADD_PRODUCT" == $action){
-        $product_name = $_POST['product_name'];
-        $product_detail = $_POST['product_detail'];
-        $product_image = $_POST['product_image'];
-        $product_price = $_POST['product_price'];
-        $product_quantity = $_POST['product_quantity'];
-        $export_product = $_POST['export_product'];
-        $import_product = $_POST['import_product'];
-
-        $sql = "INSERT INTO product(product_name,product_detail,product_image,product_price,product_quantity,export_product,import_product) VALUES ('$product_name','$product_detail','$product_image','$product_price','$product_quantity','$export_product','$import_product')";
-        $result = $conn->query($sql);
-        echo "success";
-        $conn->close();
-        return;
-    }
+    
 
     if("ADD_ORDERDETAIL" == $action){
         $order_id = $_POST['order_id'];
@@ -641,6 +626,17 @@
         $conn->close();
         return;
     }
+
+    if("ADD_PRODUCT" == $action){ 
+        $sql = $_POST["sql"];
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+
+    
 
 
 ?>

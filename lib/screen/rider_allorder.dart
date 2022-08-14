@@ -35,7 +35,7 @@ class _rider_allorderState extends State<rider_allorder> {
   _getImport_product() async {
     //user_email = await SessionManager().get("email");
     print("User : ${user_email}");
-    Services().rider_getExport_product('ยังไม่มีใครรับ').then((value) {
+    Art_Services().rider_getExport_product('ยังไม่มีใครรับ').then((value) {
       setState(() {
         user_order = value;
       });
@@ -154,7 +154,7 @@ class _import_order_detailState extends State<user_order_detail> {
 
   _getImport_product() {
     print("function working");
-    Services()
+    Art_Services()
         .getuserorder_detail(widget.import_order_id)
         .then((Import_detail) {
       setState(() {
@@ -176,7 +176,7 @@ class _import_order_detailState extends State<user_order_detail> {
               String email = await SessionManager().get("email");
               print('email rider : ${email}');
               print('Order : ${widget.import_order_id}');
-              Services()
+              Art_Services()
                   .rider_update_order(email.toString(), 'ของกำลังส่ง',
                       widget.import_order_id.toString())
                   .then((value) => {

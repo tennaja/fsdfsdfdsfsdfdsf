@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/export_product.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/mysql/service.dart';
@@ -26,7 +28,7 @@ class _admin_orderallState extends State<admin_orderall> {
 
   _getImport_product(where) {
     print("function working");
-    Services().gatallExport_product(where).then((value) {
+    Art_Services().gatallExport_product(where).then((value) {
       setState(() {
         _Export_product = value;
 
@@ -48,7 +50,30 @@ class _admin_orderallState extends State<admin_orderall> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              showDialog<bool>(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('ออกจากระบบ'),
+                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("ไม่"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              CupertinoPageRoute(
+                                  builder: (context) => LoginPage()),
+                              (_) => false,
+                            );
+                          },
+                          child: const Text("ใช่"),
+                        ),
+                      ],
+                    );
+                  });
             },
           ),
           backgroundColor: Colors.white.withOpacity(0.1),
@@ -158,7 +183,7 @@ class _admin_oderall_detailState extends State<admin_oderall_detail> {
 
   _getImport_product() {
     print("function working");
-    Services().getorder_detail(widget.order_id).then((value) {
+    Art_Services().getorder_detail(widget.order_id).then((value) {
       setState(() {
         _orderdetail = value;
       });

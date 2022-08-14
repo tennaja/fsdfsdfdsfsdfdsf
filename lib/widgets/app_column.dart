@@ -4,17 +4,25 @@ import 'big_text.dart';
 import 'icon_and_text_widget.dart';
 
 class AppColumn extends StatelessWidget {
-  final String text;
-  const AppColumn({Key? key, required this.text}) : super(key: key);
+  final String? text, sell, quantity, promotion;
+  const AppColumn(
+      {Key? key,
+      required this.text,
+      required this.sell,
+      required this.quantity,
+      required this.promotion})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double star = int.parse(sell.toString()) / 10;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Bigtext(text: text, size: height / 32.46, color: Colors.black),
+        Bigtext(
+            text: text.toString(), size: height / 32.46, color: Colors.black),
         SizedBox(
           height: height / 84.4,
         ),
@@ -22,7 +30,7 @@ class AppColumn extends StatelessWidget {
           children: [
             Wrap(
                 children: List.generate(
-                    5,
+                    star.round(),
                     (index) => Icon(
                           Icons.star,
                           color: Colors.redAccent,
@@ -31,15 +39,22 @@ class AppColumn extends StatelessWidget {
             SizedBox(
               width: height / 42.2,
             ),
-            Smalltext(text: "Rating"),
+            Smalltext(text: "ขายได้"),
             SizedBox(
               width: 10,
             ),
-            Smalltext(text: "2.0"),
+            Smalltext(text: "$sell"),
             SizedBox(
               width: 10,
             ),
-            Smalltext(text: "buyers"),
+            Smalltext(text: "ชิ้น"),
+            Padding(
+              padding: const EdgeInsets.only(left: 75),
+              child: IconAndTextWidget(
+                  icon: Icons.discount,
+                  text: "${promotion}",
+                  iconColor: Color.fromARGB(255, 0, 255, 21)),
+            ),
           ],
         ),
         SizedBox(
@@ -50,15 +65,11 @@ class AppColumn extends StatelessWidget {
           children: [
             IconAndTextWidget(
                 icon: Icons.circle_sharp,
-                text: "Normal",
+                text: "จำนวนเหลือในร้าน ${quantity} ชิ้น",
                 iconColor: Colors.yellow.shade300),
             IconAndTextWidget(
-                icon: Icons.location_on,
-                text: "1.7 km",
-                iconColor: Colors.redAccent),
-            IconAndTextWidget(
                 icon: Icons.access_alarm_rounded,
-                text: "3.2 min ",
+                text: "ใช้เวลาส่ง2-3วัน",
                 iconColor: Colors.green.shade400)
           ],
         )

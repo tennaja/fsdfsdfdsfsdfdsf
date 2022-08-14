@@ -38,7 +38,7 @@ class _admin_import_sourceState extends State<admin_import_source> {
 
   _getsource() {
     print("function working");
-    Services().getSource().then((source) {
+    Art_Services().getSource().then((source) {
       print(
           "------------------------------------------------------------------------");
       setState(() {
@@ -147,7 +147,7 @@ class _import_product_menuState extends State<import_product_menu> {
 
   _getProduct() {
     print("function working");
-    Services().getProduct('SELECT * from product').then((product) {
+    Art_Services().getProduct('SELECT * from product').then((product) {
       setState(() {
         _product = product;
 
@@ -434,7 +434,12 @@ class _import_product_detailState extends State<import_product_detail> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppColumn(text: "${widget.product_name}"),
+                      AppColumn(
+                        text: "${widget.product_name}",
+                        quantity: '${widget.product_quantity.toString()}',
+                        sell: '${widget.export_product.toString()}',
+                        promotion: '',
+                      ),
                       SizedBox(
                         height: height / 42.2,
                       ),
@@ -488,7 +493,7 @@ class Import_quantity extends StatefulWidget {
 
 Future<void> _addproducttocart(
     product_id, quantity, product_price, source_id) async {
-  Services()
+  Art_Services()
       .import_producttobasket(product_id, quantity, product_price, source_id);
 }
 
@@ -612,7 +617,7 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
 
   _getBasket() {
     print("function working");
-    Services().getadminbasket().then((basket) {
+    Art_Services().getadminbasket().then((basket) {
       setState(() {
         _basket = basket;
         length = basket.length;
@@ -641,7 +646,7 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
         Import_totalprice +=
             int.parse(_basket![i].basket_product_pricetotal.toString());
       });
-      Services().add_importproduct_detail(
+      Art_Services().add_importproduct_detail(
           Import_order_id.toString(),
           _basket![i].basket_product_id.toString(),
           _basket![i].basket_product_quantity.toString(),
@@ -650,7 +655,7 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
     }
     print("ราคารวมรายการ : ${Import_totalprice}");
 
-    Services().add_importproduct(
+    Art_Services().add_importproduct(
         Import_order_id.toString(),
         Import_totalprice.toString(),
         DateTime.now().toString(),
@@ -659,7 +664,7 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
     setState(() {
       Import_totalprice = 0;
     });
-    Services().deletebasket().then((value) => {
+    Art_Services().deletebasket().then((value) => {
           Fluttertoast.showToast(
               msg: "สั่งซื้อเสร็จสิ้น",
               toastLength: Toast.LENGTH_SHORT,

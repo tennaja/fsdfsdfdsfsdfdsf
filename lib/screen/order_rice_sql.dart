@@ -51,7 +51,7 @@ class data_product_sqlState extends State<data_product_sql> {
 
   _getProduct() {
     print('ข้อมูล : ${widget.where}');
-    Services().getonlyProduct(widget.where).then((product) {
+    Art_Services().getonlyProduct(widget.where).then((product) {
       print(
           "------------------------------------------------------------------------");
       setState(() {
@@ -60,7 +60,7 @@ class data_product_sqlState extends State<data_product_sql> {
         _filterproduct = product;
       });
       print("Length ${product.length}");
-      print(_product![0].product_name);
+      print(_product![0].product_promotion);
     });
   }
 
@@ -79,7 +79,9 @@ class data_product_sqlState extends State<data_product_sql> {
             _filterproduct![index].product_price.toString(),
             _filterproduct![index].product_quantity.toString(),
             _filterproduct![index].export_product.toString(),
-            _filterproduct![index].import_product.toString()),
+            _filterproduct![index].import_product.toString(),
+            _filterproduct![index].product_type_id.toString(),
+            _filterproduct![index].product_promotion.toString()),
       ),
     );
   }
@@ -93,7 +95,9 @@ class order_rice_sql extends StatefulWidget {
       product_price,
       product_quantity,
       export_product,
-      import_product;
+      import_product,
+      product_type_id,
+      proudct_promotion;
   order_rice_sql(
       this.product_id,
       this.product_name,
@@ -102,7 +106,9 @@ class order_rice_sql extends StatefulWidget {
       this.product_price,
       this.product_quantity,
       this.export_product,
-      this.import_product);
+      this.import_product,
+      this.product_type_id,
+      this.proudct_promotion);
 
   @override
   _order_rice_sqlState createState() => _order_rice_sqlState();
@@ -202,7 +208,9 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                                       widget.product_price.toString(),
                                       widget.product_quantity.toString(),
                                       widget.export_product.toString(),
-                                      widget.import_product.toString());
+                                      widget.import_product.toString(),
+                                      widget.product_type_id.toString(),
+                                      widget.proudct_promotion.toString());
                                 }));
                               })),
                     ),
@@ -225,7 +233,9 @@ class product_detail_sql extends StatefulWidget {
       product_price,
       product_quantity,
       export_product,
-      import_product;
+      import_product,
+      product_type_id,
+      proudct_promotion;
   const product_detail_sql(
       this.product_id,
       this.product_name,
@@ -235,6 +245,8 @@ class product_detail_sql extends StatefulWidget {
       this.product_quantity,
       this.export_product,
       this.import_product,
+      this.product_type_id,
+      this.proudct_promotion,
       {Key? key})
       : super(key: key);
 
@@ -276,9 +288,6 @@ class _product_detail_sqlState extends State<product_detail_sql> {
                           Navigator.of(context).pop();
                         },
                         child: AppIcon(icon: Icons.arrow_back_ios)),
-                    GestureDetector(
-                        onTap: () {},
-                        child: AppIcon(icon: Icons.shopping_cart_outlined))
                   ],
                 )),
             Positioned(
@@ -300,7 +309,12 @@ class _product_detail_sqlState extends State<product_detail_sql> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppColumn(text: "${widget.product_name}"),
+                      AppColumn(
+                        text: "${widget.product_name}",
+                        sell: '${widget.export_product.toString()}',
+                        quantity: '${widget.product_quantity.toString()}',
+                        promotion: '${widget.proudct_promotion.toString()}',
+                      ),
                       SizedBox(
                         height: height / 42.2,
                       ),
@@ -335,15 +349,18 @@ class _product_detail_sqlState extends State<product_detail_sql> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(height / 42.2 * 2),
                 topRight: Radius.circular(height / 42.2 * 2))),
-        child: Import_quantity(widget.product_id, widget.product_price),
+        child: Import_quantity(widget.product_id, widget.product_price,
+            widget.proudct_promotion.toString()),
       ),
     );
   }
 }
 
 class Import_quantity extends StatefulWidget {
-  final product_id, product_price;
-  const Import_quantity(this.product_id, this.product_price, {Key? key})
+  final product_id, product_price, proudct_promotion;
+  const Import_quantity(
+      this.product_id, this.product_price, this.proudct_promotion,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -402,7 +419,7 @@ class _Import_quantityState extends State<Import_quantity> {
         InkWell(
           onTap: () async {
             String email = await SessionManager().get("email");
-            Services().checkuserbasket(widget.product_id).then((value) {
+            Art_Services().checkuserbasket(widget.product_id).then((value) {
               if (value.isNotEmpty) {
                 Fluttertoast.showToast(
                     msg: "มีสิ้นค้าในตระกร้าแล้ว",
@@ -413,24 +430,112 @@ class _Import_quantityState extends State<Import_quantity> {
                     textColor: Colors.white,
                     fontSize: 16.0);
               } else {
+                print('Promotion : ${widget.proudct_promotion}');
                 print('Product_price : ${(widget.product_price.toString())}');
                 print('Quantity : ${quantity.toString()}');
-                int totalprice = int.parse(widget.product_price) * quantity;
-                print('Totalprice : ${totalprice.toString()}');
-                Services()
-                    .user_add_basket(widget.product_id, quantity,
-                        totalprice.toString(), email)
-                    .then((value) {
-                  Fluttertoast.showToast(
-                      msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Color.fromARGB(255, 0, 255, 13),
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                  Navigator.of(context).pop();
-                });
+
+                if (widget.proudct_promotion == 'โปรโมชั่น 10%') {
+                  print('โปรโมชั่น 10%');
+                  int totalprice = int.parse(widget.product_price) * quantity;
+                  int totalprice2 = (totalprice * (10 / 100)).round();
+                  int totalprice3 = totalprice - totalprice2;
+                  print('Totalprice : ${totalprice.toString()}');
+                  Art_Services()
+                      .user_add_basket(widget.product_id, quantity,
+                          totalprice3.toString(), email)
+                      .then((value) {
+                    Fluttertoast.showToast(
+                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.of(context).pop();
+                  });
+                } else if (widget.proudct_promotion == 'โปรโมชั่น 20%') {
+                  print('โปรโมชั่น 20%');
+                  int totalprice = int.parse(widget.product_price) * quantity;
+                  int totalprice2 = (totalprice * (20 / 100)).round();
+                  int totalprice3 = totalprice - totalprice2;
+                  print('Totalprice : ${totalprice.toString()}');
+                  Art_Services()
+                      .user_add_basket(widget.product_id, quantity,
+                          totalprice3.toString(), email)
+                      .then((value) {
+                    Fluttertoast.showToast(
+                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.of(context).pop();
+                  });
+                } else if (widget.proudct_promotion == 'โปรโมชั่น 30%') {
+                  print('โปรโมชั่น 30%');
+                  int totalprice = int.parse(widget.product_price) * quantity;
+                  int totalprice2 = (totalprice * (30 / 100)).round();
+                  int totalprice3 = totalprice - totalprice2;
+                  print('Totalprice : ${totalprice.toString()}');
+                  Art_Services()
+                      .user_add_basket(widget.product_id, quantity,
+                          totalprice3.toString(), email)
+                      .then((value) {
+                    Fluttertoast.showToast(
+                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.of(context).pop();
+                  });
+                } else if (widget.proudct_promotion == 'โปรโมชั่น 50%') {
+                  print('โปรโมชั่น 50%');
+                  int totalprice = int.parse(widget.product_price) * quantity;
+                  int totalprice2 = (totalprice * (50 / 100)).round();
+                  int totalprice3 = totalprice - totalprice2;
+                  print('Totalprice : ${totalprice.toString()}');
+                  Art_Services()
+                      .user_add_basket(widget.product_id, quantity,
+                          totalprice3.toString(), email)
+                      .then((value) {
+                    Fluttertoast.showToast(
+                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.of(context).pop();
+                  });
+                } else if (widget.proudct_promotion ==
+                    'โปรโมชั่น ซื้อ 1 แถม 1') {
+                  print('โปรโมชั่น ซื้อ 1 แถม 1');
+                  int totalprice = int.parse(widget.product_price) * quantity;
+                  print('Totalprice : ${totalprice.toString()}');
+                  Art_Services()
+                      .user_add_basket(widget.product_id, quantity * 2,
+                          totalprice.toString(), email)
+                      .then((value) {
+                    Fluttertoast.showToast(
+                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.of(context).pop();
+                  });
+                } else {
+                  print('ไม่มีโปรโมชั่น');
+                }
               }
             });
           },

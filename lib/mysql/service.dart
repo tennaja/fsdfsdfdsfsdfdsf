@@ -10,7 +10,7 @@ import 'package:project_bekery/model/user_basket.dart';
 import '../model/source_model.dart';
 import 'user.dart';
 
-class Services {
+class Art_Services {
   var url = Uri.parse('http://119.59.97.4/~web5/user_actions.php');
   static const _CRETE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_ALL';
@@ -93,25 +93,6 @@ class Services {
       return response.body;
     } catch (e) {
       print('error ${e}');
-      return 'error';
-    }
-  }
-
-  Future<String> addProduct(product_name, product_detail, product_image,
-      product_price, export_product, import_product) async {
-    try {
-      var map = <String, dynamic>{};
-      map["action"] = _ADD_PRODUCT_ACTION;
-      map["product_name"] = product_name;
-      map["product_detail"] = product_detail;
-      map["product_image"] = product_image;
-      map["product_price"] = product_price;
-      map["export_product"] = export_product;
-      map["import_product"] = import_product;
-      final response = await http.post(url, body: map);
-      print("addProduct >> Response:: ${response.body}");
-      return response.body;
-    } catch (e) {
       return 'error';
     }
   }
@@ -420,6 +401,7 @@ class Services {
   Future<List<Import_product>> getimport_product(where) async {
     try {
       var map = <String, dynamic>{};
+      print('Where : ${where}');
       map["action"] = "GET_IMPORT_PRODUCT";
       map["where"] = where;
       print(where);
@@ -694,6 +676,39 @@ class Services {
       map["user_password"] = user_password;
       final response = await http.post(url, body: map);
       print("addUser >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> AddProduct(
+      product_name,
+      product_detail,
+      product_img,
+      product_price,
+      product_quantity,
+      export_product,
+      import_product,
+      producttype,
+      promotion) async {
+    try {
+      print('funtion working....');
+      var map = <String, dynamic>{};
+      map["action"] = "ADD_PRODUCT";
+      map["product_name"] = product_name;
+      map["product_detail"] = product_detail;
+      map["product_img"] = product_img;
+      map["product_price"] = product_price;
+      map["product_quantity"] = product_quantity;
+      map["export_product"] = export_product;
+      map["import_product"] = import_product;
+      map["producttype"] = producttype;
+      map["promotion"] = promotion;
+      print(
+          'value : $product_name,$product_detail,$product_img,$product_price,$product_quantity,$export_product,$import_product,$producttype,$promotion');
+      final response = await http.post(url, body: map);
+      print("AddProduct >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       return 'error';

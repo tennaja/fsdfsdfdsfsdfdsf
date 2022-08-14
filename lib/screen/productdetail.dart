@@ -100,7 +100,12 @@ class _productdetailState extends State<productdetail> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            AppColumn(text: "${data['product_name']}"),
+                            AppColumn(
+                              text: "${data['product_name']}",
+                              quantity: '',
+                              sell: '',
+                              promotion: '',
+                            ),
                             SizedBox(
                               height: height / 42.2,
                             ),

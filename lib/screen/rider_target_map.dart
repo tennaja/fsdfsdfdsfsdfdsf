@@ -121,7 +121,7 @@ class _rider_target_mapState extends State<rider_target_map> {
             child: FloatingActionButton.extended(
               onPressed: () async {
                 String email = await SessionManager().get("email");
-                Services()
+                Art_Services()
                     .rider_update_order(
                         email, 'ส่งเรียบร้อย', widget.order_id.toString())
                     .then((value) => {

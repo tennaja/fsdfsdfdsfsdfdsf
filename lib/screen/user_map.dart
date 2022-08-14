@@ -169,7 +169,7 @@ class _MapsPageState extends State<user_MapsPage> {
     print(userLocation.latitude.toString());
     print(userLocation.longitude.toString());
     print(user_email.toString());
-    Services()
+    Art_Services()
         .update_map_user(userLocation.latitude.toString(),
             userLocation.longitude.toString(), user_email.toString())
         .then((value) => {

@@ -16,7 +16,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 _addEmployee(user_name, user_surname, user_phone, user_email, user_password) {
-  Services()
+  Art_Services()
       .addUser(user_name, user_surname, user_phone, user_email, user_password);
 }
 
@@ -268,7 +268,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       fromKey.currentState!.save();
                                       // ignore: avoid_print
                                       try {
-                                        Services()
+                                        Art_Services()
                                             .getonlyUser(customer.email)
                                             .then((value) {
                                           print('USER ---> ${value.length}');
