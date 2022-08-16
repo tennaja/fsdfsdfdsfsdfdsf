@@ -174,7 +174,10 @@ class _cart_order_addState extends State<cart_order_add> {
                               ),
                               onPressed: () {
                                 _getImportorder(length);
-                                Navigator.pop(context);
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return user_WelcomeScreen();
+                                }));
                               },
                               child: const Text("ใช่",
                                   style: TextStyle(color: Colors.black)),
@@ -198,7 +201,9 @@ class _cart_order_addState extends State<cart_order_add> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return user_WelcomeScreen();
+              }));
             },
           ),
           backgroundColor: Colors.white.withOpacity(0.1),
@@ -271,20 +276,12 @@ class _cart_order_addState extends State<cart_order_add> {
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 252, 187, 101),
                                                 title:
                                                     const Text('ยกเลิกการซื้อ'),
                                                 content: Text(
                                                     'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
                                                 actions: <Widget>[
                                                   ElevatedButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all<Color>(Colors
-                                                                  .orangeAccent),
-                                                    ),
                                                     onPressed: () =>
                                                         Navigator.of(context)
                                                             .pop(),
@@ -295,12 +292,6 @@ class _cart_order_addState extends State<cart_order_add> {
                                                     ),
                                                   ),
                                                   ElevatedButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all<Color>(Colors
-                                                                  .orangeAccent),
-                                                    ),
                                                     onPressed: () {
                                                       Art_Services()
                                                           .deleteonlybasket(

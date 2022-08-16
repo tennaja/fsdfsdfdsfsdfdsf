@@ -538,11 +538,13 @@ class Art_Services {
     }
   }
 
-  Future<List<Export_product>> rider_getonlyExport_product(where) async {
+  Future<List<Export_product>> rider_getonlyExport_product(
+      where, where2) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = "RIDER_GET_ONLYEXPORT_PRODUCT";
       map["where"] = where;
+      map["where2"] = where2;
       final response = await http.post(url, body: map);
       print("rider_getonlyExport_product >> Response:: ${response.body}");
       if (response.statusCode == 200) {

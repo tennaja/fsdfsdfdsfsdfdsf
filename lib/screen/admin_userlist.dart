@@ -182,6 +182,9 @@ class _admin_userdetailState extends State<admin_userdetail> {
   String? username, usersurname, useremail, userrole, userphone;
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      dropdownValue = widget.user_role.toString();
+    });
     return Scaffold(
       extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

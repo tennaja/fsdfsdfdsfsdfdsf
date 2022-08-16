@@ -9,6 +9,7 @@ import 'package:project_bekery/screen/rider_home.dart';
 import 'package:project_bekery/screen/rider_login.dart';
 import 'package:project_bekery/screen/rider_map.dart';
 import 'package:project_bekery/screen/rider_myorder.dart';
+import 'package:project_bekery/screen/user_map.dart';
 import 'package:project_bekery/screen/user_myorder.dart';
 import 'package:project_bekery/screen/user_profire.dart';
 
@@ -76,7 +77,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const List<Widget> _widgetOptions = <Widget>[
     Center(child: rider_allorder()), //หน้า1
 
-    Center(child: rider_MapsPage()), //หน้า2
+    Center(child: user_MapsPage()), //หน้า2
 
     Center(child: rider_myorder()), //หน้า3
 

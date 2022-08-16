@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_import, sized_box_for_whitespace, non_constant_identifier_names
 
+import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:get/get.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/product_model.dart';
+import 'package:project_bekery/model/user_basket.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/order_rice.dart';
@@ -16,8 +18,36 @@ import 'cart_order_add.dart';
 import 'float_add_order.dart';
 import 'home.dart';
 
-class Orderpage extends StatelessWidget {
+class Orderpage extends StatefulWidget {
   const Orderpage({Key? key}) : super(key: key);
+
+  @override
+  State<Orderpage> createState() => _OrderpageState();
+}
+
+class _OrderpageState extends State<Orderpage> {
+  List<User_Basket>? userbasket;
+  int? length;
+  int totalprice = 0;
+  @override
+  void initState() {
+    length ??= 0;
+    super.initState();
+    userbasket = [];
+    _getBasket();
+  }
+
+  _getBasket() async {
+    String email = await SessionManager().get("email");
+    print("function working");
+    Art_Services().getuserbasket(email.toString()).then((basket) {
+      setState(() {
+        userbasket = basket;
+        length = basket.length;
+      });
+      print("Length ${basket.length}");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,19 +95,24 @@ class Orderpage extends StatelessWidget {
               color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
         )),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Color.fromARGB(255, 0, 0, 0),
+          Badge(
+            animationType: BadgeAnimationType.scale,
+            position: BadgePosition.bottomStart(bottom: 5, start: 4),
+            badgeContent: Text('${length.toString()}'),
+            child: IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+              onPressed: () async {
+                String email = await SessionManager().get("email");
+                // do somethingNavigator.push(context,
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return cart_order_add(email);
+                }));
+              },
             ),
-            onPressed: () async {
-              String email = await SessionManager().get("email");
-              // do somethingNavigator.push(context,
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return cart_order_add(email);
-              }));
-            },
-          )
+          ),
         ],
       ),
       resizeToAvoidBottomInset: false,
@@ -92,24 +127,11 @@ class Orderpage extends StatelessWidget {
             children: [
               CarouselSlider(
                   items: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return data_product_sql_more('1');
-                        }));
-                      },
-                      child: Image.network(
-                          'https://www.igetweb.com/themes_v2/portal/assets/img/hero-promotion/promotion-2-detail.jpg'),
-                    ),
-                    InkWell(
-                      child: Image.network(
-                          'https://www.igetweb.com/themes_v2/portal/assets/img/hero-promotion/promotion-1-detail.jpg'),
-                    ),
-                    InkWell(
-                      child: Image.network(
-                          'https://www.friendtellpro.com/wp-content/uploads/2020/09/5f4f86c5N7a6e748c.jpg.dpg_.jpeg'),
-                    )
+                    Image.asset('assets/images/promotion1.jpg'),
+                    Image.asset('assets/images/promotion2.jpg'),
+                    Image.asset('assets/images/promotion3.jpg'),
+                    Image.asset('assets/images/promotion4.jpg'),
+                    Image.asset('assets/images/promotion5.jpg'),
                   ],
                   options: CarouselOptions(
                     height: 150,

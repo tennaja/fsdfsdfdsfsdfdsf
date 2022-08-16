@@ -44,7 +44,7 @@ class _rider_myorderState extends State<rider_myorder> {
     user_email = await SessionManager().get("email");
     print("User : ${user_email}");
     Art_Services()
-        .rider_getonlyExport_product(user_email.toString())
+        .rider_getonlyExport_product(user_email.toString(), 'ของกำลังส่ง')
         .then((value) {
       setState(() {
         user_order = value;
@@ -99,6 +99,19 @@ class _rider_myorderState extends State<rider_myorder> {
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.history,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return rider_history();
+                }));
+              },
+            ),
+          ],
         ),
         body: Container(
           width: double.infinity,
@@ -286,6 +299,233 @@ class _import_order_detailState extends State<user_order_detail> {
               },
             ),
           ],
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+          elevation: 0,
+          title: Center(
+              child: const Text(
+            'รายละเอียดการสั่งซื้อ',
+            style: TextStyle(
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          )),
+        ),
+        backgroundColor: Colors.grey[100],
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.orangeAccent.withOpacity(0.5),
+          child: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: 600,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text('${widget.import_order_id}'),
+                          SizedBox(height: 20),
+                          ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: _Import_product != null
+                                ? (_Import_product?.length ?? 0)
+                                : 0,
+                            itemBuilder: (_, index) => Container(
+                              margin: EdgeInsets.all(5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          'ชื่อสินค้า : ${_Import_product![index].product_name}'),
+                                      Text(
+                                          'จำนวน : ${_Import_product![index].product_amount}'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                          'ราคาต่อชิ้น : ${_Import_product![index].product_price}'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                  'ราคารวม : ${widget.Import_product_pricetotal}'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
+          ),
+        ));
+  }
+}
+
+class rider_history extends StatefulWidget {
+  const rider_history({Key? key}) : super(key: key);
+
+  @override
+  State<rider_history> createState() => _rider_historyState();
+}
+
+class _rider_historyState extends State<rider_history> {
+  List<Export_product>? user_order;
+  String? user_email;
+
+  void initState() {
+    Intl.defaultLocale = 'th';
+    initializeDateFormatting();
+    super.initState();
+    user_order = [];
+    _getImport_product();
+  }
+
+  _getImport_product() async {
+    user_email = await SessionManager().get("email");
+    print("User : ${user_email}");
+    Art_Services()
+        .rider_getonlyExport_product(user_email.toString(), 'ส่งเรียบร้อย')
+        .then((value) {
+      setState(() {
+        user_order = value;
+      });
+
+      print('จำนวข้อมูล : ${value.length}');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: Colors.white.withOpacity(0.1),
+          elevation: 0,
+          title: Center(
+              child: const Text(
+            'ประวัติการส่งของฉัน',
+            style: TextStyle(
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          )),
+        ),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.orangeAccent.withOpacity(0.5),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
+                itemBuilder: (_, index) => Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return user_order_history_detail(
+                                    user_order![index].order_id.toString(),
+                                    user_order![index].total_price.toString());
+                              }));
+                            },
+                          ),
+                          title: Text(
+                              '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
+                          subtitle: Text(
+                              'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
+                          tileColor: Colors.orangeAccent,
+                        ),
+                      ),
+                    )),
+          ),
+        ));
+  }
+}
+
+class user_order_history_detail extends StatefulWidget {
+  final String import_order_id, Import_product_pricetotal;
+  const user_order_history_detail(
+      this.import_order_id, this.Import_product_pricetotal,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  State<user_order_history_detail> createState() =>
+      user_order_history_detailState();
+}
+
+class user_order_history_detailState extends State<user_order_history_detail> {
+  List<Export_product_detail>? _Import_product;
+  Location location = Location();
+
+  @override
+  void initState() {
+    super.initState();
+    _Import_product = [];
+    _getImport_product();
+  }
+
+  _getImport_product() {
+    print("function working");
+    Art_Services()
+        .getuserorder_detail(widget.import_order_id)
+        .then((Import_detail) {
+      setState(() {
+        _Import_product = Import_detail;
+      });
+
+      print('จำนวข้อมูล : ${Import_detail.length}');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,

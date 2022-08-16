@@ -42,8 +42,55 @@ class _user_profileState extends State<user_profile> {
   Widget build(BuildContext context) {
     if (user?.length == 0) {
       return Scaffold(
-        appBar: AppBar(title: Text('Loadding..')),
-        body: Container(),
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              showDialog<bool>(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('ออกจากระบบ'),
+                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("ไม่"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              CupertinoPageRoute(
+                                  builder: (context) => LoginPage()),
+                              (_) => false,
+                            );
+                          },
+                          child: const Text("ใช่"),
+                        ),
+                      ],
+                    );
+                  });
+            },
+          ),
+          backgroundColor: Colors.white.withOpacity(0.1),
+          elevation: 0,
+          title: Center(
+              child: const Text(
+            'รายชื่อสมาชิก',
+            style: TextStyle(
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          )),
+          actions: <Widget>[],
+        ),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.orangeAccent.withOpacity(0.5),
+        ),
       );
     }
     return Scaffold(
@@ -135,7 +182,15 @@ class _user_profileState extends State<user_profile> {
           style: TextStyle(
               color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
         )),
-        actions: <Widget>[],
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.password_sharp,
+              color: Colors.black,
+            ),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Container(
         width: double.infinity,
@@ -215,6 +270,7 @@ class _user_profileState extends State<user_profile> {
                                 onSaved: (email) {
                                   useremail = email!;
                                 },
+                                enabled: false,
                                 autofocus: false,
                                 initialValue: "${user![0].user_email}",
                                 decoration: InputDecoration(

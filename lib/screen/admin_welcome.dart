@@ -87,6 +87,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     Center(
       child: admin_allproduct(),
+    ),
+    Center(
+      child: admin_allproduct(),
     ), //หน้า4
   ];
 
@@ -122,6 +125,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.production_quantity_limits),
             label: 'โปรไฟล์',
+            backgroundColor: Colors.orangeAccent,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'รายงาน',
             backgroundColor: Colors.orangeAccent,
           ),
         ],

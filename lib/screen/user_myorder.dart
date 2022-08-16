@@ -159,19 +159,25 @@ class _user_orderState extends State<user_order> {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return user_order_detail_cancel(
-                                      user_order![index].order_id.toString(),
-                                      user_order![index]
-                                          .total_price
-                                          .toString());
+                                    user_order![index].order_id.toString(),
+                                    user_order![index].total_price.toString(),
+                                    user_order![index]
+                                        .order_responsible_person
+                                        .toString(),
+                                    user_order![index].date.toString(),
+                                  );
                                 }));
                               } else {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return user_order_detail_onlysee(
-                                      user_order![index].order_id.toString(),
-                                      user_order![index]
-                                          .total_price
-                                          .toString());
+                                    user_order![index].order_id.toString(),
+                                    user_order![index].total_price.toString(),
+                                    user_order![index]
+                                        .order_responsible_person
+                                        .toString(),
+                                    user_order![index].date.toString(),
+                                  );
                                 }));
                               }
                             },
@@ -192,9 +198,15 @@ class _user_orderState extends State<user_order> {
 }
 
 class user_order_detail_onlysee extends StatefulWidget {
-  final String import_order_id, Import_product_pricetotal;
+  final String import_order_id,
+      Import_product_pricetotal,
+      order_responsible_person,
+      orderdate;
   const user_order_detail_onlysee(
-      this.import_order_id, this.Import_product_pricetotal,
+      this.import_order_id,
+      this.Import_product_pricetotal,
+      this.order_responsible_person,
+      this.orderdate,
       {Key? key})
       : super(key: key);
 
@@ -265,6 +277,11 @@ class user_order_detail_onlyseeState extends State<user_order_detail_onlysee> {
                         children: [
                           Text('${widget.import_order_id}'),
                           SizedBox(height: 20),
+                          Text('สั่งในวันที่ : ${widget.orderdate}'),
+                          SizedBox(height: 20),
+                          Text(
+                              'รับผิดชอบโดย :${widget.order_responsible_person}'),
+                          SizedBox(height: 20),
                           ListView.builder(
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,
@@ -295,6 +312,16 @@ class user_order_detail_onlyseeState extends State<user_order_detail_onlysee> {
                                     ],
                                   ),
                                   SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('โปรโมชั่น : '),
+                                      Text('ราคารวม : '),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Divider(color: Colors.black)
                                 ],
                               ),
                             ),
@@ -318,9 +345,15 @@ class user_order_detail_onlyseeState extends State<user_order_detail_onlysee> {
 }
 
 class user_order_detail_cancel extends StatefulWidget {
-  final String import_order_id, Import_product_pricetotal;
+  final String import_order_id,
+      Import_product_pricetotal,
+      order_responsible_person,
+      orderdate;
   const user_order_detail_cancel(
-      this.import_order_id, this.Import_product_pricetotal,
+      this.import_order_id,
+      this.Import_product_pricetotal,
+      this.order_responsible_person,
+      this.orderdate,
       {Key? key})
       : super(key: key);
 
@@ -420,6 +453,11 @@ class user_order_detaill_cancelState extends State<user_order_detail_cancel> {
                       child: Column(
                         children: [
                           Text('${widget.import_order_id}'),
+                          SizedBox(height: 20),
+                          Text('สั่งในวันที่ : ${widget.orderdate}'),
+                          SizedBox(height: 20),
+                          Text(
+                              'รับผิดชอบโดย :${widget.order_responsible_person}'),
                           SizedBox(height: 20),
                           ListView.builder(
                             scrollDirection: Axis.vertical,

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:project_bekery/screen/user_welcome.dart';
 import 'package:project_bekery/widgets/app_column.dart';
 import 'package:project_bekery/widgets/app_icon.dart';
 import 'package:project_bekery/widgets/big_text.dart';
@@ -452,7 +453,10 @@ class _Import_quantityState extends State<Import_quantity> {
                         backgroundColor: Color.fromARGB(255, 0, 255, 13),
                         textColor: Colors.white,
                         fontSize: 16.0);
-                    Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return user_WelcomeScreen();
+                    }));
                   });
                 } else if (widget.proudct_promotion == 'โปรโมชั่น 20%') {
                   print('โปรโมชั่น 20%');
@@ -472,7 +476,10 @@ class _Import_quantityState extends State<Import_quantity> {
                         backgroundColor: Color.fromARGB(255, 0, 255, 13),
                         textColor: Colors.white,
                         fontSize: 16.0);
-                    Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return user_WelcomeScreen();
+                    }));
                   });
                 } else if (widget.proudct_promotion == 'โปรโมชั่น 30%') {
                   print('โปรโมชั่น 30%');
@@ -492,7 +499,10 @@ class _Import_quantityState extends State<Import_quantity> {
                         backgroundColor: Color.fromARGB(255, 0, 255, 13),
                         textColor: Colors.white,
                         fontSize: 16.0);
-                    Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return user_WelcomeScreen();
+                    }));
                   });
                 } else if (widget.proudct_promotion == 'โปรโมชั่น 50%') {
                   print('โปรโมชั่น 50%');
@@ -512,7 +522,10 @@ class _Import_quantityState extends State<Import_quantity> {
                         backgroundColor: Color.fromARGB(255, 0, 255, 13),
                         textColor: Colors.white,
                         fontSize: 16.0);
-                    Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return user_WelcomeScreen();
+                    }));
                   });
                 } else if (widget.proudct_promotion ==
                     'โปรโมชั่น ซื้อ 1 แถม 1') {
@@ -531,10 +544,32 @@ class _Import_quantityState extends State<Import_quantity> {
                         backgroundColor: Color.fromARGB(255, 0, 255, 13),
                         textColor: Colors.white,
                         fontSize: 16.0);
-                    Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return user_WelcomeScreen();
+                    }));
                   });
                 } else {
                   print('ไม่มีโปรโมชั่น');
+                  int totalprice = int.parse(widget.product_price) * quantity;
+                  print('Totalprice : ${totalprice.toString()}');
+                  Art_Services()
+                      .user_add_basket(widget.product_id, quantity,
+                          totalprice.toString(), email)
+                      .then((value) {
+                    Fluttertoast.showToast(
+                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return user_WelcomeScreen();
+                    }));
+                  });
                 }
               }
             });
@@ -546,7 +581,7 @@ class _Import_quantityState extends State<Import_quantity> {
                   left: height / 42.2,
                   right: height / 42.2),
               child: Bigtext(
-                text: "200 บาท | เพิ่มลงตระกร้า ",
+                text: "${widget.product_price} บาท | เพิ่มลงตระกร้า ",
                 color: Colors.white,
                 size: 16,
               ),

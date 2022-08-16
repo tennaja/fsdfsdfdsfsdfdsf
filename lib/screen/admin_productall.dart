@@ -310,6 +310,9 @@ class _admin_productdetailState extends State<admin_productdetail> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      promotion = widget.proudct_promotion.toString();
+    });
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 50, right: 20),

@@ -302,8 +302,9 @@
     }
 
     if("RIDER_GET_ONLYEXPORT_PRODUCT" == $action){
+        $where2 = $_POST['where2'];
         $db_data = array();
-        $sql = "SELECT * FROM user_order where order_responsible_person = '$where'";
+        $sql = "SELECT * FROM user_order where order_responsible_person = '$where' AND order_status = '$where2'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){

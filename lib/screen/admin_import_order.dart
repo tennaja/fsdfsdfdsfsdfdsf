@@ -268,7 +268,7 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
                           onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return import_order_detail(
+                              return import_history_detail(
                                   _Import_product![index]
                                       .Import_order_id
                                       .toString(),
@@ -399,6 +399,114 @@ class _import_order_detailState extends State<import_order_detail> {
             ),
           ],
         ),
+        appBar: AppBar(
+          title: Text('รายละเอียดการสั่งซื้อ'),
+          backgroundColor: Colors.blueAccent,
+        ),
+        backgroundColor: Colors.grey[100],
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Container(
+                  height: 600,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text('${widget.import_order_id}'),
+                        SizedBox(height: 20),
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: _Import_product != null
+                              ? (_Import_product?.length ?? 0)
+                              : 0,
+                          itemBuilder: (_, index) => Container(
+                            margin: EdgeInsets.all(5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        'ชื่อสินค้า : ${_Import_product![index].product_name}'),
+                                    Text(
+                                        'จำนวน : ${_Import_product![index].basket_product_quantity}'),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                        'ราคาต่อชิ้น : ${_Import_product![index].product_price}'),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                                'ราคารวม : ${widget.Import_product_pricetotal}'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )),
+        ));
+  }
+}
+
+class import_history_detail extends StatefulWidget {
+  final String import_order_id, Import_product_pricetotal;
+  const import_history_detail(
+      this.import_order_id, this.Import_product_pricetotal,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  State<import_history_detail> createState() => _import_history_detailState();
+}
+
+class _import_history_detailState extends State<import_history_detail> {
+  List<Import_detail>? _Import_product;
+  int? datalength;
+  @override
+  void initState() {
+    super.initState();
+    _Import_product = [];
+    _getImport_product();
+  }
+
+  _getImport_product() {
+    print("function working");
+    Art_Services()
+        .getimport_detail(widget.import_order_id)
+        .then((Import_detail) {
+      setState(() {
+        _Import_product = Import_detail;
+
+        datalength = Import_detail.length;
+      });
+
+      print('จำนวข้อมูล : ${Import_detail.length}');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
         appBar: AppBar(
           title: Text('รายละเอียดการสั่งซื้อ'),
           backgroundColor: Colors.blueAccent,
