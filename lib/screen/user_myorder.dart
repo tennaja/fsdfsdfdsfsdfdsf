@@ -7,6 +7,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -17,6 +18,7 @@ import 'package:project_bekery/model/export_product.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/user_myorderdetail.dart';
+import 'package:project_bekery/widgets/userAppbar.dart';
 
 enum Menu { itemOne, itemTwo, itemThree }
 
@@ -58,142 +60,110 @@ class _user_orderState extends State<user_order> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('ออกจากระบบ'),
-                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text("ไม่"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginPage()),
-                              (_) => false,
-                            );
-                          },
-                          child: const Text("ใช่"),
-                        ),
-                      ],
-                    );
-                  });
-            },
+        body: SliderDrawer(
+      appBar: SliderAppBar(
+        trailing: PopupMenuButton(
+          icon: Icon(
+            Icons.filter_alt_outlined,
+            color: Colors.black,
           ),
-          actions: <Widget>[
-            // This button presents popup menu items.
-            PopupMenuButton(
-              icon: Icon(
-                Icons.filter_alt_outlined,
-                color: Colors.black,
+          onSelected: (value) {
+            print('สถานะ : ${value.toString()}');
+            _getImport_product(value);
+          },
+          itemBuilder: (BuildContext bc) {
+            return const [
+              PopupMenuItem(
+                child: Text("ยังไม่มีใครรับ"),
+                value: 'ยังไม่มีใครรับ',
               ),
-              onSelected: (value) {
-                print('สถานะ : ${value.toString()}');
-                _getImport_product(value);
-              },
-              itemBuilder: (BuildContext bc) {
-                return const [
-                  PopupMenuItem(
-                    child: Text("ยังไม่มีใครรับ"),
-                    value: 'ยังไม่มีใครรับ',
-                  ),
-                  PopupMenuItem(
-                    child: Text("ส่งเรียบร้อย"),
-                    value: 'ส่งเรียบร้อย',
-                  ),
-                  PopupMenuItem(
-                    child: Text("รายการที่ยกเลิก"),
-                    value: 'รายการที่ยกเลิก',
-                  ),
-                  PopupMenuItem(
-                    child: Text("ของกำลังส่ง"),
-                    value: 'ของกำลังส่ง',
-                  )
-                ];
-              },
-            )
-          ],
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
+              PopupMenuItem(
+                child: Text("ส่งเรียบร้อย"),
+                value: 'ส่งเรียบร้อย',
+              ),
+              PopupMenuItem(
+                child: Text("รายการที่ยกเลิก"),
+                value: 'รายการที่ยกเลิก',
+              ),
+              PopupMenuItem(
+                child: Text("ของกำลังส่ง"),
+                value: 'ของกำลังส่ง',
+              )
+            ];
+          },
+        ),
+        appBarHeight: 85,
+        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        title: Container(
+          child: Center(
               child: const Text(
-            'รายการสินค้าของฉัน',
+            'รายการของฉัน',
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
-                itemBuilder: (_, index) => Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              if (user_order![index].order_status ==
-                                  'ยังไม่มีใครรับ') {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return user_order_detail_cancel(
-                                    user_order![index].order_id.toString(),
-                                    user_order![index].total_price.toString(),
-                                    user_order![index]
-                                        .order_responsible_person
-                                        .toString(),
-                                    user_order![index].date.toString(),
-                                  );
-                                }));
-                              } else {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return user_order_detail_onlysee(
-                                    user_order![index].order_id.toString(),
-                                    user_order![index].total_price.toString(),
-                                    user_order![index]
-                                        .order_responsible_person
-                                        .toString(),
-                                    user_order![index].date.toString(),
-                                  );
-                                }));
-                              }
-                            },
+      ),
+      slider: UserAppBar(),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.orangeAccent.withOpacity(0.5),
+        child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
+            itemBuilder: (_, index) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      color: Colors.orangeAccent,
+                      child: ListTile(
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
                           ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          title: Text(
-                              '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
-                          subtitle: Text(
-                              'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
-                          tileColor: Colors.orangeAccent,
+                          onPressed: () {
+                            if (user_order![index].order_status ==
+                                'ยังไม่มีใครรับ') {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return user_order_detail_cancel(
+                                  user_order![index].order_id.toString(),
+                                  user_order![index].total_price.toString(),
+                                  user_order![index]
+                                      .order_responsible_person
+                                      .toString(),
+                                  user_order![index].date.toString(),
+                                );
+                              }));
+                            } else {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return user_order_detail_onlysee(
+                                  user_order![index].order_id.toString(),
+                                  user_order![index].total_price.toString(),
+                                  user_order![index]
+                                      .order_responsible_person
+                                      .toString(),
+                                  user_order![index].date.toString(),
+                                );
+                              }));
+                            }
+                          },
                         ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        title: Text(
+                            '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
+                        subtitle: Text(
+                            'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
                       ),
-                    )),
-          ),
-        ));
+                    ),
+                  ),
+                )),
+      ),
+    ));
   }
 }
 

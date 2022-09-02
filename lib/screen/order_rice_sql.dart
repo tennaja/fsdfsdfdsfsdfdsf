@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:project_bekery/screen/user_order.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
 import 'package:project_bekery/widgets/app_column.dart';
 import 'package:project_bekery/widgets/app_icon.dart';
@@ -455,7 +456,7 @@ class _Import_quantityState extends State<Import_quantity> {
                         fontSize: 16.0);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return user_WelcomeScreen();
+                      return Orderpage();
                     }));
                   });
                 } else if (widget.proudct_promotion == 'โปรโมชั่น 20%') {
@@ -478,7 +479,7 @@ class _Import_quantityState extends State<Import_quantity> {
                         fontSize: 16.0);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return user_WelcomeScreen();
+                      return Orderpage();
                     }));
                   });
                 } else if (widget.proudct_promotion == 'โปรโมชั่น 30%') {
@@ -501,7 +502,7 @@ class _Import_quantityState extends State<Import_quantity> {
                         fontSize: 16.0);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return user_WelcomeScreen();
+                      return Orderpage();
                     }));
                   });
                 } else if (widget.proudct_promotion == 'โปรโมชั่น 50%') {
@@ -524,7 +525,7 @@ class _Import_quantityState extends State<Import_quantity> {
                         fontSize: 16.0);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return user_WelcomeScreen();
+                      return Orderpage();
                     }));
                   });
                 } else if (widget.proudct_promotion ==
@@ -546,7 +547,7 @@ class _Import_quantityState extends State<Import_quantity> {
                         fontSize: 16.0);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return user_WelcomeScreen();
+                      return Orderpage();
                     }));
                   });
                 } else {
@@ -567,7 +568,7 @@ class _Import_quantityState extends State<Import_quantity> {
                         fontSize: 16.0);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return user_WelcomeScreen();
+                      return Orderpage();
                     }));
                   });
                 }

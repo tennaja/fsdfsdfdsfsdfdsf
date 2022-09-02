@@ -7,9 +7,14 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:project_bekery/login/profire_model/customer_model.dart';
 import 'package:project_bekery/login/register.dart';
 import 'package:project_bekery/mysql/service.dart';
+import 'package:project_bekery/screen/admin_import_order.dart';
 import 'package:project_bekery/screen/admin_welcome.dart';
+import 'package:project_bekery/screen/rider_allorder.dart';
 import 'package:project_bekery/screen/rider_welcome.dart';
+import 'package:project_bekery/screen/user_myorder.dart';
+import 'package:project_bekery/screen/user_order.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
+import 'package:project_bekery/widgets/adminAppbar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -19,6 +24,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late bool UserSelected = true;
+  late bool RiderSelected = false;
   final fromKey = GlobalKey<FormState>();
   late String email;
   late String password;
@@ -110,8 +117,88 @@ class _LoginPageState extends State<LoginPage> {
                                 customer.password = password!;
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        RiderSelected = false;
+
+                                        UserSelected = true;
+                                      });
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            height: 20,
+                                            width: 20,
+                                            alignment: Alignment.center,
+                                            margin: EdgeInsets.only(right: 10),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: Color.fromARGB(
+                                                        153, 0, 0, 0))),
+                                            child: UserSelected
+                                                ? Container(
+                                                    margin: EdgeInsets.all(4),
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Color.fromARGB(
+                                                            153, 0, 0, 0)),
+                                                  )
+                                                : SizedBox()),
+                                        Text('Customer',
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    153, 0, 0, 0),
+                                                fontSize: 14.5))
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        UserSelected = false;
+
+                                        RiderSelected = true;
+                                      });
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            height: 20,
+                                            width: 20,
+                                            alignment: Alignment.center,
+                                            margin: EdgeInsets.only(right: 10),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: Color.fromARGB(
+                                                        153, 0, 0, 0))),
+                                            child: RiderSelected
+                                                ? Container(
+                                                    margin: EdgeInsets.all(4),
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Color.fromARGB(
+                                                            153, 0, 0, 0)),
+                                                  )
+                                                : SizedBox()),
+                                        Text('Staff',
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    153, 0, 0, 0),
+                                                fontSize: 14.5))
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             Container(
                               width: 340,
@@ -120,88 +207,99 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () {
                                   if (fromKey.currentState!.validate()) {
                                     fromKey.currentState!.save();
-                                    print('${customer.email}');
-                                    print('${customer.password}');
-                                    Art_Services()
-                                        .Loginuser(
-                                            customer.email, customer.password)
-                                        .then((value) async => {
-                                              print(value.length),
-                                              if (value.isNotEmpty)
-                                                {
-                                                  await SessionManager().set(
-                                                      "email",
-                                                      '${customer.email}'),
-                                                  print(value[0].user_role),
-                                                  print(
-                                                      'Sesion : ${await SessionManager().get("email")}'),
-                                                  if (value[0].user_role ==
-                                                      'customer')
-                                                    {
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                        return user_WelcomeScreen();
-                                                      })),
-                                                    }
-                                                  else if (value[0].user_role ==
-                                                      'rider')
-                                                    {
-                                                      print(SessionManager()
-                                                          .get("email")),
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                        return rider_WelcomeScreen();
-                                                      })),
-                                                    }
-                                                  else if (value[0].user_role ==
-                                                      'admin')
-                                                    {
-                                                      print(SessionManager()
-                                                          .get("email")),
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                        return admin_WelcomeScreen();
-                                                      })),
-                                                    }
-                                                  else
-                                                    {
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              "ไม่มีข้อมูลของตำแหน่ง",
-                                                          toastLength: Toast
-                                                              .LENGTH_SHORT,
-                                                          gravity: ToastGravity
-                                                              .BOTTOM,
-                                                          timeInSecForIosWeb: 1,
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          textColor:
-                                                              Colors.white,
-                                                          fontSize: 16.0),
-                                                    }
-                                                }
-                                              else
-                                                {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "ไม่มีข้อมูลผู้ใช้ในระบบ",
-                                                      toastLength:
-                                                          Toast.LENGTH_SHORT,
-                                                      gravity:
-                                                          ToastGravity.BOTTOM,
-                                                      timeInSecForIosWeb: 1,
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      textColor: Colors.white,
-                                                      fontSize: 16.0),
-                                                }
-                                            });
+                                    if (UserSelected == true) {
+                                      print('เข้าใช้ในถานะUser');
+                                      print('${customer.email}');
+                                      Art_Services()
+                                          .Loginuser(
+                                              customer.email, customer.password)
+                                          .then((value) async => {
+                                                print(value.length),
+                                                if (value.isNotEmpty)
+                                                  {
+                                                    await SessionManager().set(
+                                                        "email",
+                                                        '${customer.email}'),
+                                                    print(value[0].user_role),
+                                                    print(
+                                                        'Sesion : ${await SessionManager().get("email")}'),
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) {
+                                                      return Orderpage();
+                                                    })),
+                                                  }
+                                                else
+                                                  {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "ไม่มีข้อมูลผู้ใช้ในระบบของUser",
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity:
+                                                            ToastGravity.BOTTOM,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        textColor: Colors.white,
+                                                        fontSize: 16.0),
+                                                  }
+                                              });
+                                    } else {
+                                      print('เข้าใช้ในถานะStaff');
+                                      print('${customer.email}');
+                                      Art_Services()
+                                          .Loginrider(
+                                              customer.email, customer.password)
+                                          .then((value) async => {
+                                                print(value.length),
+                                                if (value.isNotEmpty)
+                                                  {
+                                                    await SessionManager().set(
+                                                        "email",
+                                                        '${customer.email}'),
+                                                    print(value[0].rider_role),
+                                                    print(
+                                                        'Sesion : ${await SessionManager().get("email")}'),
+                                                    if (value[0].rider_role ==
+                                                        'rider')
+                                                      {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return rider_allorder();
+                                                        })),
+                                                      }
+                                                    else if (value[0]
+                                                            .rider_role ==
+                                                        'admin')
+                                                      {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return admin_import_order();
+                                                        })),
+                                                      }
+                                                  }
+                                                else
+                                                  {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "ไม่มีข้อมูลผู้ใช้ในระบบของStaff",
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity:
+                                                            ToastGravity.BOTTOM,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        textColor: Colors.white,
+                                                        fontSize: 16.0),
+                                                  }
+                                              });
+                                    }
                                   } else {
                                     Fluttertoast.showToast(
                                         msg: "ไม่มีข้อมูลผู้ใช้ในระบบ",
@@ -212,6 +310,31 @@ class _LoginPageState extends State<LoginPage> {
                                         textColor: Colors.white,
                                         fontSize: 16.0);
                                   }
+
+                                  /*
+
+
+                                print(SessionManager()
+                                                          .get("email")),
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return rider_WelcomeScreen();
+                                                      })),
+                                                    
+                                                  
+                                                      print(SessionManager()
+                                                          .get("email")),
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return admin_WelcomeScreen();
+                                                      })),
+
+
+                                  */
                                 },
                                 style: ButtonStyle(
                                     foregroundColor:

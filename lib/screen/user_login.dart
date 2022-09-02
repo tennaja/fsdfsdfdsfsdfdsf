@@ -1,5 +1,5 @@
 // ignore_for_file: unused_import, camel_case_types, non_constant_identifier_names, avoid_print, duplicate_ignore, avoid_web_libraries_in_flutter
-
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -215,3 +215,4 @@ class LoginScreenState extends State<user_LoginScreen> {
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
+*/

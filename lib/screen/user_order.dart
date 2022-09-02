@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:get/get.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/product_model.dart';
@@ -14,6 +15,7 @@ import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/order_rice.dart';
 import 'package:project_bekery/screen/order_rice_sql.dart';
+import 'package:project_bekery/widgets/userAppbar.dart';
 import 'cart_order_add.dart';
 import 'float_add_order.dart';
 import 'home.dart';
@@ -53,49 +55,21 @@ class _OrderpageState extends State<Orderpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
+      body: SliderDrawer(
+        appBar: SliderAppBar(
+          appBarHeight: 85,
+          appBarColor: Color.fromARGB(255, 255, 222, 178),
+          title: Container(
+            child: Center(
+                child: const Text(
+              'รายการสินค้า',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
+            )),
           ),
-          onPressed: () {
-            showDialog<bool>(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('ออกจากระบบ'),
-                    content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text("ไม่"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            CupertinoPageRoute(
-                                builder: (context) => LoginPage()),
-                            (_) => false,
-                          );
-                        },
-                        child: const Text("ใช่"),
-                      ),
-                    ],
-                  );
-                });
-          },
-        ),
-        backgroundColor: Colors.white.withOpacity(0.1),
-        elevation: 0,
-        title: Center(
-            child: const Text(
-          'รายการสินค้า',
-          style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-        )),
-        actions: <Widget>[
-          Badge(
+          trailing: Badge(
             animationType: BadgeAnimationType.scale,
             position: BadgePosition.bottomStart(bottom: 5, start: 4),
             badgeContent: Text('${length.toString()}'),
@@ -113,149 +87,151 @@ class _OrderpageState extends State<Orderpage> {
               },
             ),
           ),
-        ],
-      ),
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.orangeAccent.withOpacity(0.5),
-        child: Padding(
-          padding:
-              const EdgeInsets.only(top: 10, right: 10, left: 10, bottom: 10),
-          child: ListView(
-            children: [
-              CarouselSlider(
-                  items: [
-                    Image.asset('assets/images/promotion1.jpg'),
-                    Image.asset('assets/images/promotion2.jpg'),
-                    Image.asset('assets/images/promotion3.jpg'),
-                    Image.asset('assets/images/promotion4.jpg'),
-                    Image.asset('assets/images/promotion5.jpg'),
-                  ],
-                  options: CarouselOptions(
-                    height: 150,
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 0.8,
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    reverse: false,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enlargeCenterPage: true,
+        ),
+        slider: UserAppBar(),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.orangeAccent.withOpacity(0.5),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+            child: ListView(
+              children: [
+                CarouselSlider(
+                    items: [
+                      Image.asset('assets/images/promotion1.jpg'),
+                      Image.asset('assets/images/promotion2.jpg'),
+                      Image.asset('assets/images/promotion3.jpg'),
+                      Image.asset('assets/images/promotion4.jpg'),
+                      Image.asset('assets/images/promotion5.jpg'),
+                    ],
+                    options: CarouselOptions(
+                      height: 150,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.8,
+                      initialPage: 0,
+                      enableInfiniteScroll: true,
+                      reverse: false,
+                      autoPlay: true,
+                      autoPlayInterval: Duration(seconds: 3),
+                      autoPlayAnimationDuration: Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enlargeCenterPage: true,
+                      scrollDirection: Axis.horizontal,
+                    )),
+                /*Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [Text("ข้าวสาร"), Text("ทั้งหมด")],
+                  ),
+                ),*/
+                Container(
+                  height: 50.0,
+                  child: ListView(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30.0))),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.orangeAccent),
+                            ),
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return data_product_sql_more('1');
+                              }));
+                            },
+                            child: Text('ข้าวสาร'),
+                          ),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30.0))),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.orangeAccent),
+                            ),
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return data_product_sql_more('2');
+                              }));
+                            },
+                            child: Text('อุปกรณ์เครื่องใช้ในครัว'),
+                          ),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30.0))),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.orangeAccent),
+                            ),
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return data_product_sql_more('3');
+                              }));
+                            },
+                            child: Text('เครื่องปรุง'),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  height: 225.0,
+                  child: ListView(
                     scrollDirection: Axis.horizontal,
-                  )),
-              /*Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("ข้าวสาร"), Text("ทั้งหมด")],
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          data_product_sql('1'),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),*/
-              Container(
-                height: 50.0,
-                child: ListView(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0))),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.orangeAccent),
-                          ),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return data_product_sql_more('1');
-                            }));
-                          },
-                          child: Text('ข้าวสาร'),
-                        ),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0))),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.orangeAccent),
-                          ),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return data_product_sql_more('2');
-                            }));
-                          },
-                          child: Text('อุปกรณ์เครื่องใช้ในครัว'),
-                        ),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0))),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.orangeAccent),
-                          ),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return data_product_sql_more('3');
-                            }));
-                          },
-                          child: Text('เครื่องปรุง'),
-                        )
-                      ],
-                    ),
-                  ],
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  height: 225.0,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          data_product_sql('2'),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                height: 225.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        data_product_sql('1'),
-                      ],
-                    )
-                  ],
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  height: 225.0,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          data_product_sql('3'),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                height: 225.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        data_product_sql('2'),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                height: 225.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        data_product_sql('3'),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

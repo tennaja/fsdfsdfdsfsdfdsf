@@ -4,12 +4,14 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/admin_welcome.dart';
+import 'package:project_bekery/widgets/adminAppbar.dart';
 
 class admin_Userlist extends StatefulWidget {
   const admin_Userlist({Key? key}) : super(key: key);
@@ -38,86 +40,57 @@ class _admin_UserlistState extends State<admin_Userlist> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('ออกจากระบบ'),
-                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text("ไม่"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginPage()),
-                              (_) => false,
-                            );
-                          },
-                          child: const Text("ใช่"),
-                        ),
-                      ],
-                    );
-                  });
-            },
+        body: SliderDrawer(
+      appBar: SliderAppBar(
+        trailing: PopupMenuButton(
+          icon: Icon(
+            Icons.filter_alt_outlined,
+            color: Colors.black,
           ),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
+          onSelected: (value) {
+            print('สถานะ : ${value.toString()}');
+            _getuserdata(value.toString());
+          },
+          itemBuilder: (BuildContext bc) {
+            return const [
+              PopupMenuItem(
+                child: Text("แสดงข้อมูลลูกค้า"),
+                value: 'customer',
+              ),
+              PopupMenuItem(
+                child: Text("แสดงข้อมูลคนส่ง"),
+                value: 'rider',
+              )
+            ];
+          },
+        ),
+        appBarHeight: 85,
+        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        title: Container(
+          child: Center(
               child: const Text(
-            'รายชื่อสมาชิก',
+            'รายการนำเข้าสินค้า',
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
-          actions: <Widget>[
-            PopupMenuButton(
-              icon: Icon(
-                Icons.filter_alt_outlined,
-                color: Colors.black,
-              ),
-              onSelected: (value) {
-                print('สถานะ : ${value.toString()}');
-                _getuserdata(value.toString());
-              },
-              itemBuilder: (BuildContext bc) {
-                return const [
-                  PopupMenuItem(
-                    child: Text("แสดงข้อมูลลูกค้า"),
-                    value: 'customer',
-                  ),
-                  PopupMenuItem(
-                    child: Text("แสดงข้อมูลคนส่ง"),
-                    value: 'rider',
-                  )
-                ];
-              },
-            )
-          ],
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: user != null ? (user?.length ?? 0) : 0,
-                itemBuilder: (_, index) => Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+      ),
+      slider: AdminAppBar(),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.orangeAccent.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: user != null ? (user?.length ?? 0) : 0,
+              itemBuilder: (_, index) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        color: Colors.orangeAccent,
                         child: ListTile(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
@@ -142,9 +115,11 @@ class _admin_UserlistState extends State<admin_Userlist> {
                           },
                         ),
                       ),
-                    )),
-          ),
-        ));
+                    ),
+                  )),
+        ),
+      ),
+    ));
   }
 }
 

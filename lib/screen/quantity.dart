@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:project_bekery/screen/productdetail.dart';
+import 'package:project_bekery/screen/user_order.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
 
 import '../widgets/big_text.dart';
@@ -146,7 +147,7 @@ class _product_quantityState extends State<product_quantity> {
                           fontSize: 16.0);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return user_WelcomeScreen();
+                        return Orderpage();
                       }));
                     });
                   } catch (e) {
@@ -235,7 +236,7 @@ class _product_quantityState extends State<product_quantity> {
                         fontSize: 16.0);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return user_WelcomeScreen();
+                      return Orderpage();
                     }));
                   });
                 } catch (e) {

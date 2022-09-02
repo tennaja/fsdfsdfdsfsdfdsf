@@ -3,17 +3,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/product_model.dart';
+import 'package:project_bekery/model/producttype.dart';
+import 'package:project_bekery/model/promotion_model.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/float_add_order.dart';
 import 'package:project_bekery/script/firebaseapi.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:project_bekery/widgets/adminAppbar.dart';
 
 class admin_allproduct extends StatefulWidget {
   const admin_allproduct({Key? key}) : super(key: key);
@@ -46,104 +50,57 @@ class _admin_allproductState extends State<admin_allproduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('ออกจากระบบ'),
-                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text("ไม่"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginPage()),
-                              (_) => false,
-                            );
-                          },
-                          child: const Text("ใช่"),
-                        ),
-                      ],
-                    );
-                  });
-            },
+        body: SliderDrawer(
+      appBar: SliderAppBar(
+        trailing: PopupMenuButton(
+          icon: Icon(
+            Icons.filter_alt_outlined,
+            color: Colors.black,
           ),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
-              child: Text(
-            'รายชื่อสินค้าในคลัง',
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-          )),
-          actions: <Widget>[
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return add_product_order();
-                    }));
-                  },
-                ),
-                PopupMenuButton(
-                  icon: Icon(
-                    Icons.filter_alt_outlined,
-                    color: Colors.black,
-                  ),
-                  onSelected: (value) {
-                    print('สถานะ : ${value.toString()}');
-                    _getProduct(value);
-                  },
-                  itemBuilder: (BuildContext bc) {
-                    return const [
-                      PopupMenuItem(
-                        child: Text("สินค้าใกล้หมด"),
-                        value:
-                            'SELECT * FROM `product` ORDER BY product_quantity ASC',
-                      ),
-                      PopupMenuItem(
-                        child: Text("สินค้าขายดี"),
-                        value:
-                            'SELECT * FROM `product` ORDER BY export_product DESC',
-                      ),
-                    ];
-                  },
-                )
-              ],
-            )
-          ],
+          onSelected: (value) {
+            print('สถานะ : ${value.toString()}');
+            _getProduct(value);
+          },
+          itemBuilder: (BuildContext bc) {
+            return const [
+              PopupMenuItem(
+                child: Text("สินค้าใกล้หมด"),
+                value: 'SELECT * FROM `product` ORDER BY product_quantity ASC',
+              ),
+              PopupMenuItem(
+                child: Text("สินค้าขายดี"),
+                value: 'SELECT * FROM `product` ORDER BY export_product DESC',
+              ),
+            ];
+          },
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _product != null ? (_product?.length ?? 0) : 0,
-                itemBuilder: (_, index) => Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+        appBarHeight: 85,
+        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        title: Container(
+          child: Center(
+              child: const Text(
+            'รายการนำเข้าสินค้า',
+            style: TextStyle(
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          )),
+        ),
+      ),
+      slider: AdminAppBar(),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.orangeAccent.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: _product != null ? (_product?.length ?? 0) : 0,
+              itemBuilder: (_, index) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        color: Colors.orangeAccent,
                         child: ListTile(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
@@ -183,9 +140,11 @@ class _admin_allproductState extends State<admin_allproduct> {
                           },
                         ),
                       ),
-                    )),
-          ),
-        ));
+                    ),
+                  )),
+        ),
+      ),
+    ));
   }
 }
 
@@ -264,6 +223,44 @@ class _admin_productdetailState extends State<admin_productdetail> {
   String selecttype = '';
   String dropdownValue = 'ประเภทข้าวสาร';
   String promotion = 'ไม่มีโปรโมชั่น';
+  List<Promotion>? promotionlist;
+  List<String> promotionnamelist = [];
+  List<Producttype>? producttypelist;
+  List<String> producttypenamelist = [];
+
+  void initState() {
+    super.initState();
+    _getProduct();
+  }
+
+  _getProduct() {
+    print("function working");
+    Art_Services().getall_promotion().then((promotion) {
+      setState(() {
+        promotionlist = promotion;
+      });
+      print("Length ${promotion.length}");
+      print(promotionlist![0].promotion_name);
+      for (var i = 0; i < promotion.length; i++) {
+        setState(() {
+          promotionnamelist.insert(i, '${promotionlist![i].promotion_name}');
+        });
+      }
+      print('promotionnamelist : ${promotionnamelist}');
+    });
+    Art_Services().getall_producttype().then((producttype) {
+      setState(() {
+        producttypelist = producttype;
+      });
+      for (var i = 0; i < producttype.length; i++) {
+        setState(() {
+          producttypenamelist.insert(
+              i, '${producttypelist![i].product_type_name}');
+        });
+      }
+      print('promotionnamelist : ${producttypenamelist}');
+    });
+  }
 
   Future pickImage_carmera() async {
     try {
@@ -389,7 +386,10 @@ class _admin_productdetailState extends State<admin_productdetail> {
                               backgroundColor: Color.fromARGB(255, 13, 255, 0),
                               textColor: Colors.white,
                               fontSize: 16.0);
-                          Navigator.pop(context);
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return admin_allproduct();
+                          }));
                         }
                       }
                     }),
@@ -405,7 +405,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
                     30), //border raiuds of dropdown button
               ),
               child: SizedBox(
-                width: 150,
+                width: 130,
                 height: 35,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -426,7 +426,10 @@ class _admin_productdetailState extends State<admin_productdetail> {
                           backgroundColor: Color.fromARGB(255, 255, 0, 0),
                           textColor: Colors.white,
                           fontSize: 16.0);
-                      Navigator.pop(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return admin_allproduct();
+                      }));
                       /*uploadimage()*/
                     }),
               ),
@@ -636,14 +639,8 @@ class _admin_productdetailState extends State<admin_productdetail> {
                             },
                             // ignore: prefer_const_literals_to_create_immutables
 
-                            items: <String>[
-                              'ไม่มีโปรโมชั่น',
-                              'โปรโมชั่น 10%',
-                              'โปรโมชั่น 20%',
-                              'โปรโมชั่น 30%',
-                              'โปรโมชั่น 50%',
-                              'โปรโมชั่น ซื้อ 1 แถม 1'
-                            ].map<DropdownMenuItem<String>>((String value) {
+                            items: promotionnamelist
+                                .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: SizedBox(

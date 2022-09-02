@@ -7,8 +7,8 @@ import 'package:project_bekery/model/profile.dart';
 import 'package:project_bekery/screen/rider_allorder.dart';
 import 'package:project_bekery/screen/rider_home.dart';
 import 'package:project_bekery/screen/rider_login.dart';
-import 'package:project_bekery/screen/rider_map.dart';
 import 'package:project_bekery/screen/rider_myorder.dart';
+import 'package:project_bekery/screen/rider_profire.dart';
 import 'package:project_bekery/screen/user_map.dart';
 import 'package:project_bekery/screen/user_myorder.dart';
 import 'package:project_bekery/screen/user_profire.dart';
@@ -81,7 +81,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     Center(child: rider_myorder()), //หน้า3
 
-    Center(child: user_profile()), //หน้า4
+    Center(child: rider_profire()), //หน้า4
   ];
 
   void _onItemTapped(int index) {

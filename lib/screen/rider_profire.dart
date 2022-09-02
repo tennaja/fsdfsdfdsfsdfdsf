@@ -9,23 +9,25 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/profile.dart';
+import 'package:project_bekery/mysql/rider.dart';
 import 'package:project_bekery/mysql/service.dart';
-import 'package:project_bekery/mysql/user.dart';
+import 'package:project_bekery/mysql/rider.dart';
 import 'package:project_bekery/screen/home.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
+import 'package:project_bekery/widgets/riderAppbar.dart';
 import 'package:project_bekery/widgets/userAppbar.dart';
 
-class user_profile extends StatefulWidget {
-  const user_profile({Key? key}) : super(key: key);
+class rider_profire extends StatefulWidget {
+  const rider_profire({Key? key}) : super(key: key);
 
   @override
   _user_profileState createState() => _user_profileState();
 }
 
-class _user_profileState extends State<user_profile> {
+class _user_profileState extends State<rider_profire> {
   final fromKey = GlobalKey<FormState>();
   String? username, usersurname, useremail, userrole, userphone, user_email;
-  List<User>? user = [];
+  List<Rider>? rider = [];
   void initState() {
     super.initState();
     _getuserdata();
@@ -33,9 +35,9 @@ class _user_profileState extends State<user_profile> {
 
   _getuserdata() async {
     user_email = await SessionManager().get("email");
-    Art_Services().getonlyUser(user_email.toString()).then((datauser) => {
+    Art_Services().getonlyRider(user_email.toString()).then((datauser) => {
           setState(() {
-            user = datauser;
+            rider = datauser;
           }),
         });
   }
@@ -43,7 +45,7 @@ class _user_profileState extends State<user_profile> {
   bool _isObscure = true;
   @override
   Widget build(BuildContext context) {
-    if (user?.length == 0) {
+    if (rider?.length == 0) {
       return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -104,10 +106,10 @@ class _user_profileState extends State<user_profile> {
               if (fromKey.currentState!.validate()) {
                 fromKey.currentState!.save();
                 print(
-                    'ID : ${user![0].user_id}\n Name : ${user![0].user_name}\n Surname : ${user![0].user_surname} \n Email : ${user![0].user_email}\n Phone : ${user![0].user_phone}');
+                    'ID : ${rider![0].rider_id}\n Name : ${rider![0].rider_name}\n Surname : ${rider![0].rider_surname} \n Email : ${rider![0].rider_email}\n Phone : ${rider![0].rider_phone}');
                 Art_Services()
-                    .update_user(user![0].user_id, username, usersurname,
-                        useremail, 'customer', userphone)
+                    .update_rider(rider![0].rider_id, username, usersurname,
+                        useremail, 'rider', userphone)
                     .then((value) => {
                           Fluttertoast.showToast(
                               msg: "แก้ไขข้อมูลเรียบร้อย",
@@ -146,7 +148,7 @@ class _user_profileState extends State<user_profile> {
             )),
           ),
         ),
-        slider: UserAppBar(),
+        slider: RiderAppBar(),
         child: Container(
           width: double.infinity,
           height: double.infinity,
@@ -175,8 +177,9 @@ class _user_profileState extends State<user_profile> {
                                         username = name!;
                                       },
                                       autofocus: false,
-                                      initialValue: "${user![0].user_name}",
+                                      initialValue: "${rider![0].rider_name}",
                                       decoration: InputDecoration(
+                                        labelText: 'ชื่อจริง',
                                         fillColor: Colors.white,
                                         prefixIcon: const Icon(
                                           Icons.person,
@@ -200,7 +203,8 @@ class _user_profileState extends State<user_profile> {
                                         usersurname = surname!;
                                       },
                                       autofocus: false,
-                                      initialValue: "${user![0].user_surname}",
+                                      initialValue:
+                                          "${rider![0].rider_surname}",
                                       decoration: InputDecoration(
                                         label: Text('นามสกุล'),
                                         prefixIcon: const Icon(
@@ -225,7 +229,7 @@ class _user_profileState extends State<user_profile> {
                                 },
                                 enabled: false,
                                 autofocus: false,
-                                initialValue: "${user![0].user_email}",
+                                initialValue: "${rider![0].rider_email}",
                                 decoration: InputDecoration(
                                   label: Text('อีเมล์'),
                                   prefixIcon: const Icon(
@@ -245,7 +249,7 @@ class _user_profileState extends State<user_profile> {
                                   userphone = phone!;
                                 },
                                 autofocus: false,
-                                initialValue: "${user![0].user_phone}",
+                                initialValue: "${rider![0].rider_phone}",
                                 decoration: InputDecoration(
                                   label: Text('เบอร์โทรศัพท์'),
                                   prefixIcon: const Icon(
@@ -262,7 +266,7 @@ class _user_profileState extends State<user_profile> {
                               ),
                               TextFormField(
                                 readOnly: true,
-                                initialValue: "${user![0].user_password}",
+                                initialValue: "${rider![0].rider_password}",
                                 obscureText: _isObscure,
                                 decoration: InputDecoration(
                                     prefixIcon: const Icon(

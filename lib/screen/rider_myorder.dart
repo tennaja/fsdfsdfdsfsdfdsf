@@ -6,6 +6,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -20,6 +21,7 @@ import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/rider_myorderdetail.dart';
 import 'package:project_bekery/screen/rider_orderdetail.dart';
 import 'package:project_bekery/screen/rider_target_map.dart';
+import 'package:project_bekery/widgets/riderAppbar.dart';
 
 class rider_myorder extends StatefulWidget {
   const rider_myorder({Key? key}) : super(key: key);
@@ -58,67 +60,26 @@ class _rider_myorderState extends State<rider_myorder> {
   Widget build(BuildContext context) {
     return Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
+        body: SliderDrawer(
+          appBar: SliderAppBar(
+            appBarHeight: 85,
+            appBarColor: Color.fromARGB(255, 255, 222, 178),
+            title: Container(
+              child: Center(
+                  child: const Text(
+                'รายการงานของฉัน',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
+              )),
             ),
-            onPressed: () {
-              showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('ออกจากระบบ'),
-                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text("ไม่"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginPage()),
-                              (_) => false,
-                            );
-                          },
-                          child: const Text("ใช่"),
-                        ),
-                      ],
-                    );
-                  });
-            },
           ),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
-              child: const Text(
-            'รายการงานของฉัน',
-            style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-          )),
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.history,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return rider_history();
-                }));
-              },
-            ),
-          ],
-        ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+          slider: RiderAppBar(),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.orangeAccent.withOpacity(0.5),
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -126,28 +87,33 @@ class _rider_myorderState extends State<rider_myorder> {
                 itemBuilder: (_, index) => Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
+                        child: Container(
+                          color: Colors.orangeAccent,
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            trailing: IconButton(
+                              icon: Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return user_order_detail(
+                                      user_order![index].order_id.toString(),
+                                      user_order![index]
+                                          .total_price
+                                          .toString());
+                                }));
+                              },
                             ),
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return user_order_detail(
-                                    user_order![index].order_id.toString(),
-                                    user_order![index].total_price.toString());
-                              }));
-                            },
+                            title: Text(
+                                '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
+                            subtitle: Text(
+                                'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
+                            tileColor: Colors.orangeAccent,
                           ),
-                          title: Text(
-                              '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
-                          subtitle: Text(
-                              'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
-                          tileColor: Colors.orangeAccent,
                         ),
                       ),
                     )),
@@ -423,39 +389,35 @@ class _rider_historyState extends State<rider_history> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
+        body: SliderDrawer(
+      appBar: SliderAppBar(
+        appBarHeight: 85,
+        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        title: Container(
+          child: Center(
               child: const Text(
-            'ประวัติการส่งของฉัน',
+            'ประวัติการส่งของ',
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
-                itemBuilder: (_, index) => Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+      ),
+      slider: RiderAppBar(),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.orangeAccent.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
+              itemBuilder: (_, index) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        color: Colors.orangeAccent,
                         child: ListTile(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
@@ -480,9 +442,11 @@ class _rider_historyState extends State<rider_history> {
                           tileColor: Colors.orangeAccent,
                         ),
                       ),
-                    )),
-          ),
-        ));
+                    ),
+                  )),
+        ),
+      ),
+    ));
   }
 }
 

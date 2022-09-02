@@ -1,5 +1,5 @@
 // ignore_for_file: avoid_print, duplicate_ignore, unnecessary_brace_in_string_interps, unused_import, unnecessary_string_interpolations, unused_local_variable, unused_field, camel_case_types
-
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -169,4 +169,4 @@ class RegisterScreenState extends State<user_RegisterScreen> {
       },
     );
   }
-}
+}*/

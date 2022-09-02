@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:project_bekery/model/adminbasket.dart';
 import 'package:project_bekery/model/product_model.dart';
 import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/screen/quantity.dart';
+import 'package:project_bekery/widgets/adminAppbar.dart';
 import 'package:project_bekery/widgets/app_column.dart';
 import 'package:project_bekery/widgets/app_icon.dart';
 import 'package:project_bekery/widgets/big_text.dart';
@@ -54,54 +56,33 @@ class _admin_import_sourceState extends State<admin_import_source> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
+        body: SliderDrawer(
+      appBar: SliderAppBar(
+        appBarHeight: 85,
+        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        title: Container(
+          child: Center(
               child: const Text(
-            'รายการสินค้า',
+            'เลือกร้านที่จะนำเข้า',
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.refresh,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-              onPressed: () {
-                _getsource();
-                /*
-              // do somethingNavigator.push(context,
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return cart_order_add();
-              }));*/
-              },
-            )
-          ],
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount:
-                  _filtersource != null ? (_filtersource?.length ?? 0) : 0,
-              itemBuilder: (_, index) => Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+      ),
+      slider: AdminAppBar(),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.orangeAccent.withOpacity(0.5),
+        child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: _filtersource != null ? (_filtersource?.length ?? 0) : 0,
+            itemBuilder: (_, index) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      color: Colors.orangeAccent,
                       child: ListTile(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0)),
@@ -119,8 +100,10 @@ class _admin_import_sourceState extends State<admin_import_source> {
                         },
                       ),
                     ),
-                  )),
-        ));
+                  ),
+                )),
+      ),
+    ));
   }
 }
 

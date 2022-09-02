@@ -73,6 +73,23 @@
         return;
     }
 
+    if("GET_ONLY_RIDER" == $action){
+        $db_data = array();
+        $sql = "SELECT * from rider where rider_email = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
 
     if("GET_ALL_PRODUCT" == $action){
         
@@ -338,11 +355,33 @@
 
     if("GET_ORDER_DETAIL" == $action){
         $db_data = array();
-        $sql = "SELECT user_order.order_id,user_order.order_by,user_order.order_responsible_person,user_order.total_price,user_order.order_status,user_order_detail.product_amount,product.product_name,product.product_image,product.product_price FROM user_order
+        $sql = "SELECT user_order.order_id,user_order.order_by,user_order.order_responsible_person,user_order.total_price,user_order.order_status,user_order_detail.product_amount,product.product_name,product.product_image,product.product_price,user_order.order_date FROM user_order
         INNER JOIN user_order_detail 
         ON user_order.order_id = user_order_detail.order_id
         INNER JOIN product 
         ON user_order_detail.product_id = product.product_id where user_order.order_id = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+    if("GET_ORDER_ONLY_DETAIL" == $action){
+        $db_data = array();
+        $sql = "SELECT user_order.order_id,user_order.order_by,user_order.order_responsible_person,user_order.total_price,user_order.order_status,user_order_detail.product_amount,product.product_name,product.product_image,product.product_price,user_order.order_date,SUM(user_order_detail.product_amount) FROM user_order
+        INNER JOIN user_order_detail 
+        ON user_order.order_id = user_order_detail.order_id
+        INNER JOIN product 
+        ON user_order_detail.product_id = product.product_id 
+        where user_order.order_date = '$where'
+        GROUP BY product.product_name";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -436,6 +475,24 @@
         return;
         
     }
+
+    if("UPDATE_RIDER" == $action){
+        $ridername = $_POST['ridername'];
+        $ridersurname = $_POST['ridersurname'];
+        $rideremail = $_POST['rideremail'];
+        $riderrole = $_POST['riderrole'];
+        $riderphone = $_POST['riderphone'];
+        $sql = "UPDATE rider SET rider_name ='$ridername',rider_surname='$ridersurname',rider_phone='$riderphone',rider_email='$rideremail',rider_role='$riderrole' WHERE rider_id = $where";
+        if($conn->query($sql) === TRUE){
+            echo "success";
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+        
+    }
+
     if("UPDATE_MAP_USER" == $action){
         $latitude = $_POST['latitude'];
         $longitude = $_POST['longitude'];
@@ -523,6 +580,25 @@
 
     }
 
+    if("RIDER_LOGIN_ACTION" == $action){   
+        $db_data = array();
+        $useremail = $_POST['useremail'];
+        $password = $_POST['password'];
+        $sql = "SELECT * FROM rider WHERE rider.rider_email = '$useremail' AND rider.rider_password = '$password'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+
+    }
+
 
     
 
@@ -562,6 +638,29 @@
         $source_id = $_POST['source_id'];
 
         $sql = "INSERT INTO import_order(Import_order_id,Import_product_pricetotal,Import_date,Import_status,Import_source_id) VALUES ('$Import_order_id','$Import_product_pricetotal','$Import_date','$Import_status','$source_id')";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+
+    }
+
+    if("_ADD_PROMPTION" == $action){
+        $promotion_name = $_POST['promotion_name'];
+        $promotion_value = $_POST['promotion_value'];
+
+        $sql = "INSERT INTO promotion(promotion_name, promotion_value) VALUES ('$promotion_name','$promotion_value')";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+
+    }
+
+    if("_ADD_PRODUCTTYPE" == $action){
+        $product_type_name = $_POST['producttype_name'];
+
+        $sql = "INSERT INTO product_type(product_type_name) VALUES ('$product_type_name')";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();
@@ -632,6 +731,112 @@
         $sql = $_POST["sql"];
         $result = $conn->query($sql);
         echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("GET_ALL_IMPORT_PRODUCTDETAI" == $action){
+        $db_data = array();
+        $sql = "SELECT import_order.Import_order_id,import_order.Import_product_pricetotal,product.product_name,product.product_image,product.product_price,import_order_detail.basket_product_quantity,import_order_detail.basket_product_pricetotal,
+        SUM(import_order_detail.basket_product_quantity)
+        FROM import_order
+        INNER JOIN source ON import_order.Import_source_id = source.source_id 
+        INNER JOIN import_order_detail ON import_order.Import_order_id = import_order_detail.Import_order_id 
+        INNER JOIN product 
+        ON import_order_detail.basket_product_id = product.product_id
+        GROUP BY product.product_name";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    
+    if("CHANGE_USERPASSWORD" == $action){ 
+        $where2 = $_POST['where2'];
+        $sql = "UPDATE user SET user_password = '$where2' WHERE user_email = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    
+
+    if("CHANGE_RIDERPASSWORD" == $action){ 
+        $where2 = $_POST['where2'];
+        $sql = "UPDATE rider SET rider_password = '$where2' WHERE rider_email = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("GETONLY_PROMOTION" == $action){ 
+        $sql = "SELECT * FROM promotion WHERE promotion_name = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GETALL_PRODUCTTYPE" == $action){ 
+        $sql = "SELECT * FROM product_type WHERE product_type_name = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+
+    if("GETALL_PROMOTION" == $action){ 
+        $sql = "SELECT * FROM promotion";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+    
+    if("GETALL_PRODUCTTYPE_1" == $action){ 
+        $sql = "SELECT * FROM product_type";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
         $conn->close();
         return;
     }

@@ -8,6 +8,7 @@ import 'package:project_bekery/screen/admin_import_order.dart';
 import 'package:project_bekery/screen/admin_import_product.dart';
 import 'package:project_bekery/screen/admin_orderall.dart';
 import 'package:project_bekery/screen/admin_productall.dart';
+import 'package:project_bekery/screen/admin_report_order.dart';
 import 'package:project_bekery/screen/admin_userlist.dart';
 import 'package:project_bekery/screen/home.dart';
 import 'package:project_bekery/screen/user_login.dart';
@@ -89,7 +90,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       child: admin_allproduct(),
     ),
     Center(
-      child: admin_allproduct(),
+      child: admin_report(),
     ), //หน้า4
   ];
 

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:project_bekery/model/profile.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:project_bekery/screen/rider_map.dart';
 import 'package:project_bekery/screen/rider_welcome.dart';
 
 import 'user_home.dart';

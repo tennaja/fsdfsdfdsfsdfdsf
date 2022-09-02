@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:project_bekery/model/user_basket.dart';
 import 'package:project_bekery/mysql/user.dart';
+import 'package:project_bekery/screen/user_order.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
 import 'package:uuid/uuid.dart';
 import 'package:project_bekery/mysql/service.dart';
@@ -112,7 +113,9 @@ class _cart_order_addState extends State<cart_order_add> {
               backgroundColor: Color.fromARGB(255, 4, 255, 0),
               textColor: Colors.white,
               fontSize: 16.0),
-          Navigator.pop(context),
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return Orderpage();
+          })),
         });
   }
 
@@ -129,6 +132,7 @@ class _cart_order_addState extends State<cart_order_add> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         floatingActionButton: Container(
           alignment: Alignment.bottomCenter,
           child: Container(
@@ -176,7 +180,7 @@ class _cart_order_addState extends State<cart_order_add> {
                                 _getImportorder(length);
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return user_WelcomeScreen();
+                                  return Orderpage();
                                 }));
                               },
                               child: const Text("ใช่",
@@ -202,7 +206,7 @@ class _cart_order_addState extends State<cart_order_add> {
             ),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return user_WelcomeScreen();
+                return Orderpage();
               }));
             },
           ),
@@ -226,121 +230,113 @@ class _cart_order_addState extends State<cart_order_add> {
             )
           ],
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount:
-                            userbasket != null ? (userbasket?.length ?? 0) : 0,
-                        itemBuilder: (_, index) => Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                  leading: Image(
-                                    image: NetworkImage(userbasket![index]
-                                        .product_image
-                                        .toString()),
-                                    width: 50,
-                                    height: 50,
-                                  ),
-                                  title: Text(userbasket![index]
-                                      .product_name
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount:
+                          userbasket != null ? (userbasket?.length ?? 0) : 0,
+                      itemBuilder: (_, index) => Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                leading: Image(
+                                  image: NetworkImage(userbasket![index]
+                                      .product_image
                                       .toString()),
-                                  subtitle: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                          'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
-                                      Text(
-                                          'ราคารวม : ${userbasket![index].user_basket_pricetotal.toString()}'),
-                                    ],
-                                  ),
-                                  tileColor: Colors.orangeAccent,
-                                  trailing: IconButton(
-                                      onPressed: () {
-                                        showDialog<bool>(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title:
-                                                    const Text('ยกเลิกการซื้อ'),
-                                                content: Text(
-                                                    'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
-                                                actions: <Widget>[
-                                                  ElevatedButton(
-                                                    onPressed: () =>
-                                                        Navigator.of(context)
-                                                            .pop(),
-                                                    child: const Text(
-                                                      "ไม่",
-                                                      style: TextStyle(
-                                                          color: Colors.black),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      Art_Services()
-                                                          .deleteonlybasket(
-                                                              userbasket![index]
-                                                                  .user_basket_id)
-                                                          .then((value) => {
-                                                                Fluttertoast.showToast(
-                                                                    msg:
-                                                                        "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
-                                                                    toastLength:
-                                                                        Toast
-                                                                            .LENGTH_SHORT,
-                                                                    gravity: ToastGravity
-                                                                        .BOTTOM,
-                                                                    timeInSecForIosWeb:
-                                                                        1,
-                                                                    backgroundColor:
-                                                                        Color.fromARGB(
-                                                                            255,
-                                                                            255,
-                                                                            0,
-                                                                            0),
-                                                                    textColor:
-                                                                        Colors
-                                                                            .white,
-                                                                    fontSize:
-                                                                        16.0),
-                                                                _getBasket(),
-                                                                Navigator.pop(
-                                                                    context),
-                                                              });
-                                                    },
-                                                    child: const Text("ใช่",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black)),
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      icon: Icon(Icons.delete)),
-                                  onTap: () {},
+                                  width: 50,
+                                  height: 50,
                                 ),
+                                title: Text(
+                                    userbasket![index].product_name.toString()),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
+                                    Text(
+                                        'ราคารวม : ${userbasket![index].user_basket_pricetotal.toString()}'),
+                                  ],
+                                ),
+                                tileColor: Colors.orangeAccent,
+                                trailing: IconButton(
+                                    onPressed: () {
+                                      showDialog<bool>(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title:
+                                                  const Text('ยกเลิกการซื้อ'),
+                                              content: Text(
+                                                  'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
+                                              actions: <Widget>[
+                                                ElevatedButton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(),
+                                                  child: const Text(
+                                                    "ไม่",
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Art_Services()
+                                                        .deleteonlybasket(
+                                                            userbasket![index]
+                                                                .user_basket_id)
+                                                        .then((value) => {
+                                                              Fluttertoast.showToast(
+                                                                  msg:
+                                                                      "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
+                                                                  toastLength: Toast
+                                                                      .LENGTH_SHORT,
+                                                                  gravity:
+                                                                      ToastGravity
+                                                                          .BOTTOM,
+                                                                  timeInSecForIosWeb:
+                                                                      1,
+                                                                  backgroundColor:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          0,
+                                                                          0),
+                                                                  textColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize:
+                                                                      16.0),
+                                                              _getBasket(),
+                                                              Navigator.pop(
+                                                                  context),
+                                                            });
+                                                  },
+                                                  child: const Text("ใช่",
+                                                      style: TextStyle(
+                                                          color: Colors.black)),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    icon: Icon(Icons.delete)),
+                                onTap: () {},
                               ),
-                            )),
-                  ),
-                ],
-              ),
+                            ),
+                          )),
+                ),
+              ],
             ),
           ),
         ));

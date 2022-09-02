@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -14,6 +15,7 @@ import 'package:project_bekery/screen/admin_import_product.dart';
 import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/screen/float_add_order.dart';
 import 'package:http/http.dart' as http;
+import 'package:project_bekery/widgets/adminAppbar.dart';
 
 class admin_import_order extends StatefulWidget {
   const admin_import_order({Key? key}) : super(key: key);
@@ -52,6 +54,7 @@ class _admin_import_orderState extends State<admin_import_order> {
   Widget build(BuildContext context) {
     return Scaffold(
         extendBodyBehindAppBar: true,
+        /*
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
@@ -124,44 +127,65 @@ class _admin_import_orderState extends State<admin_import_order> {
             )
           ],
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _Import_product != null
-                    ? (_Import_product?.length ?? 0)
-                    : 0,
-                itemBuilder: (_, index) => Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          title: Text(
-                              '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Import_product![index].Import_date}'))}'),
-                          subtitle: Text(
-                              'ที่มา : ${_Import_product![index].source_name.toString()}'),
-                          tileColor: Colors.orangeAccent,
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return import_order_detail(
-                                  _Import_product![index]
-                                      .Import_order_id
-                                      .toString(),
-                                  _Import_product![index]
-                                      .Import_product_pricetotal
-                                      .toString());
-                            }));
-                          },
+        */
+        body: SliderDrawer(
+          appBar: SliderAppBar(
+            appBarHeight: 85,
+            appBarColor: Color.fromARGB(255, 255, 222, 178),
+            title: Container(
+              child: Center(
+                  child: const Text(
+                'รายการนำเข้าสินค้า',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
+              )),
+            ),
+          ),
+          slider: AdminAppBar(),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.orangeAccent.withOpacity(0.5),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _Import_product != null
+                      ? (_Import_product?.length ?? 0)
+                      : 0,
+                  itemBuilder: (_, index) => Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            color: Colors.orangeAccent,
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              title: Text(
+                                  '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Import_product![index].Import_date}'))}'),
+                              subtitle: Text(
+                                  'ที่มา : ${_Import_product![index].source_name.toString()}'),
+                              tileColor: Colors.orangeAccent,
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return import_order_detail(
+                                      _Import_product![index]
+                                          .Import_order_id
+                                          .toString(),
+                                      _Import_product![index]
+                                          .Import_product_pricetotal
+                                          .toString());
+                                }));
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    )),
+                      )),
+            ),
           ),
         ));
   }
@@ -222,41 +246,36 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
+        body: SliderDrawer(
+      appBar: SliderAppBar(
+        appBarHeight: 85,
+        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        title: Container(
+          child: Center(
               child: const Text(
-            'ประวัติการนำเข้า',
+            'รายการนำเข้าสินค้า',
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _Import_product != null
-                    ? (_Import_product?.length ?? 0)
-                    : 0,
-                itemBuilder: (_, index) => Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+      ),
+      slider: AdminAppBar(),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.orangeAccent.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount:
+                  _Import_product != null ? (_Import_product?.length ?? 0) : 0,
+              itemBuilder: (_, index) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        color: Colors.orangeAccent,
                         child: ListTile(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
@@ -279,9 +298,11 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
                           },
                         ),
                       ),
-                    )),
-          ),
-        ));
+                    ),
+                  )),
+        ),
+      ),
+    ));
   }
 }
 
