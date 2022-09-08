@@ -30,16 +30,16 @@ class admin_report extends StatefulWidget {
 
 class _admin_reportState extends State<admin_report> {
   List<Product>? _product;
+  DateTime selectedDate = DateTime.now();
+  List<Export_product_detail>? _Import_product;
+  int? datalength;
 
   @override
   void initState() {
     super.initState();
     _getImport_product(DateFormat('yyyy-MM-d').format(selectedDate));
+    _Import_product = [];
   }
-
-  DateTime selectedDate = DateTime.now();
-  List<Export_product_detail>? _Import_product;
-  int? datalength;
 
   _getImport_product(selectedDate) {
     print("function working");
@@ -48,7 +48,6 @@ class _admin_reportState extends State<admin_report> {
         .then((Import_detail) {
       setState(() {
         _Import_product = Import_detail;
-
         datalength = Import_detail.length;
       });
 
@@ -74,80 +73,85 @@ class _admin_reportState extends State<admin_report> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SliderDrawer(
-      appBar: SliderAppBar(
-        trailing: IconButton(
-          icon: Icon(
-            Icons.calendar_month,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            _selectDate(context);
-          },
-        ),
-        appBarHeight: 85,
-        appBarColor: Color.fromARGB(255, 255, 222, 178),
-        title: Container(
-          child: Center(
-              child: const Text(
-            'รายงานยอดการขาย',
-            style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-          )),
-        ),
-      ),
-      slider: AdminAppBar(),
-      child: _Import_product?.length != 0
-          ? Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Colors.orangeAccent.withOpacity(0.5),
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: _Import_product != null
-                      ? (_Import_product?.length ?? 0)
-                      : 0,
-                  itemBuilder: (_, index) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            color: Colors.orangeAccent,
-                            child: ListTile(
-                              leading: Image(
-                                image: NetworkImage(_Import_product![index]
-                                    .product_image
-                                    .toString()),
-                                width: 50,
-                                height: 50,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              title: Text(_Import_product![index]
-                                  .product_name
-                                  .toString()),
-                              subtitle: Text(
-                                  'จำนวนที่ขายได้ : ${_Import_product![index].sum_quantity.toString()} ชิ้น'),
-                              tileColor: Colors.orangeAccent,
-                            ),
-                          ),
-                        ),
-                      )),
-            )
-          : Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Colors.orangeAccent.withOpacity(0.5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.network(
-                      'https://cdn.iconscout.com/icon/free/png-256/data-not-found-1965034-1662569.png'),
-                  SizedBox(),
-                  Text(
-                      'ไม่มีการขายในวันที่ ${DateFormat('yyyy-MM-d').format(selectedDate)}'),
-                ],
+            appBar: SliderAppBar(
+              trailing: IconButton(
+                icon: const Icon(
+                  Icons.calendar_month,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  _selectDate(context);
+                },
+              ),
+              appBarHeight: 85,
+              appBarColor: const Color.fromARGB(255, 255, 222, 178),
+              title: Container(
+                child: const Center(
+                    child: Text(
+                  'รายงานยอดการขาย',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                )),
               ),
             ),
-    ));
+            slider: const AdminAppBar(),
+            child: _Import_product?.length != 0
+                ? Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.orangeAccent.withOpacity(0.5),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30, bottom: 30),
+                          child: Center(
+                              child: Text(
+                                  'รายงานวันที่ : ${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${selectedDate}'))}')),
+                        ),
+                        Expanded(
+                            child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: DataTable(
+                              columns: [
+                                DataColumn(label: Text('ชื่อสินค้า')),
+                                DataColumn(label: Text('ขายได้')),
+                              ],
+                              rows: _Import_product!
+                                  .map(
+                                    (importorder) => DataRow(cells: [
+                                      DataCell(Text(
+                                          importorder.product_name.toString())),
+                                      DataCell(Text(
+                                          importorder.sum_quantity.toString())),
+                                    ]),
+                                  )
+                                  .toList()),
+                        )),
+                        Divider(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Text('ราคารวม : '),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.orangeAccent.withOpacity(0.5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.network(
+                            'https://cdn.iconscout.com/icon/free/png-256/data-not-found-1965034-1662569.png'),
+                        const SizedBox(),
+                        Text(
+                            'ไม่มีการขายในวันที่ ${DateFormat('yyyy-MM-d').format(selectedDate)}'),
+                      ],
+                    ),
+                  )));
   }
 }

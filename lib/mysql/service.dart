@@ -14,7 +14,7 @@ import '../model/source_model.dart';
 import 'user.dart';
 
 class Art_Services {
-  var url = Uri.parse('http://119.59.97.4/~web5/user_actions.php');
+  var url = Uri.parse('https://artfinalproject.000webhostapp.com/');
   static const _CRETE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_ALL';
   static const _ADD_EMP_ACTION = 'ADD_EMP';
@@ -1103,6 +1103,27 @@ class Art_Services {
     }
   }
 
+  Future<List<Producttype>> getonly_producttype(where1) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GETONLY_PRODUCTTYPE_1";
+      map["where"] = where1;
+      final response = await http.post(url, body: map);
+      print("getonly_producttype >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Producttype> list = parseResponseall_producttype(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Producttype>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Producttype>[];
+    }
+  }
+
   static List<Producttype> parseResponseall_producttype(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed
@@ -1134,6 +1155,35 @@ class Art_Services {
       // orderid
       final response = await http.post(url, body: map);
       print("changeriderpassword >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> deleteproducttype(where1) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "DELETEPRODUCTTYPE";
+      map["where"] = where1; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("deleteproducttype >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> editproducttype(where1, where2) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "EDITPRODUCTTYPE";
+      map["where"] = where1;
+      map["where2"] = where2; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("editproducttype >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       return 'error';

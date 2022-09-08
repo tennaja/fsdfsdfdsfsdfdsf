@@ -1,13 +1,25 @@
 <?php
 
     $servername = "localhost";
-    $username = "web5_project";
-    $password = "MjTfxBBmt";
-    $dbname = "web5_project";
+    $username = "id19512910_supakonproject";
+    $password = "uESSHJS{e1bU9]n<";
+    $dbname = "id19512910_supakonprojectdb";
     $table = "user";
 
-    $action = $_POST["action"];
-    $where = $_POST["where"];
+    $action = '';
+    $where = '';
+
+    
+
+    if (isset($_POST['action'])) {
+        $action = $_POST['action'];
+    }
+
+    if (isset($_POST['where'])) {
+        $where = $_POST['where'];
+    }
+    
+    
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -837,6 +849,38 @@
         }else{
             echo "error";
         }
+        $conn->close();
+        return;
+    }
+
+    if("GETONLY_PRODUCTTYPE_1" == $action){ 
+        $sql = "SELECT * FROM `product_type` WHERE product_type_name = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("DELETEPRODUCTTYPE" == $action){ 
+        $sql = "DELETE FROM product_type WHERE product_type_id = $where";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("EDITPRODUCTTYPE" == $action){ 
+        $where2 = $_POST['where2'];
+        $sql = "UPDATE product_type SET product_type_name= '$where2' WHERE product_type_id = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
         $conn->close();
         return;
     }
