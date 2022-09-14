@@ -367,7 +367,7 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
               _filterproduct![index].export_product.toString(),
               _filterproduct![index].import_product.toString(),
               _filterproduct![index].product_type_id.toString(),
-              _filterproduct![index].product_promotion.toString(),
+              _filterproduct![index].import_price.toString(),
             ),
           ),
         ),

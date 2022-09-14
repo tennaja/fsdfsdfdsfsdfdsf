@@ -12,7 +12,6 @@ import 'package:project_bekery/model/import_detail.dart';
 import 'package:project_bekery/model/import_product.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/admin_import_product.dart';
-import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/screen/float_add_order.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_bekery/widgets/adminAppbar.dart';
@@ -54,80 +53,6 @@ class _admin_import_orderState extends State<admin_import_order> {
   Widget build(BuildContext context) {
     return Scaffold(
         extendBodyBehindAppBar: true,
-        /*
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('ออกจากระบบ'),
-                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text("ไม่"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginPage()),
-                              (_) => false,
-                            );
-                          },
-                          child: const Text("ใช่"),
-                        ),
-                      ],
-                    );
-                  });
-            },
-          ),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
-              child: const Text(
-            'รายการนำเข้าสินค้า',
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-          )),
-          actions: <Widget>[
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.content_paste_sharp,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return adminhistoryimport();
-                    }));
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return admin_import_source();
-                    }));
-                  },
-                )
-              ],
-            )
-          ],
-        ),
-        */
         body: SliderDrawer(
           appBar: SliderAppBar(
             appBarHeight: 85,
@@ -203,7 +128,7 @@ _updateImport(
   import_product,
 ) async {
   try {
-    var url = Uri.parse('http://119.59.97.4/~web5/user_actions.php');
+    var url = Uri.parse('https://artfinalproject.000webhostapp.com/');
     print('funtion working....');
     var map = <String, dynamic>{};
     map["action"] = "ADD_PRODUCT";
@@ -367,7 +292,7 @@ class _import_order_detailState extends State<import_order_detail> {
                       .then((value) => {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return admin_WelcomeScreen();
+                              return admin_import_order();
                             })),
                             Fluttertoast.showToast(
                                 msg: "ยืนยันการรับสินค้าเรียบร้อย",
@@ -401,7 +326,7 @@ class _import_order_detailState extends State<import_order_detail> {
                                 .then((value) => {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return admin_WelcomeScreen();
+                                        return admin_import_order();
                                       })),
                                       Fluttertoast.showToast(
                                           msg: "ลบข้อมูลเสร็จสิ้น",

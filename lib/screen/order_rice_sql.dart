@@ -62,7 +62,7 @@ class data_product_sqlState extends State<data_product_sql> {
         _filterproduct = product;
       });
       print("Length ${product.length}");
-      print(_product![0].product_promotion);
+      print(_product![0].import_price);
     });
   }
 
@@ -83,7 +83,7 @@ class data_product_sqlState extends State<data_product_sql> {
             _filterproduct![index].export_product.toString(),
             _filterproduct![index].import_product.toString(),
             _filterproduct![index].product_type_id.toString(),
-            _filterproduct![index].product_promotion.toString()),
+            _filterproduct![index].import_price.toString()),
       ),
     );
   }

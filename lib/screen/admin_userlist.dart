@@ -10,7 +10,6 @@ import 'package:location/location.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/user.dart';
-import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
 
 class admin_Userlist extends StatefulWidget {
@@ -182,7 +181,7 @@ class _admin_userdetailState extends State<admin_userdetail> {
                       .then((value) => {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return admin_WelcomeScreen();
+                              return admin_Userlist();
                             })),
                             Fluttertoast.showToast(
                                 msg: "แก้ไขข้อมูลเรียบร้อย",

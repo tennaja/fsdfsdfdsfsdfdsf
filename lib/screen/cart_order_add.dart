@@ -98,7 +98,7 @@ class _cart_order_addState extends State<cart_order_add> {
         _user![0].user_longitude.toString(),
         'ยังไม่มีคนรับผิดชอบ'.toString(),
         Import_totalprice.toString(),
-        'ยังไม่มีใครรับ',
+        'รอการยืนยันจาก Admin',
         DateTime.now().toString());
     print('-----------จบการส่งข้อมูล-------------');
     setState(() {

@@ -669,6 +669,32 @@
 
     }
 
+    if("_ADD_PROMPTION" == $action){
+        $promotion_name = $_POST['promotion_name'];
+        $promotion_value = $_POST['promotion_value'];
+
+        $sql = "INSERT INTO promotion(promotion_name, promotion_value) VALUES ('$promotion_name','$promotion_value')";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+
+    }
+
+    if("ADD_PRODUCT_PROMOTION" == $action){
+        $product_id = $_POST['product_id'];
+        $promotion_id = $_POST['promotion_id'];
+        $start_date = $_POST['start_date'];
+        $end_date = $_POST['end_date'];
+
+        $sql = "INSERT INTO product_promotion(product_id, promotion_id, start_date, end_date) VALUES ('$product_id','$promotion_id','$start_date','$end_date')";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+
+    }
+
     if("_ADD_PRODUCTTYPE" == $action){
         $product_type_name = $_POST['producttype_name'];
 
@@ -704,6 +730,16 @@
         return;
     }
 
+    if("DELETEPRODUCTPROMOTION" == $action){ 
+        $product_id = $_POST['product_id'];
+        $promotion_id = $_POST['promotion_id'];
+        $sql = "DELETE FROM product_promotion WHERE product_promotion.product_id = $product_id AND product_promotion.promotion_id = $promotion_id";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
     if("ORDER_SUBMIT" == $action){ 
         $sql = "UPDATE import_order SET Import_status= 'ส่งแล้ว' WHERE Import_order_id = '$where'";
         $result = $conn->query($sql);
@@ -730,9 +766,25 @@
         $conn->close();
         return;
     }
-
+    
+    if("IMPORT_PRODUCT_QUANTITY_UPDATE" == $action){ 
+        $where2 = $_POST['where2'];
+        $sql = "UPDATE product SET import_product = import_product  + '$where2', export_product = export_product + '$where2'  WHERE product_id = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
     if("CANCLE_ORDER" == $action){ 
         $sql = "UPDATE user_order SET order_status = 'รายการที่ยกเลิก' WHERE order_id = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("ACCEPT_ORDER" == $action){ 
+        $sql = "UPDATE user_order SET order_status = 'ยังไม่มีใครรับ' WHERE order_id = '$where'";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();
@@ -793,6 +845,22 @@
     }
 
     if("GETONLY_PROMOTION" == $action){ 
+        $where2 = $_POST['where2'];
+        $sql = "SELECT * FROM promotion WHERE promotion_name = '$where' OR promotion_value = $where2";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GETONLY_PROMOTION_BYNAME" == $action){ 
         $sql = "SELECT * FROM promotion WHERE promotion_name = '$where'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
@@ -807,8 +875,49 @@
         return;
     }
 
+    
+
     if("GETALL_PRODUCTTYPE" == $action){ 
         $sql = "SELECT * FROM product_type WHERE product_type_name = '$where'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GET_ALL_PRODUCT_PROMOTION" == $action){ 
+        $sql = "SELECT promotion.promotion_id,promotion.promotion_name,promotion.promotion_value,product.product_id,product.product_name,product_promotion.start_date,product_promotion.end_date FROM product_promotion
+        INNER JOIN promotion
+        ON product_promotion.promotion_id = promotion.promotion_id
+        INNER JOIN product
+        ON product.product_id = product_promotion.product_id";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+    if("GET_ONLY_PRODUCT_PROMOTION" == $action){ 
+        $where2 = $_POST['where2'];
+        $sql = "SELECT promotion.promotion_id,promotion.promotion_name,promotion.promotion_value,product.product_id,product.product_name,product_promotion.start_date,product_promotion.end_date FROM product_promotion
+        INNER JOIN promotion
+        ON product_promotion.promotion_id = promotion.promotion_id
+        INNER JOIN product
+        ON product.product_id = product_promotion.product_id
+        WHERE product_promotion.product_id = '$where' AND product_promotion.promotion_id = '$where2'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -837,6 +946,26 @@
         $conn->close();
         return;
     }
+
+
+    if("DELETEPROMOTION" == $action){ 
+        $sql = "DELETE FROM promotion WHERE promotion_id = $where ";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("EDITPROMOTION" == $action){ 
+        $where2 = $_POST['where2'];
+        $where3 = $_POST['where3'];
+        $sql = "UPDATE promotion SET promotion_name = '$where2',promotion_value = '$where3' WHERE promotion_id = $where";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
     
     if("GETALL_PRODUCTTYPE_1" == $action){ 
         $sql = "SELECT * FROM product_type";

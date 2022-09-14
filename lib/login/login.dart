@@ -8,12 +8,12 @@ import 'package:project_bekery/login/profire_model/customer_model.dart';
 import 'package:project_bekery/login/register.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/admin_import_order.dart';
-import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/screen/rider_allorder.dart';
 import 'package:project_bekery/screen/rider_welcome.dart';
 import 'package:project_bekery/screen/user_myorder.dart';
 import 'package:project_bekery/screen/user_order.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
+import 'package:project_bekery/screen/admin_orderlist.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
 
 class LoginPage extends StatefulWidget {
@@ -39,34 +39,34 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        color: Colors.pinkAccent.withOpacity(0.2),
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/images/background.jpg'),
-                    fit: BoxFit.fitWidth),
-              ),
-              width: 500,
-              height: 325,
-              child: SizedBox(
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  child: Image.asset(
-                    'assets/images/app_logo.png',
+      body: SingleChildScrollView(
+        child: Container(
+          color: Colors.pinkAccent.withOpacity(0.2),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/background.jpg'),
+                      fit: BoxFit.fitWidth),
+                ),
+                width: 500,
+                height: 325,
+                child: SizedBox(
+                  child: Container(
                     width: 100,
                     height: 100,
-                    scale: 0.5,
-                    fit: BoxFit.cover,
+                    child: Image.asset(
+                      'assets/images/app_logo.png',
+                      width: 100,
+                      height: 100,
+                      scale: 0.5,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SingleChildScrollView(
-              child: Container(
+              Container(
                 padding: const EdgeInsets.all(20),
                 margin: EdgeInsets.only(top: 50),
                 child: Column(
@@ -279,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) {
-                                                          return admin_import_order();
+                                                          return admin_orderlist();
                                                         })),
                                                       }
                                                   }
@@ -312,8 +312,8 @@ class _LoginPageState extends State<LoginPage> {
                                   }
 
                                   /*
-
-
+      
+      
                                 print(SessionManager()
                                                           .get("email")),
                                                       Navigator.push(context,
@@ -332,8 +332,8 @@ class _LoginPageState extends State<LoginPage> {
                                                                   (context) {
                                                         return admin_WelcomeScreen();
                                                       })),
-
-
+      
+      
                                   */
                                 },
                                 style: ButtonStyle(
@@ -382,8 +382,8 @@ class _LoginPageState extends State<LoginPage> {
                           ])),
                     ]),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

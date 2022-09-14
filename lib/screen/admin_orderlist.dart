@@ -1,0 +1,280 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:project_bekery/model/export_product.dart';
+import 'package:project_bekery/model/export_product_detail.dart';
+import 'package:project_bekery/mysql/service.dart';
+import 'package:project_bekery/widgets/adminAppbar.dart';
+
+class admin_orderlist extends StatefulWidget {
+  const admin_orderlist({Key? key}) : super(key: key);
+
+  @override
+  State<admin_orderlist> createState() => _admin_orderlistState();
+}
+
+class _admin_orderlistState extends State<admin_orderlist> {
+  List<Export_product>? _Export_product;
+  List<Export_product>? _filterImport_product;
+  int? datalength;
+
+  void initState() {
+    Intl.defaultLocale = 'th';
+    initializeDateFormatting();
+    super.initState();
+    _Export_product = [];
+    _getImport_product('รอการยืนยันจาก Admin');
+  }
+
+  _getImport_product(where) {
+    print("function working");
+    Art_Services().gatallExport_product(where).then((value) {
+      setState(() {
+        _Export_product = value;
+        datalength = value.length;
+        _filterImport_product = value;
+      });
+
+      print('จำนวข้อมูล : ${value.length}');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SliderDrawer(
+        appBar: SliderAppBar(
+          appBarHeight: 85,
+          appBarColor: Color.fromARGB(255, 255, 222, 178),
+          title: Container(
+            child: Center(
+                child: const Text(
+              'หน้ารับออเดอร์',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
+            )),
+          ),
+        ),
+        slider: AdminAppBar(),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Color.fromRGBO(255, 171, 64, 1).withOpacity(0.5),
+          child: datalength == 0
+              ? Container(
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/correct_image.png',
+                      height: 100,
+                      width: 100,
+                    ),
+                    Text('รับงานทั้งหมดเรียบร้อยแล้ว')
+                  ],
+                ))
+              : ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _Export_product != null
+                      ? (_Export_product?.length ?? 0)
+                      : 0,
+                  itemBuilder: (_, index) => Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            color: Colors.orangeAccent,
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              title: Text(
+                                  'รหัสออเดอร์ : ${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Export_product![index].date}'))}'),
+                              subtitle: Text(
+                                  'ที่มา : ${_Export_product![index].order_by}'),
+                              tileColor: Colors.orangeAccent,
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return admin_oderlist_detail(
+                                      _Export_product![index]
+                                          .order_id
+                                          .toString(),
+                                      _Export_product![index]
+                                          .total_price
+                                          .toString(),
+                                      _Export_product![index]
+                                          .order_responsible_person
+                                          .toString());
+                                }));
+                              },
+                            ),
+                          ),
+                        ),
+                      )),
+        ),
+      ),
+    );
+  }
+}
+
+class admin_oderlist_detail extends StatefulWidget {
+  final String order_id, total_price, order_responsible_person;
+  const admin_oderlist_detail(
+      this.order_id, this.total_price, this.order_responsible_person,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  State<admin_oderlist_detail> createState() => _admin_oderlist_detailState();
+}
+
+class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
+  List<Export_product_detail>? _orderdetail;
+  @override
+  void initState() {
+    super.initState();
+    _orderdetail = [];
+    _getImport_product();
+  }
+
+  _getImport_product() {
+    print("function working");
+    Art_Services().getorder_detail(widget.order_id).then((value) {
+      setState(() {
+        _orderdetail = value;
+      });
+
+      print('จำนวข้อมูล : ${value.length}');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FloatingActionButton.extended(
+                heroTag: 1,
+                onPressed: () async {
+                  Art_Services().accept_order(widget.order_id).then((value) => {
+                        Fluttertoast.showToast(
+                            msg: "จัดส่งเรียบร้อย",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Color.fromARGB(255, 0, 255, 30),
+                            textColor: Colors.white,
+                            fontSize: 16.0),
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return admin_orderlist();
+                        }))
+                      });
+                },
+                label: Text("รับออเดอร์"),
+                icon: Icon(Icons.near_me),
+                backgroundColor: Colors.orangeAccent,
+              ),
+              FloatingActionButton.extended(
+                heroTag: 2,
+                onPressed: () async {
+                  Art_Services().cancel_order(widget.order_id).then((value) => {
+                        Fluttertoast.showToast(
+                            msg: "ยกเลิกการสั่งเรียบร้อย",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                            textColor: Colors.white,
+                            fontSize: 16.0),
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return admin_orderlist();
+                        }))
+                      });
+                },
+                label: Text("ยกเลิกออเดอร์"),
+                icon: Icon(Icons.near_me),
+                backgroundColor: Colors.orangeAccent,
+              ),
+            ],
+          ),
+        ),
+        appBar: AppBar(
+          title: Text('รายละเอียดการขาย'),
+          backgroundColor: Colors.blueAccent,
+        ),
+        backgroundColor: Colors.grey[100],
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Container(
+                  height: 600,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text('${widget.order_id}'),
+                        SizedBox(height: 20),
+                        Text(
+                            'คนรับผิดชอบงาน :  ${widget.order_responsible_person}'),
+                        SizedBox(height: 20),
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: _orderdetail != null
+                              ? (_orderdetail?.length ?? 0)
+                              : 0,
+                          itemBuilder: (_, index) => Container(
+                            margin: EdgeInsets.all(5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        'ชื่อสินค้า : ${_orderdetail![index].product_name}'),
+                                    Text(
+                                        'จำนวน : ${_orderdetail![index].product_amount}'),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                        'ราคาต่อชิ้น : ${_orderdetail![index].product_price}'),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('ราคารวม : ${widget.total_price}'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )),
+        ));
+  }
+}

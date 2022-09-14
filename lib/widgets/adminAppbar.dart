@@ -7,9 +7,11 @@ import 'package:project_bekery/mysql/rider.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/addproducttype.dart';
 import 'package:project_bekery/screen/addpromotion.dart';
+import 'package:project_bekery/screen/admin_addproduct_promotion.dart';
 import 'package:project_bekery/screen/admin_import_order.dart';
 import 'package:project_bekery/screen/admin_import_product.dart';
 import 'package:project_bekery/screen/admin_orderall.dart';
+import 'package:project_bekery/screen/admin_orderlist.dart';
 import 'package:project_bekery/screen/admin_productall.dart';
 import 'package:project_bekery/screen/admin_report_order.dart';
 import 'package:project_bekery/screen/admin_userlist.dart';
@@ -70,6 +72,16 @@ class _AdminAppBarState extends State<AdminAppBar> {
                     size: 36.0,
                   ),
                 ),
+              ),
+              Divider(),
+              ListTile(
+                title: Text('หน้ารับออเดอร์'),
+                leading: Icon(Icons.list),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return admin_orderlist();
+                  }));
+                },
               ),
               Divider(),
               ListTile(
@@ -168,6 +180,16 @@ class _AdminAppBarState extends State<AdminAppBar> {
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return add_product_order();
+                  }));
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Text('เพิ่มโปรโมชั่นให้สินค้า'),
+                leading: Icon(Icons.money_sharp),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return admin_addproductpromotion();
                   }));
                 },
               ),

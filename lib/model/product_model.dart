@@ -8,7 +8,7 @@ class Product {
   String? export_product;
   String? import_product;
   String? product_type_id;
-  String? product_promotion;
+  String? import_price;
 
   Product(
       {required this.product_id,
@@ -20,7 +20,7 @@ class Product {
       required this.export_product,
       required this.import_product,
       required this.product_type_id,
-      required this.product_promotion});
+      required this.import_price});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -33,7 +33,7 @@ class Product {
         export_product: json['export_product'],
         import_product: json['import_product'],
         product_type_id: json['product_type_id'],
-        product_promotion: json['product_promotion']);
+        import_price: json['import_price']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -46,6 +46,6 @@ class Product {
         'export_product': export_product,
         'import_product': import_product,
         'product_type_id': product_type_id,
-        'product_promotion': product_promotion,
+        'import_price': import_price,
       };
 }

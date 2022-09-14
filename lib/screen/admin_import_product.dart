@@ -6,7 +6,6 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:project_bekery/model/adminbasket.dart';
 import 'package:project_bekery/model/product_model.dart';
-import 'package:project_bekery/screen/admin_welcome.dart';
 import 'package:project_bekery/screen/quantity.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
 import 'package:project_bekery/widgets/app_column.dart';
@@ -192,7 +191,7 @@ class _import_product_menuState extends State<import_product_menu> {
               _filterproduct![index].product_name.toString(),
               _filterproduct![index].product_detail.toString(),
               _filterproduct![index].product_image.toString(),
-              _filterproduct![index].product_price.toString(),
+              _filterproduct![index].import_price.toString(),
               _filterproduct![index].product_quantity.toString(),
               _filterproduct![index].export_product.toString(),
               _filterproduct![index].import_product.toString(),
@@ -565,7 +564,7 @@ class _Import_quantityState extends State<Import_quantity> {
                   left: height / 42.2,
                   right: height / 42.2),
               child: Bigtext(
-                text: "200 บาท | เพิ่มลงตระกร้า ",
+                text: "${widget.product_price} บาท | เพิ่มลงตระกร้า ",
                 color: Colors.white,
                 size: 16,
               ),
@@ -657,7 +656,7 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
               textColor: Colors.white,
               fontSize: 16.0),
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return admin_WelcomeScreen();
+            return admin_import_source();
           })),
         });
   }

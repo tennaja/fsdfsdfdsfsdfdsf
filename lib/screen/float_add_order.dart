@@ -42,14 +42,14 @@ _AddProduct(
     export_product,
     import_product,
     producttype,
-    promotion) async {
+    improt_price1) async {
   try {
-    var url = Uri.parse('http://119.59.97.4/~web5/user_actions.php');
+    var url = Uri.parse('https://artfinalproject.000webhostapp.com/');
     print('funtion working....');
     var map = <String, dynamic>{};
     map["action"] = "ADD_PRODUCT";
     map['sql'] =
-        "INSERT INTO product(product_name, product_detail, product_image, product_price, product_quantity, export_product, import_product, product_type_id, product_promotion) VALUES ('${product_name}','${product_detail}','${product_img}',${product_price},${product_quantity},0,0,'${producttype}','${promotion}')";
+        "INSERT INTO product(product_name, product_detail, product_image, product_price, product_quantity, export_product, import_product, product_type_id, import_price) VALUES ('${product_name}','${product_detail}','${product_img}',${product_price},${product_quantity},0,0,'${producttype}','${improt_price1}')";
     final response = await http.post(url, body: map);
     print("AddProduct >> Response:: ${response.body}");
     return response.body;
@@ -67,13 +67,15 @@ class _add_product_orderState extends State<add_product_order> {
   String? product_img;
   int? product_price;
   int? product_quantity;
+  int? improt_price;
   String selecttype = '';
-  String dropdownValue = 'ประเภทข้าวสาร';
+  String dropdownValue = 'ไม่ได้ระบุ';
   String promotion = 'ไม่มีโปรโมชั่น';
   List<Promotion>? promotionlist;
   List<String> promotionnamelist = [];
   List<Producttype>? producttypelist;
   List<String> producttypenamelist = [];
+  List<Producttype> producttypeidlist = [];
 
   void initState() {
     super.initState();
@@ -138,16 +140,19 @@ class _add_product_orderState extends State<add_product_order> {
     }
   }
 
-  Future<void> uploadimage(
-      product_name, product_detail, product_price1, product_quantity1) async {
+  Future<void> uploadimage(product_name, product_detail, product_price1,
+      product_quantity1, improt_price1) async {
     String? producttype;
-    if (dropdownValue == 'ประเภทข้าวสาร') {
-      producttype = '1';
-    } else if (dropdownValue == 'ประเภทเครื่องปรุง') {
-      producttype = '2';
-    } else if (dropdownValue == 'ประเภทของใช้') {
-      producttype = '3';
-    }
+
+    Art_Services().getonly_producttype(dropdownValue).then((value) {
+      setState(() {
+        producttypeidlist = value;
+      });
+    }).then((value) {
+      setState(() {
+        producttype = producttypeidlist[0].product_type_id;
+      });
+    });
     int i = 0;
     if (image == null) return;
     final filename = basename(image!.path);
@@ -163,7 +168,7 @@ class _add_product_orderState extends State<add_product_order> {
       product_quantity = product_quantity1;
     });
     _AddProduct(product_name, product_detail, product_img, product_price,
-        product_quantity, 0, 0, producttype, promotion);
+        product_quantity, 0, 0, producttype, improt_price1);
   }
 
   @override
@@ -171,345 +176,344 @@ class _add_product_orderState extends State<add_product_order> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SliderDrawer(
-        appBar: SliderAppBar(
-          appBarHeight: 85,
-          appBarColor: Color.fromARGB(255, 255, 222, 178),
-          title: Container(
-            child: Center(
-                child: const Text(
-              'รายการนำเข้าสินค้า',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            )),
+          appBar: SliderAppBar(
+            appBarHeight: 85,
+            appBarColor: Color.fromARGB(255, 255, 222, 178),
+            title: Container(
+              child: Center(
+                  child: const Text(
+                'รายการนำเข้าสินค้า',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
+              )),
+            ),
           ),
-        ),
-        slider: AdminAppBar(),
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: fromKey,
-              child: Container(
-                child: Column(
-                  children: [
-                    image != null
-                        ? Image.file(
-                            image!,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          )
-                        : SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: Image.asset('assets/images/upload.png'),
-                          ),
-                    SizedBox(
-                      width: 25,
-                      height: 25,
-                    ),
-                    SizedBox(
-                      width: 150,
-                      height: 35,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.orangeAccent,
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(32.0)),
-                          minimumSize: Size(100, 40), //////// HERE
-                        ),
-                        child: Text('อัปโหลดรูปภาพ'),
-                        onPressed: () {
-                          showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('อัพโหลดภาพ'),
-                                  content: const Text('เลือกวิธีการนำภาพออกมา'),
-                                  actions: <Widget>[
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        pickImage_carmera();
-                                      },
-                                      child: const Text("เลือกจากกล้องถ่าย"),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        pickImage_filestore();
-                                      },
-                                      child: const Text("เลือกจากไฟล์ในมือถือ"),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextFormField(
-                            validator:
-                                RequiredValidator(errorText: "กรุณาป้อนข้อมูล"),
-                            onSaved: (name) {
-                              product_name = name.toString();
-                            },
-                            autofocus: false,
-                            decoration: InputDecoration(
-                              label: Text('ชื่อสินค้า'),
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextFormField(
-                            keyboardType: TextInputType.text,
-                            validator:
-                                RequiredValidator(errorText: "กรุณาป้อนข้อมูล"),
-                            onSaved: (detail) {
-                              product_detail = detail.toString();
-                            },
-                            autofocus: false,
-                            decoration: InputDecoration(
-                              label: Text('รายละเอียดสินค้า'),
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: 150,
-                                child: TextFormField(
-                                  validator: RequiredValidator(
-                                      errorText: "กรุณาป้อนข้อมูล"),
-                                  keyboardType: TextInputType.number,
-                                  onSaved: (price) {
-                                    product_price = int.parse(price.toString());
-                                  },
-                                  autofocus: false,
-                                  decoration: InputDecoration(
-                                    label: Text('ราคา'),
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 150,
-                                child: TextFormField(
-                                  validator: RequiredValidator(
-                                      errorText: "กรุณาป้อนข้อมูล"),
-                                  keyboardType: TextInputType.number,
-                                  onSaved: (quantity) {
-                                    product_quantity =
-                                        int.parse(quantity.toString());
-                                  },
-                                  autofocus: false,
-                                  decoration: InputDecoration(
-                                    label: Text('จำนวน'),
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                ),
+          slider: AdminAppBar(),
+          child: SingleChildScrollView(
+            child: Container(
+              color: Colors.orangeAccent.withOpacity(0.5),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: fromKey,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        image != null
+                            ? Image.file(
+                                image!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
                               )
+                            : SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: Image.asset('assets/images/upload.png'),
+                              ),
+                        SizedBox(
+                          width: 25,
+                          height: 25,
+                        ),
+                        SizedBox(
+                          width: 150,
+                          height: 35,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.orangeAccent,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(32.0)),
+                              minimumSize: Size(100, 40), //////// HERE
+                            ),
+                            child: Text('อัปโหลดรูปภาพ'),
+                            onPressed: () {
+                              showDialog<bool>(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('อัพโหลดภาพ'),
+                                      content:
+                                          const Text('เลือกวิธีการนำภาพออกมา'),
+                                      actions: <Widget>[
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            pickImage_carmera();
+                                          },
+                                          child:
+                                              const Text("เลือกจากกล้องถ่าย"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            pickImage_filestore();
+                                          },
+                                          child: const Text(
+                                              "เลือกจากไฟล์ในมือถือ"),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              TextFormField(
+                                validator: RequiredValidator(
+                                    errorText: "กรุณาป้อนข้อมูล"),
+                                onSaved: (name) {
+                                  product_name = name.toString();
+                                },
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                  label: Text('ชื่อสินค้า'),
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderSide:
+                                        const BorderSide(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              TextFormField(
+                                keyboardType: TextInputType.text,
+                                validator: RequiredValidator(
+                                    errorText: "กรุณาป้อนข้อมูล"),
+                                onSaved: (detail) {
+                                  product_detail = detail.toString();
+                                },
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                  label: Text('รายละเอียดสินค้า'),
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderSide:
+                                        const BorderSide(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 150,
+                                    child: TextFormField(
+                                      validator: RequiredValidator(
+                                          errorText: "กรุณาป้อนข้อมูล"),
+                                      keyboardType: TextInputType.number,
+                                      onSaved: (price) {
+                                        product_price =
+                                            int.parse(price.toString());
+                                      },
+                                      autofocus: false,
+                                      decoration: InputDecoration(
+                                        label: Text('ราคา (ที่จะขาย)'),
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.black),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 150,
+                                    child: TextFormField(
+                                      validator: RequiredValidator(
+                                          errorText: "กรุณาป้อนข้อมูล"),
+                                      keyboardType: TextInputType.number,
+                                      onSaved: (quantity) {
+                                        product_quantity =
+                                            int.parse(quantity.toString());
+                                      },
+                                      autofocus: false,
+                                      decoration: InputDecoration(
+                                        label: Text('จำนวน'),
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.black),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 150,
+                                    child: TextFormField(
+                                      validator: RequiredValidator(
+                                          errorText: "กรุณาป้อนข้อมูล"),
+                                      keyboardType: TextInputType.number,
+                                      onSaved: (importprice) {
+                                        improt_price =
+                                            int.parse(importprice.toString());
+                                      },
+                                      autofocus: false,
+                                      decoration: InputDecoration(
+                                        label: Text('ราคา (ที่ซื้อมา)'),
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.black),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              DecoratedBox(
+                                decoration: BoxDecoration(
+                                  //background color of dropdown button
+                                  border: Border.all(
+                                      color: Colors.black38,
+                                      width: 1), //border of dropdown button
+                                  borderRadius: BorderRadius.circular(
+                                      30), //border raiuds of dropdown button
+                                ),
+                                child: DropdownButton(
+                                  value: dropdownValue,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue!;
+                                    });
+                                  },
+                                  // ignore: prefer_const_literals_to_create_immutables
+
+                                  items: producttypenamelist
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: SizedBox(
+                                        width: 200, // for example
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20),
+                                          child: Text(value),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  icon: Padding(
+                                      //Icon at tail, arrow bottom is default icon
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: Icon(Icons.arrow_downward)),
+                                  iconEnabledColor:
+                                      Color.fromARGB(255, 0, 0, 0), //Icon color
+
+                                  //dropdown background color
+                                  underline: Container(), //remove underline
+                                  isExpanded:
+                                      true, //make true to make width 100%
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              DecoratedBox(
+                                decoration: BoxDecoration(
+                                  //background color of dropdown button
+                                  border: Border.all(
+                                      color: Colors.black38,
+                                      width: 1), //border of dropdown button
+                                  borderRadius: BorderRadius.circular(
+                                      30), //border raiuds of dropdown button
+                                ),
+                                child: SizedBox(
+                                  width: 300,
+                                  height: 35,
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.orangeAccent,
+                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(32.0)),
+                                        minimumSize:
+                                            Size(100, 40), //////// HERE
+                                      ),
+                                      child: Text('อัปโหลดข้อมูล'),
+                                      onPressed: () async {
+                                        if (fromKey.currentState!.validate()) {
+                                          if (image == null) {
+                                            Fluttertoast.showToast(
+                                                msg: "กรุณาเพิ่มรูปภาพก่อน",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 255, 0, 0),
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                          } else {
+                                            fromKey.currentState!.save();
+                                            await uploadimage(
+                                                    product_name,
+                                                    product_detail,
+                                                    product_price,
+                                                    product_quantity,
+                                                    improt_price)
+                                                .then((value) => {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "เพิ่มสินค้าเรียบร้อย",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .BOTTOM,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  13,
+                                                                  255,
+                                                                  0),
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0),
+                                                      Navigator.pop(context),
+                                                    });
+                                          }
+                                        }
+                                        /*uploadimage()*/
+                                      }),
+                                ),
+                              ),
                             ],
                           ),
-                          SizedBox(height: 10),
-                          DecoratedBox(
-                            decoration: BoxDecoration(
-                              //background color of dropdown button
-                              border: Border.all(
-                                  color: Colors.black38,
-                                  width: 1), //border of dropdown button
-                              borderRadius: BorderRadius.circular(
-                                  30), //border raiuds of dropdown button
-                            ),
-                            child: DropdownButton(
-                              value: dropdownValue,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dropdownValue = newValue!;
-                                });
-                              },
-                              // ignore: prefer_const_literals_to_create_immutables
-
-                              items: producttypenamelist
-                                  .map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: SizedBox(
-                                    width: 200, // for example
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 20),
-                                      child: Text(value),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                              icon: Padding(
-                                  //Icon at tail, arrow bottom is default icon
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: Icon(Icons.arrow_downward)),
-                              iconEnabledColor:
-                                  Color.fromARGB(255, 0, 0, 0), //Icon color
-
-                              //dropdown background color
-                              underline: Container(), //remove underline
-                              isExpanded: true, //make true to make width 100%
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          DecoratedBox(
-                            decoration: BoxDecoration(
-                              //background color of dropdown button
-                              border: Border.all(
-                                  color: Colors.black38,
-                                  width: 1), //border of dropdown button
-                              borderRadius: BorderRadius.circular(
-                                  30), //border raiuds of dropdown button
-                            ),
-                            child: DropdownButton(
-                              value: promotion,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  promotion = newValue!;
-                                });
-                              },
-                              // ignore: prefer_const_literals_to_create_immutables
-
-                              items: promotionnamelist
-                                  .map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: SizedBox(
-                                    width: 200, // for example
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 20),
-                                      child: Text(value),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                              icon: Padding(
-                                  //Icon at tail, arrow bottom is default icon
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: Icon(Icons.arrow_downward)),
-                              iconEnabledColor:
-                                  Color.fromARGB(255, 0, 0, 0), //Icon color
-
-                              //dropdown background color
-                              underline: Container(), //remove underline
-                              isExpanded: true, //make true to make width 100%
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          DecoratedBox(
-                            decoration: BoxDecoration(
-                              //background color of dropdown button
-                              border: Border.all(
-                                  color: Colors.black38,
-                                  width: 1), //border of dropdown button
-                              borderRadius: BorderRadius.circular(
-                                  30), //border raiuds of dropdown button
-                            ),
-                            child: SizedBox(
-                              width: 300,
-                              height: 35,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.orangeAccent,
-                                    elevation: 3,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(32.0)),
-                                    minimumSize: Size(100, 40), //////// HERE
-                                  ),
-                                  child: Text('อัปโหลดข้อมูล'),
-                                  onPressed: () async {
-                                    if (fromKey.currentState!.validate()) {
-                                      if (image == null) {
-                                        Fluttertoast.showToast(
-                                            msg: "กรุณาเพิ่มรูปภาพก่อน",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor:
-                                                Color.fromARGB(255, 255, 0, 0),
-                                            textColor: Colors.white,
-                                            fontSize: 16.0);
-                                      } else {
-                                        fromKey.currentState!.save();
-                                        await uploadimage(
-                                                product_name,
-                                                product_detail,
-                                                product_price,
-                                                product_quantity)
-                                            .then((value) => {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "เพิ่มสินค้าเรียบร้อย",
-                                                      toastLength:
-                                                          Toast.LENGTH_SHORT,
-                                                      gravity:
-                                                          ToastGravity.BOTTOM,
-                                                      timeInSecForIosWeb: 1,
-                                                      backgroundColor:
-                                                          Color.fromARGB(
-                                                              255, 13, 255, 0),
-                                                      textColor: Colors.white,
-                                                      fontSize: 16.0),
-                                                  Navigator.pop(context),
-                                                });
-                                      }
-                                    }
-                                    /*uploadimage()*/
-                                  }),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
+          )),
     );
   }
 }

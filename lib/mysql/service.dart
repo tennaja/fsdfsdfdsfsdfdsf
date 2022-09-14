@@ -6,6 +6,7 @@ import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/model/import_detail.dart';
 import 'package:project_bekery/model/import_product.dart';
 import 'package:project_bekery/model/product_model.dart';
+import 'package:project_bekery/model/product_promotion.dart';
 import 'package:project_bekery/model/producttype.dart';
 import 'package:project_bekery/model/promotion_model.dart';
 import 'package:project_bekery/model/user_basket.dart';
@@ -107,6 +108,22 @@ class Art_Services {
       return response.body;
     } catch (e) {
       print('error ${e}');
+      return 'error';
+    }
+  }
+
+  Future<String> add_product_promotion(where1, where2, where3, where4) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "ADD_PRODUCT_PROMOTION";
+      map["product_id"] = where1; // rideremail
+      map["promotion_id"] = where2; // status
+      map["start_date"] = where3;
+      map["end_date"] = where4; // orderid
+      final response = await http.post(url, body: map);
+      print("add_product_promotion >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
       return 'error';
     }
   }
@@ -1003,6 +1020,21 @@ class Art_Services {
     }
   }
 
+  Future<String> Import_product_quantity_update(where1, where2) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "IMPORT_PRODUCT_QUANTITY_UPDATE";
+      map["where"] = where1; // rideremail
+      map["where2"] = where2; // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("Import_product_quantity_update >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
   Future<String> cancel_order(where1) async {
     try {
       var map = <String, dynamic>{};
@@ -1011,6 +1043,20 @@ class Art_Services {
       // orderid
       final response = await http.post(url, body: map);
       print("product_quantity_update >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return '${e}';
+    }
+  }
+
+  Future<String> accept_order(where1) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "ACCEPT_ORDER";
+      map["where"] = where1; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("accept_order >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       return '${e}';
@@ -1042,13 +1088,35 @@ class Art_Services {
     return parsed.map<Promotion>((json) => Promotion.fromJson(json)).toList();
   }
 
-  Future<List<Promotion>> getonly_promotion(where) async {
+  Future<List<Promotion>> getonly_promotion(where, where2) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = "GETONLY_PROMOTION";
       map["where"] = where;
+      map["where2"] = where2;
       final response = await http.post(url, body: map);
       print("getonly_promotion >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Promotion> list = parseResponseall_promotion(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Promotion>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Promotion>[];
+    }
+  }
+
+  Future<List<Promotion>> getonly_promotionbyname(where) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GETONLY_PROMOTION_BYNAME";
+      map["where"] = where;
+      final response = await http.post(url, body: map);
+      print("getonly_promotionbyname >> Response:: ${response.body}");
       if (response.statusCode == 200) {
         List<Promotion> list = parseResponseall_promotion(response.body);
         print("---------------------------------------------");
@@ -1188,5 +1256,103 @@ class Art_Services {
     } catch (e) {
       return 'error';
     }
+  }
+
+  Future<String> deletepromotion(where1) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "DELETEPROMOTION";
+      map["where"] = where1; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("deleteproducttype >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> deleteproduct_promotion(product_id, promotion_id) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "DELETEPRODUCTPROMOTION";
+      map["product_id"] = product_id;
+      map["promotion_id"] = promotion_id; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("deleteproduct_promotion >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> editpromotion(where1, where2, where3) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "EDITPROMOTION";
+      map["where"] = where1;
+      map["where2"] = where2;
+      map["where3"] = where3; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("editproducttype >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<List<Product_promotion>> getall_product_promotion() async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_ALL_PRODUCT_PROMOTION";
+      final response = await http.post(url, body: map);
+      print("getall_product_promotion >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Product_promotion> list =
+            parseResponseproduct_promotion(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Product_promotion>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Product_promotion>[];
+    }
+  }
+
+  Future<List<Product_promotion>> getonly_product_promotion(
+      where1, where2) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_ONLY_PRODUCT_PROMOTION";
+      map["where"] = where1;
+      map["where2"] = where2;
+      final response = await http.post(url, body: map);
+      print("getall_product_promotion >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Product_promotion> list =
+            parseResponseproduct_promotion(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Product_promotion>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Product_promotion>[];
+    }
+  }
+
+  static List<Product_promotion> parseResponseproduct_promotion(
+      String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed
+        .map<Product_promotion>((json) => Product_promotion.fromJson(json))
+        .toList();
   }
 }

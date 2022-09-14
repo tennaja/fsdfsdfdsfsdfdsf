@@ -98,9 +98,10 @@ class _admin_allproductState extends State<admin_allproduct> {
               itemCount: _product != null ? (_product?.length ?? 0) : 0,
               itemBuilder: (_, index) => Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(
+                          right: 8.0, left: 8.0, bottom: 8.0),
                       child: Container(
-                        color: Colors.orangeAccent,
+                        color: Colors.orangeAccent.withOpacity(0.5),
                         child: ListTile(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
@@ -121,7 +122,6 @@ class _admin_allproductState extends State<admin_allproduct> {
                                   'เหลือในคลัง : ${_product![index].product_quantity}'),
                             ],
                           ),
-                          tileColor: Colors.orangeAccent,
                           onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
@@ -134,7 +134,7 @@ class _admin_allproductState extends State<admin_allproduct> {
                                   _product![index].export_product.toString(),
                                   _product![index].import_product.toString(),
                                   _product![index].product_type_id.toString(),
-                                  _product![index].product_promotion.toString(),
+                                  _product![index].import_price.toString(),
                                   _product![index].product_image.toString());
                             }));
                           },
@@ -621,49 +621,6 @@ class _admin_productdetailState extends State<admin_productdetail> {
                           ],
                         ),
                         SizedBox(height: 10),
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            //background color of dropdown button
-                            border: Border.all(
-                                color: Colors.black38,
-                                width: 1), //border of dropdown button
-                            borderRadius: BorderRadius.circular(
-                                30), //border raiuds of dropdown button
-                          ),
-                          child: DropdownButton(
-                            value: promotion,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                promotion = newValue!;
-                              });
-                            },
-                            // ignore: prefer_const_literals_to_create_immutables
-
-                            items: promotionnamelist
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: SizedBox(
-                                  width: 200, // for example
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Text(value),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            icon: Padding(
-                                //Icon at tail, arrow bottom is default icon
-                                padding: EdgeInsets.only(right: 20),
-                                child: Icon(Icons.arrow_downward)),
-                            iconEnabledColor:
-                                Color.fromARGB(255, 0, 0, 0), //Icon color
-
-                            //dropdown background color
-                            underline: Container(), //remove underline
-                            isExpanded: true, //make true to make width 100%
-                          ),
-                        )
                       ],
                     ),
                   ),

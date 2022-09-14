@@ -70,6 +70,7 @@ dependencies:
   table_calendar: ^3.0.6
   flutter_slider_drawer: ^2.1.1
   
+  
 
 flutter_icons:
   android: "launcher_icon"
@@ -111,6 +112,7 @@ flutter:
     - assets/images/promotion4.jpg
     - assets/images/promotion5.jpg
     - assets/images/user_background.jpg
+    - assets/images/correct_image.png
     # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
