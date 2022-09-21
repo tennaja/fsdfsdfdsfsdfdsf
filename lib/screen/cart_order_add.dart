@@ -24,7 +24,8 @@ class _cart_order_addState extends State<cart_order_add> {
   List<User>? _user;
   List<User_Basket>? userbasket;
   late int length;
-  int totalprice = 0;
+  int simpletotal = 0;
+  int disconttotal = 0;
   @override
   void initState() {
     super.initState();
@@ -41,6 +42,7 @@ class _cart_order_addState extends State<cart_order_add> {
         length = basket.length;
       });
       _gettotalprice(length);
+      _gettotaldiscount(length);
       print("Length ${basket.length}");
     });
   }
@@ -69,19 +71,18 @@ class _cart_order_addState extends State<cart_order_add> {
           'รหัสรายการสิ้นค้า ----> [${userbasket![i].user_basket_product_id.toString()}]');
       print(
           'จำนวนสิ้นค้า ----> [${userbasket![i].user_basket_quantity.toString()}]');
-      print(
-          'ราคารวม ----> [${userbasket![i].user_basket_pricetotal.toString()}]');
+      print('ราคารวม ----> [${userbasket![i].totalprice.toString()}]');
       print('วันเวลาที่สั่ง ----> [${DateTime.now()}]');
       setState(() {
-        Import_totalprice +=
-            int.parse(userbasket![i].user_basket_pricetotal.toString());
+        Import_totalprice += int.parse(userbasket![i].totalprice.toString());
       });
       Art_Services().addOrderdtail(
         Import_order_id.toString(),
         userbasket![i].user_basket_product_id.toString(),
         userbasket![i].user_basket_quantity.toString(),
-        userbasket![i].product_price.toString(),
-        userbasket![i].user_basket_pricetotal.toString(),
+        userbasket![i].user_basket_price.toString(),
+        userbasket![i].basket_product_promotionname.toString(),
+        userbasket![i].basket_product_promotionvalue.toString(),
       );
 
       Art_Services().product_quantity_update(
@@ -99,7 +100,8 @@ class _cart_order_addState extends State<cart_order_add> {
         'ยังไม่มีคนรับผิดชอบ'.toString(),
         Import_totalprice.toString(),
         'รอการยืนยันจาก Admin',
-        DateTime.now().toString());
+        DateTime.now().toString(),
+        length.toString());
     print('-----------จบการส่งข้อมูล-------------');
     setState(() {
       Import_totalprice = 0;
@@ -120,11 +122,20 @@ class _cart_order_addState extends State<cart_order_add> {
   }
 
   _gettotalprice(length) {
-    totalprice = 0;
+    simpletotal = 0;
     for (int i = 0; i < length; i++) {
       setState(() {
-        totalprice +=
-            int.parse(userbasket![i].user_basket_pricetotal.toString());
+        simpletotal += int.parse(userbasket![i].simpletotal.toString());
+      });
+    }
+  }
+
+  _gettotaldiscount(length) {
+    disconttotal = 0;
+    for (int i = 0; i < length; i++) {
+      setState(() {
+        print('ส่วนลด : ${userbasket![i].discount}');
+        disconttotal += int.parse(userbasket![i].discount.toString());
       });
     }
   }
@@ -191,7 +202,7 @@ class _cart_order_addState extends State<cart_order_add> {
                       });
                 }
               },
-              label: Text("ราคารวม : ${totalprice.toString()}"),
+              label: Text("ราคารวม : ${simpletotal.toString()}"),
               icon: Icon(Icons.shopping_bag),
               backgroundColor: Color.fromARGB(255, 248, 146, 13),
             ),
@@ -210,7 +221,7 @@ class _cart_order_addState extends State<cart_order_add> {
               }));
             },
           ),
-          backgroundColor: Colors.white.withOpacity(0.1),
+          backgroundColor: Colors.white,
           elevation: 0,
           title: Center(
               child: const Text(
@@ -230,115 +241,172 @@ class _cart_order_addState extends State<cart_order_add> {
             )
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Card(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount:
-                          userbasket != null ? (userbasket?.length ?? 0) : 0,
-                      itemBuilder: (_, index) => Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                leading: Image(
-                                  image: NetworkImage(userbasket![index]
-                                      .product_image
-                                      .toString()),
-                                  width: 50,
-                                  height: 50,
-                                ),
-                                title: Text(
-                                    userbasket![index].product_name.toString()),
-                                subtitle: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                        'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
-                                    Text(
-                                        'ราคารวม : ${userbasket![index].user_basket_pricetotal.toString()}'),
-                                  ],
-                                ),
-                                tileColor: Colors.orangeAccent,
-                                trailing: IconButton(
-                                    onPressed: () {
-                                      showDialog<bool>(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title:
-                                                  const Text('ยกเลิกการซื้อ'),
-                                              content: Text(
-                                                  'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
-                                              actions: <Widget>[
-                                                ElevatedButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(),
-                                                  child: const Text(
-                                                    "ไม่",
-                                                    style: TextStyle(
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    Art_Services()
-                                                        .deleteonlybasket(
-                                                            userbasket![index]
-                                                                .user_basket_id)
-                                                        .then((value) => {
-                                                              Fluttertoast.showToast(
-                                                                  msg:
-                                                                      "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
-                                                                  toastLength: Toast
-                                                                      .LENGTH_SHORT,
-                                                                  gravity:
-                                                                      ToastGravity
-                                                                          .BOTTOM,
-                                                                  timeInSecForIosWeb:
-                                                                      1,
-                                                                  backgroundColor:
-                                                                      Color.fromARGB(
-                                                                          255,
-                                                                          255,
-                                                                          0,
-                                                                          0),
-                                                                  textColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  fontSize:
-                                                                      16.0),
-                                                              _getBasket(),
-                                                              Navigator.pop(
-                                                                  context),
-                                                            });
-                                                  },
-                                                  child: const Text("ใช่",
-                                                      style: TextStyle(
-                                                          color: Colors.black)),
-                                                ),
-                                              ],
-                                            );
-                                          });
-                                    },
-                                    icon: Icon(Icons.delete)),
-                                onTap: () {},
-                              ),
-                            ),
-                          )),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount:
+                        userbasket != null ? (userbasket?.length ?? 0) : 0,
+                    itemBuilder: (_, index) => Container(
+                      margin: EdgeInsets.all(5),
+                      child: ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        leading: Image(
+                          image: NetworkImage(
+                              userbasket![index].product_image.toString()),
+                          width: 50,
+                          height: 50,
+                        ),
+                        title: Text(userbasket![index].product_name.toString()),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
+                          ],
+                        ),
+                        tileColor: Color.fromARGB(255, 255, 192, 111),
+                        trailing: IconButton(
+                            onPressed: () {
+                              showDialog<bool>(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('ยกเลิกการซื้อ'),
+                                      content: Text(
+                                          'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
+                                      actions: <Widget>[
+                                        ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: const Text(
+                                            "ไม่",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Art_Services()
+                                                .deleteonlybasket(
+                                                    userbasket![index]
+                                                        .user_basket_id)
+                                                .then((value) => {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .BOTTOM,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  255,
+                                                                  0,
+                                                                  0),
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0),
+                                                      _getBasket(),
+                                                      Navigator.pop(context),
+                                                    });
+                                          },
+                                          child: const Text("ใช่",
+                                              style: TextStyle(
+                                                  color: Colors.black)),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
+                            icon: Icon(Icons.delete)),
+                        onTap: () {},
+                      ),
+                    ),
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: Container(
+                height: 90,
+                child: Card(
+                  elevation: 20,
+                  color: Colors.greenAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "รวมเบื้องต้น",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              Text(
+                                "${simpletotal}",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          subtitle: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "ส่วนลด ",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    "- ${disconttotal}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "ราคารวม ",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    "${simpletotal - disconttotal}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ));
   }
 }

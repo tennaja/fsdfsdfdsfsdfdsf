@@ -52,7 +52,7 @@ class AppColumn extends StatelessWidget {
               padding: const EdgeInsets.only(left: 75),
               child: IconAndTextWidget(
                   icon: Icons.discount,
-                  text: "${promotion}",
+                  text: promotion == 'null' ? 'ไม่มีโปรโมชั่น' : "${promotion}",
                   iconColor: Color.fromARGB(255, 0, 255, 21)),
             ),
           ],

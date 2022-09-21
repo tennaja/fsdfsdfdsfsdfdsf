@@ -15,7 +15,7 @@ import '../model/source_model.dart';
 import 'user.dart';
 
 class Art_Services {
-  var url = Uri.parse('https://artfinalproject.000webhostapp.com/');
+  var url = Uri.parse('https://projectart434.000webhostapp.com/');
   static const _CRETE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_ALL';
   static const _ADD_EMP_ACTION = 'ADD_EMP';
@@ -42,8 +42,8 @@ class Art_Services {
     }
   }
 
-  Future<String> addOrderdtail(
-      order_id, product_id, product_amount, product_per_pice, total) async {
+  Future<String> addOrderdtail(order_id, product_id, product_amount,
+      product_per_pice, product_promotion_name, product_promotion_value) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = _ADD_ORDERDTAIL_ACTION;
@@ -51,7 +51,8 @@ class Art_Services {
       map["product_id"] = product_id;
       map["product_amount"] = product_amount;
       map["product_per_pice"] = product_per_pice;
-      map["total"] = total;
+      map["product_promotion_name"] = product_promotion_name;
+      map["product_promotion_value"] = product_promotion_value;
 
       final response = await http.post(url, body: map);
       print("addOrderdtail >> Response:: ${response.body}");
@@ -148,8 +149,16 @@ class Art_Services {
     }
   }
 
-  Future<String> add_order(order_id, order_by, user_latitude, user_longitude,
-      order_responsible_person, total_price, order_status, date) async {
+  Future<String> add_order(
+      order_id,
+      order_by,
+      user_latitude,
+      user_longitude,
+      order_responsible_person,
+      total_price,
+      order_status,
+      date,
+      product_amount) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = _ADD_USER_ORDER_ACTION;
@@ -161,6 +170,7 @@ class Art_Services {
       map["total_price"] = total_price;
       map["order_status"] = order_status;
       map["date"] = date;
+      map["product_amount"] = product_amount;
       final response = await http.post(url, body: map);
       print("add_order >> Response:: ${response.body}");
       return response.body;
@@ -211,16 +221,31 @@ class Art_Services {
     }
   }
 
-  Future<String> user_add_basket(basket_product_id, basket_product_quantity,
-      basket_product_price, email) async {
+  Future<String> user_add_basket(
+      basket_product_id,
+      basket_product_quantity,
+      basket_product_price,
+      email,
+      basket_product_promotionname,
+      basket_product_promotionvalue) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = "ADD_USER_BASKET";
       print('product ID --------> ${basket_product_id}');
+      print('product quantity --------> ${basket_product_quantity}');
+      print('product price --------> ${basket_product_price}');
+      print('email --------> ${email}');
+      print(
+          'basket_product_promotionname --------> ${basket_product_promotionname}');
+      print(
+          'basket_product_promotionvalue --------> ${basket_product_promotionvalue}');
       map["basket_product_id"] = basket_product_id.toString();
-      map["basket_product_quantity"] = basket_product_quantity.toString();
-      map["basket_product_pricetotal"] = basket_product_price.toString();
+      map["basket_product_quantity"] = basket_product_quantity;
+      map["basket_product_price"] = basket_product_price;
       map["email"] = email.toString();
+      map["basket_product_promotionname"] =
+          basket_product_promotionname.toString();
+      map["basket_product_promotionvalue"] = basket_product_promotionvalue;
 
       final response = await http.post(url, body: map);
       print("user_add_basket >> Response:: ${response.body}");
@@ -1329,6 +1354,30 @@ class Art_Services {
     try {
       var map = <String, dynamic>{};
       map["action"] = "GET_ONLY_PRODUCT_PROMOTION";
+      map["where"] = where1;
+      map["where2"] = where2;
+      final response = await http.post(url, body: map);
+      print("getall_product_promotion >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Product_promotion> list =
+            parseResponseproduct_promotion(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Product_promotion>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Product_promotion>[];
+    }
+  }
+
+  Future<List<Product_promotion>> getonlyvalue_product_promotion(
+      where1, where2) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_ONLYVALUE_PRODUCT_PROMOTION";
       map["where"] = where1;
       map["where2"] = where2;
       final response = await http.post(url, body: map);

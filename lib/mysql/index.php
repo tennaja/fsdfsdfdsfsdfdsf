@@ -1,9 +1,9 @@
 <?php
 
     $servername = "localhost";
-    $username = "id19512910_supakonproject";
-    $password = "uESSHJS{e1bU9]n<";
-    $dbname = "id19512910_supakonprojectdb";
+    $username = "id19581590_artmyproject";
+    $password = "I_?@N7!Oc8IL/=z?";
+    $dbname = "id19581590_myproject";
     $table = "user";
 
     $action = '';
@@ -238,10 +238,20 @@
 
     if("GET_USER_BASKET" == $action){
         $db_data = array();
-        $sql = "SELECT * FROM user_basket
-        INNER JOIN product
-        ON user_basket.user_basket_product_id = product.product_id
-        WHERE user_basket.user_basket_email = '$where'";
+        $sql = "SELECT user_basket_id,
+        user_basket_product_id,
+        product.product_name,
+        user_basket_quantity,
+        user_basket_price,
+        user_basket_email,
+        basket_product_promotionname,
+        basket_product_promotionvalue,
+        CAST(user_basket_quantity * user_basket_price AS int) AS simpletotal,
+        CAST((user_basket_quantity * user_basket_price) * basket_product_promotionvalue / 100 AS int) AS discount,
+        CAST((user_basket_quantity * user_basket_price) - ((user_basket_quantity * user_basket_price) * basket_product_promotionvalue / 100) AS int) AS totalprice,
+        product.product_image 
+         FROM user_basket 
+         INNER JOIN product ON user_basket.user_basket_product_id = product.product_id WHERE user_basket.user_basket_email = '$where'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -425,10 +435,12 @@
     if("ADD_USER_BASKET" == $action){
         $basket_product_id = $_POST['basket_product_id'];
         $basket_product_quantity = $_POST['basket_product_quantity'];
-        $basket_product_pricetotal = $_POST['basket_product_pricetotal'];
+        $basket_product_price = $_POST['basket_product_price'];
         $source_id = $_POST['email'];
+        $basket_product_promotionname = $_POST['basket_product_promotionname'];
+        $basket_product_promotionvalue = $_POST['basket_product_promotionvalue'];
 
-        $sql = "INSERT INTO user_basket (user_basket_product_id, user_basket_quantity, user_basket_pricetotal,user_basket_email) VALUES ('$basket_product_id','$basket_product_quantity','$basket_product_pricetotal','$source_id')";
+        $sql = "INSERT INTO user_basket (user_basket_product_id, user_basket_quantity, user_basket_price,user_basket_email,basket_product_promotionname,basket_product_promotionvalue) VALUES ('$basket_product_id',$basket_product_quantity,$basket_product_price,'$source_id','$basket_product_promotionname',$basket_product_promotionvalue)";
         $result = $conn->query($sql);
         echo "success";
         
@@ -565,8 +577,9 @@
         $total_price = $_POST['total_price'];
         $order_status = $_POST['order_status'];
         $date = $_POST['date'];
+        $product_amount = $_POST['product_amount'];
 
-        $sql = "INSERT INTO user_order(order_id,order_by,user_latitude,user_longitude,order_responsible_person,total_price,order_status,order_date) VALUES ('$order_id','$order_by','$user_latitude','$user_longitude','$order_responsible_person','$total_price','$order_status','$date')";
+        $sql = "INSERT INTO user_order(order_id,order_by,user_latitude,user_longitude,order_responsible_person,total_price,order_status,order_date,product_amount) VALUES ('$order_id','$order_by','$user_latitude','$user_longitude','$order_responsible_person','$total_price','$order_status','$date','$product_amount')";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();
@@ -619,9 +632,10 @@
         $product_id = $_POST['product_id'];
         $product_amount = $_POST['product_amount'];
         $product_per_pice = $_POST['product_per_pice'];
-        $total = $_POST['total'];
+        $product_promotion_name = $_POST['product_promotion_name'];
+        $product_promotion_value = $_POST['product_promotion_value'];
 
-        $sql = "INSERT INTO user_order_detail(order_id,product_id,product_amount,product_per_price,total) VALUES ('$order_id','$product_id','$product_amount','$product_per_pice','$total')";
+        $sql = "INSERT INTO user_order_detail(order_id,product_id,product_amount,product_per_price,product_promotion_name,product_promotion_value) VALUES ('$order_id','$product_id','$product_amount','$product_per_pice','$product_promotion_name','$product_promotion_value')";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();
@@ -918,6 +932,25 @@
         INNER JOIN product
         ON product.product_id = product_promotion.product_id
         WHERE product_promotion.product_id = '$where' AND product_promotion.promotion_id = '$where2'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GET_ONLYVALUE_PRODUCT_PROMOTION" == $action){ 
+        $where2 = $_POST['where2'];
+        $sql = "SELECT product_promotion.promotion_id,promotion.promotion_name,promotion.promotion_value,product.product_id,product.product_name,start_date,end_date FROM product_promotion 
+        INNER JOIN product ON product_promotion.product_id = product.product_id 
+        INNER JOIN promotion ON product_promotion.promotion_id = promotion.promotion_id 
+        WHERE product.product_id = '$where' AND '$where2' BETWEEN product_promotion.start_date AND product_promotion.end_date";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){

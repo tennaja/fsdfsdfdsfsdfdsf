@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Constants/Constants.dart';
-import 'package:flutter_application_1/Models/CDM.dart';
-import 'package:flutter_application_1/Widgets/Widgets.dart';
+import 'package:project_bekery/drawer/Constants/Constants.dart';
+import 'package:project_bekery/drawer/Models/CDM.dart';
+import 'package:project_bekery/drawer/Widgets/Widgets.dart';
+import 'package:project_bekery/screen/admin_addproduct_promotion.dart';
 
 class ComplexDrawerPage extends StatefulWidget {
   const ComplexDrawerPage({Key? key}) : super(key: key);
@@ -65,18 +66,11 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Container(
-      width: width,
-      child: row(),
-      color: Colorz.compexDrawerCanvasColor,
-    );
+    return row();
   }
 
   Widget row() {
-    return Row(children: [
-      isExpanded ? blackIconTiles() : blackIconMenu(),
-      invisibleSubMenus(),
-    ]);
+    return blackIconTiles();
   }
 
   Widget blackIconTiles() {
@@ -87,34 +81,128 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
         children: [
           controlTile(),
           Expanded(
-            child: ListView.builder(
-              itemCount: cdms.length,
-              itemBuilder: (BuildContext context, int index) {
-                //  if(index==0) return controlTile();
-
-                CDM cdm = cdms[index];
-                bool selected = selectedIndex == index;
-                return ExpansionTile(
-                    onExpansionChanged: (z) {
-                      setState(() {
-                        selectedIndex = z ? index : -1;
-                      });
-                    },
-                    leading: Icon(cdm.icon, color: Colors.white),
-                    title: Txt(
-                      text: cdm.title,
-                      color: Colors.white,
-                    ),
-                    trailing: cdm.submenus.isEmpty
-                        ? null
-                        : Icon(
-                            selected ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                            color: Colors.white,
+            child: Container(
+              child: ListView(
+                children: [
+                  Container(
+                    color: Color(0xFF47126b),
+                    child: ExpansionTile(
+                      leading: Icon(Icons.abc, color: Colors.white),
+                      title: Txt(
+                        text: 'แก้ไขข้อมูล',
+                        color: Colors.white,
+                      ),
+                      children: [
+                        Container(
+                          color: Color(0xFF571089),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_addproductpromotion();
+                              }));
+                            },
+                            title: Text(
+                              'เพิ่มโปรโมชั่นให้สินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                    children: cdm.submenus.map((subMenu) {
-                      return sMenuButton(subMenu, false);
-                    }).toList());
-              },
+                        ),
+                        Container(
+                          color: Color(0xFF6411ad),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {},
+                            title: Text(
+                              'เพิ่มสินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFF6d23b6),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {},
+                            title: Text(
+                              'เพิ่มโปรโมชั่น',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFF822faf),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {},
+                            title: Text(
+                              'เพิ่มประเภทสินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    color: Color(0xFF036666),
+                    child: ExpansionTile(
+                      leading: Icon(Icons.abc, color: Colors.white),
+                      title: Txt(
+                        text: 'รายงาน',
+                        color: Colors.white,
+                      ),
+                      children: [
+                        Container(
+                          color: Color(0xFF14746f),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {},
+                            title: Text(
+                              '',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFF248277),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {},
+                            title: Text(
+                              '',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFF358f80),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {},
+                            title: Text(
+                              '',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFF469d89),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {},
+                            title: Text(
+                              '',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           accountTile(),
@@ -125,11 +213,11 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
 
   Widget controlTile() {
     return Padding(
-      padding: EdgeInsets.only(top: 20, bottom: 30),
+      padding: EdgeInsets.only(top: 20, bottom: 5),
       child: ListTile(
-        leading: FlutterLogo(),
+        leading: Image(image: AssetImage('assets/images/app_logo.png')),
         title: Txt(
-          text: "FlutterShip",
+          text: "AumgPao",
           fontSize: 18,
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -139,6 +227,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
     );
   }
 
+/*
   Widget blackIconMenu() {
     return AnimatedContainer(
       duration: Duration(seconds: 1),
@@ -171,7 +260,8 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
       ),
     );
   }
-
+*/
+/*
   Widget invisibleSubMenus() {
     // List<CDM> _cmds = cdms..removeAt(0);
     return AnimatedContainer(
@@ -182,7 +272,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
         children: [
           Container(height: 95),
           Expanded(
-            child: ListView.builder(
+            child: ListView(
                 itemCount: cdms.length,
                 itemBuilder: (context, index) {
                   CDM cmd = cdms[index];
@@ -191,14 +281,15 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
 
                   bool selected = selectedIndex == index;
                   bool isValidSubMenu = selected && cmd.submenus.isNotEmpty;
-                  return subMenuWidget([cmd.title]..addAll(cmd.submenus), isValidSubMenu);
+                  return subMenuWidget(
+                      [cmd.title]..addAll(cmd.submenus), isValidSubMenu);
                 }),
           ),
         ],
       ),
     );
   }
-
+*/
   Widget controlButton() {
     return Padding(
       padding: EdgeInsets.only(top: 20, bottom: 30),
@@ -221,7 +312,9 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
       height: isValidSubMenu ? submenus.length.toDouble() * 37.5 : 45,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          color: isValidSubMenu ? Colorz.complexDrawerBlueGrey : Colors.transparent,
+          color: isValidSubMenu
+              ? Colorz.complexDrawerBlueGrey
+              : Colors.transparent,
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(8),
             bottomRight: Radius.circular(8),
@@ -290,20 +383,22 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
     );
   }
 
+/*
   static List<CDM> cdms = [
     // CDM(Icons.grid_view, "Control", []),
 
     CDM(Icons.grid_view, "Dashboard", []),
-    CDM(Icons.subscriptions, "Category", ["HTML & CSS", "Javascript", "PHP & MySQL"]),
+    CDM(Icons.subscriptions, "Category",
+        ["HTML & CSS", "Javascript", "PHP & MySQL"]),
     CDM(Icons.markunread_mailbox, "Posts", ["Add", "Edit", "Delete"]),
     CDM(Icons.pie_chart, "Analytics", []),
     CDM(Icons.trending_up, "Chart", []),
-
-    CDM(Icons.power, "Plugins", ["Ad Blocker", "Everything Https", "Dark Mode"]),
+    CDM(Icons.power, "Plugins",
+        ["Ad Blocker", "Everything Https", "Dark Mode"]),
     CDM(Icons.explore, "Explore", []),
     CDM(Icons.settings, "Setting", []),
   ];
-
+*/
   void expandOrShrinkDrawer() {
     setState(() {
       isExpanded = !isExpanded;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/user_profire.dart';
@@ -110,6 +111,8 @@ class _user_changepasswordState extends State<user_changepassword> {
                                     height: 20,
                                   ),
                                   TextFormField(
+                                    validator: RequiredValidator(
+                                        errorText: "กรุณาป้อนข้อมูล"),
                                     onSaved: (password) {
                                       setState(() {
                                         password1 = password;
@@ -131,6 +134,8 @@ class _user_changepasswordState extends State<user_changepassword> {
                                     height: 20,
                                   ),
                                   TextFormField(
+                                    validator: RequiredValidator(
+                                        errorText: "กรุณาป้อนข้อมูล"),
                                     onSaved: (password) {
                                       setState(() {
                                         password2 = password;

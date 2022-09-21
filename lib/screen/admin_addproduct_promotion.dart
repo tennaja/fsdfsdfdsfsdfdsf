@@ -5,6 +5,8 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:intl/intl.dart';
+import 'package:project_bekery/drawer/Constants/Constants.dart';
+import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/model/product_model.dart';
 import 'package:project_bekery/model/product_promotion.dart';
 import 'package:project_bekery/model/promotion_model.dart';
@@ -177,196 +179,80 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
     final fromKey = GlobalKey<FormState>();
     String? promotion_name, promotion_value;
     return Scaffold(
-      body: SliderDrawer(
-        appBar: SliderAppBar(
-          trailing: IconButton(
-              onPressed: () {
-                setState(() {
-                  status = 'เพิ่มข้อมูล';
-                });
-              },
-              icon: Icon(Icons.add)),
-          appBarHeight: 85,
-          appBarColor: Color.fromARGB(255, 255, 222, 178),
-          title: Container(
-            child: Center(
-                child: const Text(
-              'รายการนำเข้าสินค้า',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            )),
-          ),
-        ),
-        slider: AdminAppBar(),
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Container(
-                  child: status == 'เพิ่มข้อมูล'
-                      ? Form(
-                          key: fromKey,
-                          child: Column(
-                            children: [
-                              SizedBox(height: 20),
-                              DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    //background color of dropdown button
-                                    border: Border.all(
-                                        color: Colors.black38,
-                                        width: 1), //border of dropdown button
-                                    borderRadius: BorderRadius.circular(
-                                        30), //border raiuds of dropdown button
-                                  ),
-                                  child: DropdownButton(
-                                    value: product,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        product = newValue!;
-                                      });
-                                    },
-                                    // ignore: prefer_const_literals_to_create_immutables
+      backgroundColor: Colorz.complexDrawerBlack,
+      appBar: AppBar(
+        backgroundColor: Color(0xFF571089),
+        title: Text('เพิ่มโปรโมชั่นให้สินค้า'),
+      ),
+      drawer: ComplexDrawer(),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Container(
+                child: status == 'เพิ่มข้อมูล'
+                    ? Form(
+                        key: fromKey,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            DecoratedBox(
+                                decoration: BoxDecoration(
+                                  //background color of dropdown button
+                                  border: Border.all(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      width: 1), //border of dropdown button
+                                  borderRadius: BorderRadius.circular(
+                                      30), //border raiuds of dropdown button
+                                ),
+                                child: DropdownButton(
+                                  dropdownColor: Colorz.complexDrawerBlack,
+                                  value: product,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      product = newValue!;
+                                    });
+                                  },
+                                  // ignore: prefer_const_literals_to_create_immutables
 
-                                    items: productnamelist
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: SizedBox(
-                                          width: 200, // for example
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 20),
-                                            child: Text(value),
+                                  items: productnamelist
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: SizedBox(
+                                        width: 200, // for example
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20),
+                                          child: Text(
+                                            value,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255),
+                                            ),
                                           ),
                                         ),
-                                      );
-                                    }).toList(),
-                                    icon: Padding(
-                                        //Icon at tail, arrow bottom is default icon
-                                        padding: EdgeInsets.only(right: 20),
-                                        child: Icon(Icons.arrow_downward)),
-                                    iconEnabledColor: Color.fromARGB(
-                                        255, 0, 0, 0), //Icon color
+                                      ),
+                                    );
+                                  }).toList(),
+                                  icon: Padding(
+                                      //Icon at tail, arrow bottom is default icon
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: Icon(Icons.arrow_downward)),
+                                  iconEnabledColor: Color.fromARGB(
+                                      255, 255, 255, 255), //Icon color
 
-                                    //dropdown background color
-                                    underline: Container(), //remove underline
-                                    isExpanded:
-                                        true, //make true to make width 100%
-                                  )),
-                              SizedBox(height: 20),
-                              DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    //background color of dropdown button
-                                    border: Border.all(
-                                        color: Colors.black38,
-                                        width: 1), //border of dropdown button
-                                    borderRadius: BorderRadius.circular(
-                                        30), //border raiuds of dropdown button
-                                  ),
-                                  child: DropdownButton(
-                                    value: promotion,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        promotion = newValue!;
-                                      });
-                                    },
-                                    // ignore: prefer_const_literals_to_create_immutables
-
-                                    items: promotionnamelist
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: SizedBox(
-                                          width: 200, // for example
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 20),
-                                            child: Text(value),
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    icon: Padding(
-                                        //Icon at tail, arrow bottom is default icon
-                                        padding: EdgeInsets.only(right: 20),
-                                        child: Icon(Icons.arrow_downward)),
-                                    iconEnabledColor: Color.fromARGB(
-                                        255, 0, 0, 0), //Icon color
-
-                                    //dropdown background color
-                                    underline: Container(), //remove underline
-                                    isExpanded:
-                                        true, //make true to make width 100%
-                                  )),
-                              SizedBox(height: 20),
-                              TextFormField(
-                                initialValue:
-                                    DateFormat('วันที่ d เดือน MMMM ปี y', 'th')
-                                        .format(startDate)
-                                        .toString(),
-                                onTap: () {
-                                  _selectstartDate(context);
-                                },
-                                readOnly: true,
-                                keyboardType: TextInputType.number,
-                                validator: RequiredValidator(
-                                    errorText: "กรุณาป้อนข้อมูล"),
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                  suffixIcon: new IconButton(
-                                    onPressed: () {
-                                      _selectstartDate(context);
-                                    },
-                                    icon: Icon(
-                                      Icons.edit_calendar,
-                                    ),
-                                  ),
-                                  label: Text('วันที่เริ่มโปรโมชั่น'),
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderSide:
-                                        const BorderSide(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              TextFormField(
-                                readOnly: true,
-                                initialValue:
-                                    DateFormat('วันที่ d เดือน MMMM ปี y', 'th')
-                                        .format(endDate)
-                                        .toString(),
-                                onTap: () {
-                                  _selectendDate(context);
-                                },
-                                keyboardType: TextInputType.number,
-                                validator: RequiredValidator(
-                                    errorText: "กรุณาป้อนข้อมูล"),
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                  suffixIcon: new Icon(
-                                    Icons.edit_calendar,
-                                  ),
-                                  label: Text('วันที่หมดอายุโปโมชั่น'),
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderSide:
-                                        const BorderSide(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              DecoratedBox(
+                                  //dropdown background color
+                                  underline: Container(), //remove underline
+                                  isExpanded:
+                                      true, //make true to make width 100%
+                                )),
+                            SizedBox(height: 20),
+                            DecoratedBox(
                                 decoration: BoxDecoration(
                                   //background color of dropdown button
                                   border: Border.all(
@@ -375,137 +261,246 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                   borderRadius: BorderRadius.circular(
                                       30), //border raiuds of dropdown button
                                 ),
-                                child: SizedBox(
-                                  width: 350,
-                                  height: 40,
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.orangeAccent,
-                                        elevation: 3,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(32.0)),
-                                        //////// HERE
+                                child: DropdownButton(
+                                  value: promotion,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      promotion = newValue!;
+                                    });
+                                  },
+                                  // ignore: prefer_const_literals_to_create_immutables
+
+                                  items: promotionnamelist
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: SizedBox(
+                                        width: 200, // for example
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20),
+                                          child: Text(value),
+                                        ),
                                       ),
-                                      child: Text('เพิ่มโปรโมชั่นให้สินค้า'),
-                                      onPressed: () {
-                                        if (fromKey.currentState!.validate()) {
-                                          fromKey.currentState!.save();
-                                          if (endDate.isBefore(startDate)) {
-                                            print('end before start');
-                                          } else {
-                                            _addproduct_promotion();
-                                          }
-                                        }
-                                      }),
+                                    );
+                                  }).toList(),
+                                  icon: Padding(
+                                      //Icon at tail, arrow bottom is default icon
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: Icon(Icons.arrow_downward)),
+                                  iconEnabledColor:
+                                      Color.fromARGB(255, 0, 0, 0), //Icon color
+
+                                  //dropdown background color
+                                  underline: Container(), //remove underline
+                                  isExpanded:
+                                      true, //make true to make width 100%
+                                )),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              initialValue:
+                                  DateFormat('วันที่ d เดือน MMMM ปี y', 'th')
+                                      .format(startDate)
+                                      .toString(),
+                              onTap: () {
+                                _selectstartDate(context);
+                              },
+                              readOnly: true,
+                              keyboardType: TextInputType.number,
+                              validator: RequiredValidator(
+                                  errorText: "กรุณาป้อนข้อมูล"),
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                suffixIcon: new IconButton(
+                                  onPressed: () {
+                                    _selectstartDate(context);
+                                  },
+                                  icon: Icon(
+                                    Icons.edit_calendar,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ))
-                      : Container(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Divider(
-                    color: Colors.black,
-                  ),
-                ),
-
-                //ตาราง
-
-                Expanded(
-                    child: _product_promotion?.length != 0
-                        ? SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  child: DataTable(
-                                      columns: [
-                                        DataColumn(label: Text('ชื่อสินค้า')),
-                                        DataColumn(
-                                            label: Text('ชื่อโปรโมชั่น')),
-                                        DataColumn(label: Text('ส่วนลด')),
-                                        DataColumn(label: Text('วันที่เริ่ม')),
-                                        DataColumn(
-                                            label: Text('วันที่สิ้นสุด')),
-                                        DataColumn(label: Text('ลบ')),
-                                      ],
-                                      rows: _product_promotion!
-                                          .map(
-                                            (Promotion) => DataRow(cells: [
-                                              DataCell(Text(Promotion
-                                                  .product_name
-                                                  .toString())),
-                                              DataCell(Text(Promotion
-                                                  .promotion_name
-                                                  .toString())),
-                                              DataCell(Text(Promotion
-                                                  .promotion_value
-                                                  .toString())),
-                                              DataCell(Text(Promotion.start_date
-                                                  .toString())),
-                                              DataCell(Text(Promotion.end_date
-                                                  .toString())),
-                                              DataCell(IconButton(
-                                                icon: Icon(Icons.delete),
-                                                onPressed: () {
-                                                  showDialog<bool>(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return AlertDialog(
-                                                          title: const Text(
-                                                              'ลบข้อมูล'),
-                                                          content: const Text(
-                                                              'ต้องการที่จะลบประเภทสินค้านี้ใช้ไหม?'),
-                                                          actions: <Widget>[
-                                                            ElevatedButton(
-                                                              onPressed: () =>
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop(),
-                                                              child: const Text(
-                                                                  "ไม่"),
-                                                            ),
-                                                            ElevatedButton(
-                                                              onPressed: () {
-                                                                Art_Services()
-                                                                    .deleteproduct_promotion(
-                                                                        Promotion
-                                                                            .product_id
-                                                                            .toString(),
-                                                                        Promotion
-                                                                            .promotion_id
-                                                                            .toString())
-                                                                    .then(
-                                                                        (value) =>
-                                                                            {
-                                                                              Fluttertoast.showToast(msg: "ลบ ${Promotion.promotion_name.toString()} เรียบร้อย", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Color.fromARGB(255, 255, 0, 0), textColor: Colors.white, fontSize: 16.0),
-                                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                return admin_addproductpromotion();
-                                                                              }))
-                                                                            });
-                                                              },
-                                                              child: const Text(
-                                                                  "ใช่"),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      });
-                                                },
-                                              )),
-                                            ]),
-                                          )
-                                          .toList()),
+                                label: Text('วันที่เริ่มโปรโมชั่น'),
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
                             ),
-                          )
-                        : Container()),
-              ],
-            ),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              readOnly: true,
+                              initialValue:
+                                  DateFormat('วันที่ d เดือน MMMM ปี y', 'th')
+                                      .format(endDate)
+                                      .toString(),
+                              onTap: () {
+                                _selectendDate(context);
+                              },
+                              keyboardType: TextInputType.number,
+                              validator: RequiredValidator(
+                                  errorText: "กรุณาป้อนข้อมูล"),
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                suffixIcon: new Icon(
+                                  Icons.edit_calendar,
+                                ),
+                                label: Text('วันที่หมดอายุโปโมชั่น'),
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            DecoratedBox(
+                              decoration: BoxDecoration(
+                                //background color of dropdown button
+                                border: Border.all(
+                                    color: Colors.black38,
+                                    width: 1), //border of dropdown button
+                                borderRadius: BorderRadius.circular(
+                                    30), //border raiuds of dropdown button
+                              ),
+                              child: SizedBox(
+                                width: 350,
+                                height: 40,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color(0xFF571089),
+                                      elevation: 3,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(32.0)),
+                                      //////// HERE
+                                    ),
+                                    child: Text('เพิ่มโปรโมชั่นให้สินค้า'),
+                                    onPressed: () {
+                                      if (fromKey.currentState!.validate()) {
+                                        fromKey.currentState!.save();
+                                        if (endDate.isBefore(startDate)) {
+                                          print('end before start');
+                                        } else {
+                                          _addproduct_promotion();
+                                        }
+                                      }
+                                    }),
+                              ),
+                            ),
+                          ],
+                        ))
+                    : Container(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+
+              //ตาราง
+
+              Expanded(
+                  child: _product_promotion?.length != 0
+                      ? SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                child: DataTable(
+                                    columns: [
+                                      DataColumn(label: Text('ชื่อสินค้า')),
+                                      DataColumn(label: Text('ชื่อโปรโมชั่น')),
+                                      DataColumn(label: Text('ส่วนลด')),
+                                      DataColumn(label: Text('วันที่เริ่ม')),
+                                      DataColumn(label: Text('วันที่สิ้นสุด')),
+                                      DataColumn(label: Text('ลบ')),
+                                    ],
+                                    rows: _product_promotion!
+                                        .map(
+                                          (Promotion) => DataRow(cells: [
+                                            DataCell(Text(Promotion.product_name
+                                                .toString())),
+                                            DataCell(Text(Promotion
+                                                .promotion_name
+                                                .toString())),
+                                            DataCell(Text(Promotion
+                                                .promotion_value
+                                                .toString())),
+                                            DataCell(Text(Promotion.start_date
+                                                .toString())),
+                                            DataCell(Text(
+                                                Promotion.end_date.toString())),
+                                            DataCell(IconButton(
+                                              icon: Icon(Icons.delete),
+                                              onPressed: () {
+                                                showDialog<bool>(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'ลบข้อมูล'),
+                                                        content: const Text(
+                                                            'ต้องการที่จะลบประเภทสินค้านี้ใช้ไหม?'),
+                                                        actions: <Widget>[
+                                                          ElevatedButton(
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(),
+                                                            child: const Text(
+                                                                "ไม่"),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              Art_Services()
+                                                                  .deleteproduct_promotion(
+                                                                      Promotion
+                                                                          .product_id
+                                                                          .toString(),
+                                                                      Promotion
+                                                                          .promotion_id
+                                                                          .toString())
+                                                                  .then(
+                                                                      (value) =>
+                                                                          {
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "ลบ ${Promotion.promotion_name.toString()} เรียบร้อย",
+                                                                                toastLength: Toast.LENGTH_SHORT,
+                                                                                gravity: ToastGravity.BOTTOM,
+                                                                                timeInSecForIosWeb: 1,
+                                                                                backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                                                                                textColor: Colors.white,
+                                                                                fontSize: 16.0),
+                                                                            Navigator.push(context,
+                                                                                MaterialPageRoute(builder: (context) {
+                                                                              return admin_addproductpromotion();
+                                                                            }))
+                                                                          });
+                                                            },
+                                                            child: const Text(
+                                                                "ใช่"),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                            )),
+                                          ]),
+                                        )
+                                        .toList()),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container()),
+            ],
           ),
         ),
       ),

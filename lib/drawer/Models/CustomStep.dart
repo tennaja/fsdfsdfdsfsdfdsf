@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class CustomStep extends Equatable{
+class CustomStep extends Equatable {
   final int createdAt;
   final String title;
   final String description;
@@ -14,6 +14,4 @@ class CustomStep extends Equatable{
   String toString() {
     return props.toString();
   }
-
-  
 }

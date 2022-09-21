@@ -60,7 +60,7 @@ class _AvatarState extends State<Avatar> {
         });
   }
 
-  Widget backgroundContainer(String?  imgUrl) {
+  Widget backgroundContainer(String? imgUrl) {
     return Container(
       alignment: Alignment.center,
       width: size,

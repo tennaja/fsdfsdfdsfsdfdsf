@@ -3,6 +3,8 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:project_bekery/drawer/Constants/Constants.dart';
+import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/model/export_product.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/mysql/service.dart';
@@ -18,7 +20,8 @@ class admin_orderlist extends StatefulWidget {
 class _admin_orderlistState extends State<admin_orderlist> {
   List<Export_product>? _Export_product;
   List<Export_product>? _filterImport_product;
-  int? datalength;
+  List<int> datalength = [];
+  int? datadetaillength;
 
   void initState() {
     Intl.defaultLocale = 'th';
@@ -33,10 +36,8 @@ class _admin_orderlistState extends State<admin_orderlist> {
     Art_Services().gatallExport_product(where).then((value) {
       setState(() {
         _Export_product = value;
-        datalength = value.length;
-        _filterImport_product = value;
+        datadetaillength = value.length;
       });
-
       print('จำนวข้อมูล : ${value.length}');
     });
   }
@@ -44,78 +45,64 @@ class _admin_orderlistState extends State<admin_orderlist> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SliderDrawer(
-        appBar: SliderAppBar(
-          appBarHeight: 85,
-          appBarColor: Color.fromARGB(255, 255, 222, 178),
-          title: Container(
-            child: Center(
-                child: const Text(
-              'หน้ารับออเดอร์',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            )),
-          ),
-        ),
-        slider: AdminAppBar(),
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Color.fromRGBO(255, 171, 64, 1).withOpacity(0.5),
-          child: datalength == 0
-              ? Container(
-                  child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/correct_image.png',
-                      height: 100,
-                      width: 100,
-                    ),
-                    Text('รับงานทั้งหมดเรียบร้อยแล้ว')
-                  ],
-                ))
-              : ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: _Export_product != null
-                      ? (_Export_product?.length ?? 0)
-                      : 0,
-                  itemBuilder: (_, index) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            color: Colors.orangeAccent,
-                            child: ListTile(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              title: Text(
-                                  'รหัสออเดอร์ : ${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Export_product![index].date}'))}'),
-                              subtitle: Text(
-                                  'ที่มา : ${_Export_product![index].order_by}'),
-                              tileColor: Colors.orangeAccent,
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return admin_oderlist_detail(
-                                      _Export_product![index]
-                                          .order_id
-                                          .toString(),
-                                      _Export_product![index]
-                                          .total_price
-                                          .toString(),
-                                      _Export_product![index]
-                                          .order_responsible_person
-                                          .toString());
-                                }));
-                              },
-                            ),
+      appBar: AppBar(
+        backgroundColor: Color(0xFF571089),
+        title: Text('data'),
+      ),
+      drawer: /*AdminAppBar(),*/
+          ComplexDrawer(),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: datalength == 0
+            ? Container(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/correct_image.png',
+                    height: 100,
+                    width: 100,
+                  ),
+                  Text('รับงานทั้งหมดเรียบร้อยแล้ว')
+                ],
+              ))
+            : ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _Export_product != null
+                    ? (_Export_product?.length ?? 0)
+                    : 0,
+                itemBuilder: (_, index) => Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          color: Colors.orangeAccent,
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            title: Text(
+                                'รหัสออเดอร์ : ${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Export_product![index].date}'))}'),
+                            subtitle: Text(
+                                'ที่มา : ${_Export_product![index].order_by}'),
+                            tileColor: Colors.orangeAccent,
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_oderlist_detail(
+                                    _Export_product![index].order_id.toString(),
+                                    _Export_product![index]
+                                        .total_price
+                                        .toString(),
+                                    _Export_product![index]
+                                        .order_responsible_person
+                                        .toString());
+                              }));
+                            },
                           ),
                         ),
-                      )),
-        ),
+                      ),
+                    )),
       ),
     );
   }

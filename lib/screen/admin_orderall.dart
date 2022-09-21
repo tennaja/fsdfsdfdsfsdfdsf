@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:project_bekery/login/login.dart';
@@ -18,7 +19,9 @@ class admin_orderall extends StatefulWidget {
 
 class _admin_orderallState extends State<admin_orderall> {
   List<Export_product>? _Export_product;
-  List<Export_product>? _filterImport_product;
+  List<Export_product_detail>? _orderdetail;
+  late int datalength;
+  List<String> datadetail_lengthlist = [];
 
   void initState() {
     Intl.defaultLocale = 'th';
@@ -26,19 +29,29 @@ class _admin_orderallState extends State<admin_orderall> {
     super.initState();
     _Export_product = [];
     _getImport_product('ยังไม่มีใครรับ');
+    print(datadetail_lengthlist);
   }
 
-  _getImport_product(where) {
+  _getImport_product(where) async {
     print("function working");
     Art_Services().gatallExport_product(where).then((value) {
       setState(() {
         _Export_product = value;
-
-        _filterImport_product = value;
+        datalength = value.length;
       });
-
-      print('จำนวข้อมูล : ${value.length}');
     });
+  }
+
+  _getquantity(order_id) {
+    int? datadetail_length;
+    print('--------------------------funtion--------------------------------');
+    print('รับข้อมูล : ${order_id}');
+    Art_Services().getorder_detail(order_id.toString()).then((value) {
+      setState(() {
+        datadetail_length = value.length;
+      });
+    });
+    return datadetail_length;
   }
 
   @override
@@ -100,6 +113,102 @@ class _admin_orderallState extends State<admin_orderall> {
               itemCount:
                   _Export_product != null ? (_Export_product?.length ?? 0) : 0,
               itemBuilder: (_, index) => Center(
+                    child: Card(
+                      elevation: 20,
+                      color: Colors.yellow,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: _Export_product![index].order_status ==
+                                    'ยังไม่มีใครรับ'
+                                ? Icon(
+                                    Icons.timelapse,
+                                    color: Color.fromARGB(255, 255, 166, 0),
+                                  )
+                                : _Export_product![index].order_status ==
+                                        'ส่งเรียบร้อย'
+                                    ? Icon(
+                                        Icons.check,
+                                        color: Colors.lightGreen,
+                                      )
+                                    : _Export_product![index].order_status ==
+                                            'รายการที่ยกเลิก'
+                                        ? Icon(
+                                            Icons.cancel,
+                                            color:
+                                                Color.fromARGB(255, 255, 0, 0),
+                                          )
+                                        : _Export_product![index]
+                                                    .order_status ==
+                                                'ของกำลังส่ง'
+                                            ? Icon(
+                                                Icons.motorcycle,
+                                                color: Colors.lightGreen,
+                                              )
+                                            : Container(),
+                            title: Text(
+                                'รหัสการสั่ง : ${_Export_product![index].order_id}'),
+                            subtitle: Text(
+                                'จำนวนรายการ : ${_Export_product![index].product_amount}'),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  'วันที่สั่ง ${_Export_product![index].date}',
+                                  style: TextStyle(
+                                      color: Colors.black.withOpacity(0.6)),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.discount_rounded,
+                                    color: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                      '${_Export_product![index].total_price} .-  '),
+                                ],
+                              )
+                            ],
+                          ),
+                          ButtonBar(
+                            alignment: MainAxisAlignment.end,
+                            children: [
+                              FlatButton(
+                                textColor: const Color(0xFF6200EE),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              admin_oderall_detail(
+                                                  _Export_product![index]
+                                                      .order_id
+                                                      .toString(),
+                                                  _Export_product![index]
+                                                      .total_price
+                                                      .toString(),
+                                                  _Export_product![index]
+                                                      .order_responsible_person
+                                                      .toString())));
+                                },
+                                child: const Text('รายละเอียด >'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+/*
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -127,7 +236,7 @@ class _admin_orderallState extends State<admin_orderall> {
                           },
                         ),
                       ),
-                    ),
+                    ),*/
                   )),
         ),
       ),
@@ -169,12 +278,226 @@ class _admin_oderall_detailState extends State<admin_oderall_detail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('รายละเอียดการขาย'),
-          backgroundColor: Colors.blueAccent,
-        ),
-        backgroundColor: Colors.grey[100],
-        body: SingleChildScrollView(
+      appBar: AppBar(
+        title: Text('รายละเอียดการขาย'),
+        backgroundColor: Colors.blueAccent,
+      ),
+      backgroundColor: Colors.grey[100],
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount:
+                      _orderdetail != null ? (_orderdetail?.length ?? 0) : 0,
+                  itemBuilder: (_, index) => Container(
+                    margin: EdgeInsets.all(5),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                      "${_orderdetail![index].product_amount} x"),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "${_orderdetail![index].product_name}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                '${_orderdetail![index].product_price}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          subtitle: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "ลด 20 %",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              Text(
+                                '- 20',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                /*
+                Column(
+                  children: [
+                    ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text("1 x"),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "ข้าวตราฉัตร",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            '250',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "ลด 20 %",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          Text(
+                            '- 20',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),*/
+              ),
+            ),
+          ),
+          Container(
+            height: 90,
+            child: Card(
+              elevation: 20,
+              color: Colors.greenAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "รวมเบื้องต้น",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "ราคา ",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          "250",
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: 90,
+            child: Card(
+              elevation: 20,
+              color: Colors.yellow,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("ส่วนลด"),
+                      ],
+                    ),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "ลด 20 % ",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          '- 20',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Container(
+            height: 60,
+            width: double.maxFinite,
+            decoration: BoxDecoration(
+                color: Colors.lightBlue,
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(20.0))),
+            child: Column(
+              children: [
+                ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "รวม",
+                        style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
+                      Text(
+                        '${widget.total_price} บาท',
+                        style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+
+      /*SingleChildScrollView(
           child: Padding(
               padding: const EdgeInsets.all(20),
               child: SingleChildScrollView(
@@ -236,6 +559,7 @@ class _admin_oderall_detailState extends State<admin_oderall_detail> {
                   ),
                 ),
               )),
-        ));
+        )*/
+    );
   }
 }

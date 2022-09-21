@@ -99,7 +99,14 @@ class _OrderpageState extends State<Orderpage> {
               children: [
                 CarouselSlider(
                     items: [
-                      Image.asset('assets/images/promotion1.jpg'),
+                      InkWell(
+                        child: Image.asset(
+                          'assets/images/promotion1.jpg',
+                        ),
+                        onTap: () {
+                          print('object');
+                        },
+                      ),
                       Image.asset('assets/images/promotion2.jpg'),
                       Image.asset('assets/images/promotion3.jpg'),
                       Image.asset('assets/images/promotion4.jpg'),

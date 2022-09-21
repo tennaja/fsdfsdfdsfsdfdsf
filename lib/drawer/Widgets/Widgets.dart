@@ -1,15 +1,15 @@
 import 'dart:math' as math;
 
 import 'package:async/async.dart';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/Repos/Img.dart';
 
 import 'package:intl/intl.dart';
+import 'package:project_bekery/drawer/Repos/Img.dart';
 
 import '../Constants/Constants.dart';
 
@@ -41,13 +41,16 @@ class FadePageRoute extends PageRouteBuilder {
               return widget;
             },
             transitionDuration: Duration(milliseconds: 300),
-            transitionsBuilder: ((context, animation, secondaryAnimation, child) {
+            transitionsBuilder:
+                ((context, animation, secondaryAnimation, child) {
               return SlideTransition(
                   transformHitTests: false,
                   position:
-                      Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero).animate(animation),
+                      Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero)
+                          .animate(animation),
                   child: new SlideTransition(
-                      position: new Tween<Offset>(begin: Offset.zero, end: const Offset(0.0, -1.0))
+                      position: new Tween<Offset>(
+                              begin: Offset.zero, end: const Offset(0.0, -1.0))
                           .animate(secondaryAnimation),
                       child: child));
             }));
@@ -88,7 +91,11 @@ class Widgets {
 
   static Txt subtitle(BuildContext context, String text,
       {TextAlign? textAlign, double? fontSize = 12}) {
-    return Txt(text: text, textAlign: textAlign, fontSize: fontSize, color: subtitleColor(context));
+    return Txt(
+        text: text,
+        textAlign: textAlign,
+        fontSize: fontSize,
+        color: subtitleColor(context));
   }
 
   static Color subtitleColor(BuildContext context) {
@@ -161,7 +168,8 @@ class Widgets {
   //   return List<Logg>.generate((list).length, (index) => Logg.fromJson(list[index]));
   // }
 
-  static String get today => "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+  static String get today =>
+      "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
 
   // static Future<bool?> call(String number) async {
   // return await FlutterPhoneDirectCaller.callNumber(number);
@@ -207,7 +215,8 @@ class Widgets {
   // }
 
   static String ago(int millisecondsSinceEpoch, {bool numericDates = true}) {
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
     final difference = DateTime.now().difference(dateTime);
 
     if (difference.inDays > 8) {
@@ -265,7 +274,8 @@ class Widgets {
     );
   }
 
-  static bool isLight(BuildContext context) => Theme.of(context).brightness == Brightness.light;
+  static bool isLight(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.light;
 
   // static Future<bool> sendEmail(String email) async {
   //   bool success = false;
@@ -306,7 +316,10 @@ class Widgets {
 
   ///[filter] Removes all the special characters and spaces
   static String filter(String text) {
-    return (text.replaceAll(new RegExp(r'[^\w\s]+'), '').replaceAll(' ', '').replaceAll('_', ''));
+    return (text
+        .replaceAll(new RegExp(r'[^\w\s]+'), '')
+        .replaceAll(' ', '')
+        .replaceAll('_', ''));
   }
 
   ///Returns the [DateTime] values in a human readable format
@@ -317,13 +330,15 @@ class Widgets {
     DateTime? finalDateTime;
 
     if (input is DateTime) finalDateTime = input;
-    if (input is int) finalDateTime = DateTime.fromMillisecondsSinceEpoch(input);
+    if (input is int)
+      finalDateTime = DateTime.fromMillisecondsSinceEpoch(input);
 
     ///If the input is not valid, then just return ''
     if (finalDateTime == null) return '';
 
     final Duration difference = DateTime.now().difference(finalDateTime);
-    bool isPast = finalDateTime.millisecondsSinceEpoch <= DateTime.now().millisecondsSinceEpoch;
+    bool isPast = finalDateTime.millisecondsSinceEpoch <=
+        DateTime.now().millisecondsSinceEpoch;
     String ago;
 
     if (difference.inDays > 8) {
@@ -331,7 +346,9 @@ class Widgets {
     } else if ((difference.inDays / 7).floor() >= 1) {
       ago = isPast ? '1 week ago' : '1 week';
     } else if (difference.inDays >= 2) {
-      ago = isPast ? '${difference.inDays} days ago' : '${difference.inDays} days';
+      ago = isPast
+          ? '${difference.inDays} days ago'
+          : '${difference.inDays} days';
     } else if (difference.inDays >= 1) {
       ago = isPast ? 'Yesterday' : 'Tomorrow';
     } else if (difference.inHours >= 2) {
@@ -354,7 +371,8 @@ class Widgets {
     return '${toDate(createdAt)} @ ${toTime(createdAt)}';
   }
 
-  static String toDate(int createdAt, {bool showFullYear = true, bool showYear = true}) {
+  static String toDate(int createdAt,
+      {bool showFullYear = true, bool showYear = true}) {
     DateTime date = DateTime.fromMillisecondsSinceEpoch(createdAt);
     int day = date.day;
     int _month = date.month;

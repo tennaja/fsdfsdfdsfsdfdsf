@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+import 'package:project_bekery/model/product_promotion.dart';
 import 'package:project_bekery/screen/user_order.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
 import 'package:project_bekery/widgets/app_column.dart';
@@ -257,6 +259,36 @@ class product_detail_sql extends StatefulWidget {
 }
 
 class _product_detail_sqlState extends State<product_detail_sql> {
+  List<Product_promotion>? _product_promotion;
+  String? promotionname;
+
+  void initState() {
+    super.initState();
+    _product_promotion = [];
+    _getpromotion();
+  }
+
+  _getpromotion() {
+    print("function working");
+    print(
+      widget.product_id,
+    );
+    print(DateFormat('yyyy-MM-d').format(DateTime.now()).toString());
+    Art_Services()
+        .getonlyvalue_product_promotion(widget.product_id,
+            DateFormat('yyyy-MM-d').format(DateTime.now()).toString())
+        .then((promotion) {
+      setState(() {
+        _product_promotion = promotion;
+        promotionname = promotion[0].promotion_name;
+      });
+
+      print('จำนวข้อมูล : ${promotion.length}');
+      print('ชื่อโปรโมชั้น : ${promotion[0].promotion_name}');
+      return promotion[0].promotion_name.toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     int quantity = 1;
@@ -315,7 +347,7 @@ class _product_detail_sqlState extends State<product_detail_sql> {
                         text: "${widget.product_name}",
                         sell: '${widget.export_product.toString()}',
                         quantity: '${widget.product_quantity.toString()}',
-                        promotion: '${widget.proudct_promotion.toString()}',
+                        promotion: '${promotionname}',
                       ),
                       SizedBox(
                         height: height / 42.2,
@@ -351,8 +383,8 @@ class _product_detail_sqlState extends State<product_detail_sql> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(height / 42.2 * 2),
                 topRight: Radius.circular(height / 42.2 * 2))),
-        child: Import_quantity(widget.product_id, widget.product_price,
-            widget.proudct_promotion.toString()),
+        child: Import_quantity(
+            widget.product_id, widget.product_price, promotionname.toString()),
       ),
     );
   }
@@ -371,6 +403,39 @@ class Import_quantity extends StatefulWidget {
 
 class _Import_quantityState extends State<Import_quantity> {
   int quantity = 1;
+
+  List<Product_promotion>? _product_promotion;
+  String? promotionname;
+  int? promotionvalue;
+
+  void initState() {
+    super.initState();
+    _product_promotion = [];
+    _getpromotion();
+  }
+
+  _getpromotion() {
+    print("function working");
+    print(
+      widget.product_id,
+    );
+    print(DateFormat('yyyy-MM-d').format(DateTime.now()).toString());
+    Art_Services()
+        .getonlyvalue_product_promotion(widget.product_id,
+            DateFormat('yyyy-MM-d').format(DateTime.now()).toString())
+        .then((promotion) {
+      setState(() {
+        _product_promotion = promotion;
+        promotionname = promotion[0].promotion_name;
+        promotionvalue = int.parse(promotion[0].promotion_value.toString());
+      });
+
+      print('จำนวข้อมูล : ${promotion.length}');
+      print('ชื่อโปรโมชั้น : ${promotion[0].promotion_name}');
+      return promotion[0].promotion_name.toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -420,6 +485,9 @@ class _Import_quantityState extends State<Import_quantity> {
         ),
         InkWell(
           onTap: () async {
+            print('promotionของครั้งนี้ : ${promotionname}');
+            print('valuepromotionของครั้งนี้ : ${promotionvalue}');
+
             String email = await SessionManager().get("email");
             Art_Services().checkuserbasket(widget.product_id).then((value) {
               if (value.isNotEmpty) {
@@ -435,107 +503,18 @@ class _Import_quantityState extends State<Import_quantity> {
                 print('Promotion : ${widget.proudct_promotion}');
                 print('Product_price : ${(widget.product_price.toString())}');
                 print('Quantity : ${quantity.toString()}');
-
-                if (widget.proudct_promotion == 'โปรโมชั่น 10%') {
-                  print('โปรโมชั่น 10%');
-                  int totalprice = int.parse(widget.product_price) * quantity;
-                  int totalprice2 = (totalprice * (10 / 100)).round();
-                  int totalprice3 = totalprice - totalprice2;
-                  print('Totalprice : ${totalprice.toString()}');
-                  Art_Services()
-                      .user_add_basket(widget.product_id, quantity,
-                          totalprice3.toString(), email)
-                      .then((value) {
-                    Fluttertoast.showToast(
-                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
-                        textColor: Colors.white,
-                        fontSize: 16.0);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return Orderpage();
-                    }));
-                  });
-                } else if (widget.proudct_promotion == 'โปรโมชั่น 20%') {
-                  print('โปรโมชั่น 20%');
-                  int totalprice = int.parse(widget.product_price) * quantity;
-                  int totalprice2 = (totalprice * (20 / 100)).round();
-                  int totalprice3 = totalprice - totalprice2;
-                  print('Totalprice : ${totalprice.toString()}');
-                  Art_Services()
-                      .user_add_basket(widget.product_id, quantity,
-                          totalprice3.toString(), email)
-                      .then((value) {
-                    Fluttertoast.showToast(
-                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
-                        textColor: Colors.white,
-                        fontSize: 16.0);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return Orderpage();
-                    }));
-                  });
-                } else if (widget.proudct_promotion == 'โปรโมชั่น 30%') {
-                  print('โปรโมชั่น 30%');
-                  int totalprice = int.parse(widget.product_price) * quantity;
-                  int totalprice2 = (totalprice * (30 / 100)).round();
-                  int totalprice3 = totalprice - totalprice2;
-                  print('Totalprice : ${totalprice.toString()}');
-                  Art_Services()
-                      .user_add_basket(widget.product_id, quantity,
-                          totalprice3.toString(), email)
-                      .then((value) {
-                    Fluttertoast.showToast(
-                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
-                        textColor: Colors.white,
-                        fontSize: 16.0);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return Orderpage();
-                    }));
-                  });
-                } else if (widget.proudct_promotion == 'โปรโมชั่น 50%') {
-                  print('โปรโมชั่น 50%');
-                  int totalprice = int.parse(widget.product_price) * quantity;
-                  int totalprice2 = (totalprice * (50 / 100)).round();
-                  int totalprice3 = totalprice - totalprice2;
-                  print('Totalprice : ${totalprice.toString()}');
-                  Art_Services()
-                      .user_add_basket(widget.product_id, quantity,
-                          totalprice3.toString(), email)
-                      .then((value) {
-                    Fluttertoast.showToast(
-                        msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Color.fromARGB(255, 0, 255, 13),
-                        textColor: Colors.white,
-                        fontSize: 16.0);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return Orderpage();
-                    }));
-                  });
-                } else if (widget.proudct_promotion ==
-                    'โปรโมชั่น ซื้อ 1 แถม 1') {
-                  print('โปรโมชั่น ซื้อ 1 แถม 1');
+                if (promotionname == null) {
+                  print('ไม่มีโปรโมชั่น');
                   int totalprice = int.parse(widget.product_price) * quantity;
                   print('Totalprice : ${totalprice.toString()}');
                   Art_Services()
-                      .user_add_basket(widget.product_id, quantity * 2,
-                          totalprice.toString(), email)
+                      .user_add_basket(
+                          widget.product_id,
+                          quantity.toString(),
+                          widget.product_price.toString(),
+                          email,
+                          'ไม่มีโปรโมชั่น',
+                          0.toString())
                       .then((value) {
                     Fluttertoast.showToast(
                         msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
@@ -551,12 +530,21 @@ class _Import_quantityState extends State<Import_quantity> {
                     }));
                   });
                 } else {
-                  print('ไม่มีโปรโมชั่น');
+                  print('โปรโมชั่นValue : ${promotionvalue} %');
                   int totalprice = int.parse(widget.product_price) * quantity;
+                  int totalprice2 = (totalprice *
+                          (int.parse(promotionvalue.toString()) / 100))
+                      .round();
+                  int totalprice3 = totalprice - totalprice2;
                   print('Totalprice : ${totalprice.toString()}');
                   Art_Services()
-                      .user_add_basket(widget.product_id, quantity,
-                          totalprice.toString(), email)
+                      .user_add_basket(
+                          widget.product_id,
+                          quantity.toString(),
+                          widget.product_price.toString(),
+                          email,
+                          promotionname,
+                          promotionvalue.toString())
                       .then((value) {
                     Fluttertoast.showToast(
                         msg: "นำสินค้าใส่ตะกร้าเรียบร้อย",
