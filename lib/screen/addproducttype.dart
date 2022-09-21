@@ -65,7 +65,7 @@ class _addproducttypeState extends State<addproducttype> {
             title: Container(
               child: Center(
                   child: const Text(
-                'เพิ่มประเภทสินค้า',
+                'เพิ่มประเภทสินค้า1',
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
