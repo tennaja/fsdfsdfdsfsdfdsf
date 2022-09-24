@@ -12,6 +12,8 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_bekery/drawer/Constants/Constants.dart';
+import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/model/producttype.dart';
 import 'package:project_bekery/model/promotion_model.dart';
 import 'package:project_bekery/mysql/service.dart';
@@ -174,26 +176,27 @@ class _add_product_orderState extends State<add_product_order> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       resizeToAvoidBottomInset: false,
       body: SliderDrawer(
           appBar: SliderAppBar(
             appBarHeight: 85,
-            appBarColor: Color.fromARGB(255, 255, 222, 178),
+            appBarColor: Color(0xFF6411ad),
             title: Container(
               child: Center(
                   child: const Text(
-                'รายการนำเข้าสินค้า',
+                'เพิ่มสินค้า',
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold),
               )),
             ),
           ),
-          slider: AdminAppBar(),
+          slider: ComplexDrawer(),
           child: SingleChildScrollView(
             child: Container(
-              color: Colors.orangeAccent.withOpacity(0.5),
+              color: Colorz.complexDrawerBlack,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Form(
@@ -222,7 +225,7 @@ class _add_product_orderState extends State<add_product_order> {
                           height: 35,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.orangeAccent,
+                              primary: Color(0xFF6411ad),
                               elevation: 3,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(32.0)),
@@ -274,11 +277,17 @@ class _add_product_orderState extends State<add_product_order> {
                                 },
                                 autofocus: false,
                                 decoration: InputDecoration(
-                                  label: Text('ชื่อสินค้า'),
+                                   enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                                  label: Text('ชื่อสินค้า',style: TextStyle(color: Colors.white)),
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                     borderSide:
-                                        const BorderSide(color: Colors.black),
+                                        const BorderSide(color: Colors.white),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
@@ -293,7 +302,13 @@ class _add_product_orderState extends State<add_product_order> {
                                 },
                                 autofocus: false,
                                 decoration: InputDecoration(
-                                  label: Text('รายละเอียดสินค้า'),
+                                   enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                                  label: Text('รายละเอียดสินค้า',style: TextStyle(color: Colors.white)),
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                     borderSide:
@@ -319,7 +334,13 @@ class _add_product_orderState extends State<add_product_order> {
                                       },
                                       autofocus: false,
                                       decoration: InputDecoration(
-                                        label: Text('ราคา (ที่จะขาย)'),
+                                         enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                                        label: Text('ราคา (ที่จะขาย)',style: TextStyle(color: Colors.white)),
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
                                           borderSide: const BorderSide(
@@ -342,7 +363,13 @@ class _add_product_orderState extends State<add_product_order> {
                                       },
                                       autofocus: false,
                                       decoration: InputDecoration(
-                                        label: Text('จำนวน'),
+                                         enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                                        label: Text('จำนวน',style: TextStyle(color: Colors.white)),
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
                                           borderSide: const BorderSide(
@@ -371,7 +398,13 @@ class _add_product_orderState extends State<add_product_order> {
                                       },
                                       autofocus: false,
                                       decoration: InputDecoration(
-                                        label: Text('ราคา (ที่ซื้อมา)'),
+                                         enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                                        label: Text('ราคา (ที่ซื้อมา)',style: TextStyle(color: Colors.white)),
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
                                           borderSide: const BorderSide(
@@ -387,14 +420,16 @@ class _add_product_orderState extends State<add_product_order> {
                               SizedBox(height: 10),
                               DecoratedBox(
                                 decoration: BoxDecoration(
+                                  
                                   //background color of dropdown button
                                   border: Border.all(
-                                      color: Colors.black38,
-                                      width: 1), //border of dropdown button
+                                      color: Colors.white,
+                                      ), //border of dropdown button
                                   borderRadius: BorderRadius.circular(
                                       30), //border raiuds of dropdown button
                                 ),
                                 child: DropdownButton(
+                                  dropdownColor: Colorz.complexDrawerBlack,
                                   value: dropdownValue,
                                   onChanged: (String? newValue) {
                                     setState(() {
@@ -413,7 +448,7 @@ class _add_product_orderState extends State<add_product_order> {
                                         child: Padding(
                                           padding:
                                               const EdgeInsets.only(left: 20),
-                                          child: Text(value),
+                                          child: Text(value,style: TextStyle(color: Colors.white)),
                                         ),
                                       ),
                                     );
@@ -423,7 +458,7 @@ class _add_product_orderState extends State<add_product_order> {
                                       padding: EdgeInsets.only(right: 20),
                                       child: Icon(Icons.arrow_downward)),
                                   iconEnabledColor:
-                                      Color.fromARGB(255, 0, 0, 0), //Icon color
+                                      Color.fromARGB(255, 255, 253, 253), //Icon color
 
                                   //dropdown background color
                                   underline: Container(), //remove underline
@@ -449,7 +484,7 @@ class _add_product_orderState extends State<add_product_order> {
                                   height: 35,
                                   child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        primary: Colors.orangeAccent,
+                                        primary: Color(0xFF6411ad),
                                         elevation: 3,
                                         shape: RoundedRectangleBorder(
                                             borderRadius:

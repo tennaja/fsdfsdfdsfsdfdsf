@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/model/import_detail.dart';
@@ -77,31 +78,31 @@ class _admin_reportState extends State<admin_report> {
               trailing: IconButton(
                 icon: const Icon(
                   Icons.calendar_month,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   _selectDate(context);
                 },
               ),
               appBarHeight: 85,
-              appBarColor: const Color.fromARGB(255, 255, 222, 178),
+              appBarColor: const Color(0xFF358f80),
               title: Container(
                 child: const Center(
                     child: Text(
                   'รายงานยอดการขาย',
                   style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 )),
               ),
             ),
-            slider: const AdminAppBar(),
+            slider: const ComplexDrawer(),
             child: _Import_product?.length != 0
                 ? Container(
                     width: double.infinity,
                     height: double.infinity,
-                    color: Colors.orangeAccent.withOpacity(0.5),
+                    color: Colors.white,
                     child: Column(
                       children: <Widget>[
                         Padding(

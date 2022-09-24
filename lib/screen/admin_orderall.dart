@@ -4,6 +4,7 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/export_product.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
@@ -62,7 +63,7 @@ class _admin_orderallState extends State<admin_orderall> {
         trailing: PopupMenuButton(
           icon: Icon(
             Icons.filter_alt_outlined,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onSelected: (value) {
             print('สถานะ : ${value.toString()}');
@@ -90,21 +91,21 @@ class _admin_orderallState extends State<admin_orderall> {
           },
         ),
         appBarHeight: 85,
-        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        appBarColor: Color(0xFF036666),
         title: Container(
           child: Center(
               child: const Text(
-            'รายงานการสั่งซื้อ',
+            'รายงานการขาย',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           )),
         ),
       ),
-      slider: AdminAppBar(),
+      slider: ComplexDrawer(),
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView.builder(
@@ -169,7 +170,7 @@ class _admin_orderallState extends State<admin_orderall> {
                                 children: [
                                   Icon(
                                     Icons.discount_rounded,
-                                    color: Colors.red,
+                                    color: Colors.lightGreen,
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -183,8 +184,8 @@ class _admin_orderallState extends State<admin_orderall> {
                           ButtonBar(
                             alignment: MainAxisAlignment.end,
                             children: [
-                              FlatButton(
-                                textColor: const Color(0xFF6200EE),
+                              ElevatedButton(
+                                
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -279,8 +280,9 @@ class _admin_oderall_detailState extends State<admin_oderall_detail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('รายละเอียดการขาย'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF036666),
       ),
       backgroundColor: Colors.grey[100],
       body: Column(

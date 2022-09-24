@@ -41,15 +41,11 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
-          color: Colors.pinkAccent.withOpacity(0.2),
+          color: Colors.white,
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/background.jpg'),
-                      fit: BoxFit.fitWidth),
-                ),
+                margin: EdgeInsets.only(top: 35),
                 width: 500,
                 height: 325,
                 child: SizedBox(
@@ -66,9 +62,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              
               Container(
                 padding: const EdgeInsets.all(20),
-                margin: EdgeInsets.only(top: 50),
+                margin: EdgeInsets.only(top: 10),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -117,6 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                                 customer.password = password!;
                               },
                             ),
+                            SizedBox(height: 20,),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Row(
@@ -200,6 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ],
                               ),
                             ),
+                            SizedBox(height: 20,),
                             Container(
                               width: 340,
                               height: 50,

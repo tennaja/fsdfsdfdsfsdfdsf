@@ -7,6 +7,8 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_bekery/drawer/Constants/Constants.dart';
+import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/product_model.dart';
 import 'package:project_bekery/model/producttype.dart';
@@ -55,7 +57,7 @@ class _admin_allproductState extends State<admin_allproduct> {
         trailing: PopupMenuButton(
           icon: Icon(
             Icons.filter_alt_outlined,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onSelected: (value) {
             print('สถานะ : ${value.toString()}');
@@ -75,21 +77,21 @@ class _admin_allproductState extends State<admin_allproduct> {
           },
         ),
         appBarHeight: 85,
-        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        appBarColor: Color(0xFF469d89),
         title: Container(
           child: Center(
               child: const Text(
-            'รายการนำเข้าสินค้า',
+            'รายงานสินค้าในคลัง',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           )),
         ),
       ),
-      slider: AdminAppBar(),
+      slider: ComplexDrawer(),
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView.builder(
@@ -97,47 +99,99 @@ class _admin_allproductState extends State<admin_allproduct> {
               shrinkWrap: true,
               itemCount: _product != null ? (_product?.length ?? 0) : 0,
               itemBuilder: (_, index) => Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          right: 8.0, left: 8.0, bottom: 8.0),
-                      child: Container(
-                        color: Colors.orangeAccent.withOpacity(0.5),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          leading: Image(
-                            image: NetworkImage(
-                                _product![index].product_image.toString()),
-                            width: 50,
-                            height: 50,
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            right: 8.0, left: 8.0, bottom: 8.0),
+                        child: Container(
+                          
+                          child: Card(
+                            elevation: 20,
+                      color: Colors.yellow,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                            child: Column(
+                              children: [
+                                ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            leading: Image(
+                              image: NetworkImage(
+                                  _product![index].product_image.toString()),
+                              width: 50,
+                              height: 50,
+                            ),
+                            title: Text(
+                                'ชื่อสินค้า : ${_product![index].product_name}'),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    'ขายไป : ${_product![index].export_product}'),
+                                Text(
+                                    'เหลือในคลัง : ${_product![index].product_quantity}'),
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_productdetail(
+                                    _product![index].product_id.toString(),
+                                    _product![index].product_name.toString(),
+                                    _product![index].product_detail.toString(),
+                                    _product![index].product_price.toString(),
+                                    _product![index].product_quantity.toString(),
+                                    _product![index].export_product.toString(),
+                                    _product![index].import_product.toString(),
+                                    _product![index].product_type_id.toString(),
+                                    _product![index].import_price.toString(),
+                                    _product![index].product_image.toString());
+                              }));
+                            },
                           ),
-                          title: Text(
-                              'ชื่อสินค้า : ${_product![index].product_name}'),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  'ขายไป : ${_product![index].export_product}'),
-                              Text(
-                                  'เหลือในคลัง : ${_product![index].product_quantity}'),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return admin_productdetail(
-                                  _product![index].product_id.toString(),
-                                  _product![index].product_name.toString(),
-                                  _product![index].product_detail.toString(),
-                                  _product![index].product_price.toString(),
-                                  _product![index].product_quantity.toString(),
-                                  _product![index].export_product.toString(),
-                                  _product![index].import_product.toString(),
-                                  _product![index].product_type_id.toString(),
-                                  _product![index].import_price.toString(),
-                                  _product![index].product_image.toString());
-                            }));
-                          },
+                              ],
+                            ),
+
+                            
+                          )
+                          /*ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            leading: Image(
+                              image: NetworkImage(
+                                  _product![index].product_image.toString()),
+                              width: 50,
+                              height: 50,
+                            ),
+                            title: Text(
+                                'ชื่อสินค้า : ${_product![index].product_name}'),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    'ขายไป : ${_product![index].export_product}'),
+                                Text(
+                                    'เหลือในคลัง : ${_product![index].product_quantity}'),
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_productdetail(
+                                    _product![index].product_id.toString(),
+                                    _product![index].product_name.toString(),
+                                    _product![index].product_detail.toString(),
+                                    _product![index].product_price.toString(),
+                                    _product![index].product_quantity.toString(),
+                                    _product![index].export_product.toString(),
+                                    _product![index].import_product.toString(),
+                                    _product![index].product_type_id.toString(),
+                                    _product![index].import_price.toString(),
+                                    _product![index].product_image.toString());
+                              }));
+                            },
+                          ),*/
                         ),
                       ),
                     ),
@@ -330,7 +384,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
                 height: 35,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.orangeAccent,
+                      primary: Color(0xFF469d89),
                       elevation: 3,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0)),
@@ -399,7 +453,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
               decoration: BoxDecoration(
                 //background color of dropdown button
                 border: Border.all(
-                    color: Colors.black38,
+                    color: Colors.white,
                     width: 1), //border of dropdown button
                 borderRadius: BorderRadius.circular(
                     30), //border raiuds of dropdown button
@@ -409,7 +463,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
                 height: 35,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.orangeAccent,
+                      primary: Color(0xFF469d89),
                       elevation: 3,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0)),
@@ -442,25 +496,25 @@ class _admin_productdetailState extends State<admin_productdetail> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+        backgroundColor: Color(0xFF469d89),
         elevation: 0,
         title: Center(
             child: const Text(
           'เพิ่มรายการสินค้า',
           style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
         )),
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Colorz.complexDrawerBlack,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
@@ -491,7 +545,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
                     height: 35,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.orangeAccent,
+                        primary: Color(0xFF469d89),
                         elevation: 3,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32.0)),
@@ -539,9 +593,15 @@ class _admin_productdetailState extends State<admin_productdetail> {
                             product_name = name.toString();
                           },
                           autofocus: false,
-                          initialValue: widget.product_name.toString(),
+                          initialValue: widget.product_name.toString(),style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            label: Text('ชื่อสินค้า'),
+                            enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                            label: Text('ชื่อสินค้า',style: TextStyle(color: Colors.white),),
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.black),
@@ -549,7 +609,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         TextFormField(
                           keyboardType: TextInputType.text,
                           validator:
@@ -558,24 +618,30 @@ class _admin_productdetailState extends State<admin_productdetail> {
                             product_detail = detail.toString();
                           },
                           autofocus: false,
-                          initialValue: widget.product_detail.toString(),
+                          initialValue: widget.product_detail.toString(),style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            label: Text('รายละเอียดสินค้า'),
+                            enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                            label: Text('รายละเอียดสินค้า',style: TextStyle(color: Colors.white),),
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.black),
+                              borderSide: const BorderSide(color: Colors.white),
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
                               width: 150,
                               child: TextFormField(
-                                initialValue: widget.product_price.toString(),
+                                initialValue: widget.product_price.toString(),style: TextStyle(color: Colors.white),
                                 validator: RequiredValidator(
                                     errorText: "กรุณาป้อนข้อมูล"),
                                 keyboardType: TextInputType.number,
@@ -584,7 +650,13 @@ class _admin_productdetailState extends State<admin_productdetail> {
                                 },
                                 autofocus: false,
                                 decoration: InputDecoration(
-                                  label: Text('ราคา'),
+                                  enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                                  label: Text('ราคา',style: TextStyle(color: Colors.white),),
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                     borderSide:
@@ -606,9 +678,15 @@ class _admin_productdetailState extends State<admin_productdetail> {
                                 },
                                 autofocus: false,
                                 initialValue:
-                                    widget.product_quantity.toString(),
+                                    widget.product_quantity.toString(),style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                  label: Text('จำนวน'),
+                                  enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
+                                  label: Text('จำนวน',style: TextStyle(color: Colors.white),),
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                     borderSide:

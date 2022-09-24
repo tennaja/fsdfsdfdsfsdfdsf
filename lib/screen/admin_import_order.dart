@@ -7,6 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:project_bekery/drawer/Constants/Constants.dart';
+import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/import_detail.dart';
 import 'package:project_bekery/model/import_product.dart';
@@ -56,23 +58,23 @@ class _admin_import_orderState extends State<admin_import_order> {
         body: SliderDrawer(
           appBar: SliderAppBar(
             appBarHeight: 85,
-            appBarColor: Color.fromARGB(255, 255, 222, 178),
+            appBarColor: Color(0xFFff9e00),
             title: Container(
               child: Center(
                   child: const Text(
-                'รายการนำเข้าสินค้า',
+                'รายงานนำเข้าสินค้า',
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold),
               )),
             ),
           ),
-          slider: AdminAppBar(),
+          slider: ComplexDrawer(),
           child: Container(
             width: double.infinity,
             height: double.infinity,
-            color: Colors.orangeAccent.withOpacity(0.5),
+            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: ListView.builder(
@@ -82,37 +84,45 @@ class _admin_import_orderState extends State<admin_import_order> {
                       ? (_Import_product?.length ?? 0)
                       : 0,
                   itemBuilder: (_, index) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            color: Colors.orangeAccent,
-                            child: ListTile(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              title: Text(
-                                  '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Import_product![index].Import_date}'))}'),
-                              subtitle: Text(
-                                  'ที่มา : ${_Import_product![index].source_name.toString()}'),
-                              tileColor: Colors.orangeAccent,
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return import_order_detail(
-                                      _Import_product![index]
-                                          .Import_order_id
-                                          .toString(),
-                                      _Import_product![index]
-                                          .Import_product_pricetotal
-                                          .toString());
-                                }));
-                              },
-                            ),
+                        child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            right: 8.0, left: 8.0, bottom: 8.0),
+                        child: Container(
+                        child: Card( elevation: 20,
+                      color: Colors.yellow,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                            child: Column(
+                              children: [ ListTile(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                title: Text(
+                                    '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Import_product![index].Import_date}'))}'),
+                                subtitle: Text(
+                                    'ที่มา : ${_Import_product![index].source_name.toString()}'),
+                                tileColor: Colors.yellow,
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return import_order_detail(
+                                        _Import_product![index]
+                                            .Import_order_id
+                                            .toString(),
+                                        _Import_product![index]
+                                            .Import_product_pricetotal
+                                            .toString());
+                                  }));
+                                },
+                              ),
+                            ]),
                           ),
                         ),
                       )),
             ),
           ),
-        ));
+          ))));
   }
 }
 
@@ -174,21 +184,21 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
         body: SliderDrawer(
       appBar: SliderAppBar(
         appBarHeight: 85,
-        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        appBarColor: Color(0xFFff9100),
         title: Container(
           child: Center(
               child: const Text(
-            'รายการนำเข้าสินค้า',
+            'ประวัติการนำเข้าสินค้า',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           )),
         ),
       ),
-      slider: AdminAppBar(),
+      slider: ComplexDrawer(),
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView.builder(
@@ -197,37 +207,50 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
               itemCount:
                   _Import_product != null ? (_Import_product?.length ?? 0) : 0,
               itemBuilder: (_, index) => Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        color: Colors.orangeAccent,
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          title: Text(
-                              'วันที่สั่ง : ${_Import_product![index].Import_date.toString()}'),
-                          subtitle: Text(
-                              'ที่มา : ${_Import_product![index].source_name.toString()}'),
-                          tileColor: Colors.orangeAccent,
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return import_history_detail(
-                                  _Import_product![index]
-                                      .Import_order_id
-                                      .toString(),
-                                  _Import_product![index]
-                                      .Import_product_pricetotal
-                                      .toString());
-                            }));
-                          },
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            right: 8.0, left: 8.0, bottom: 8.0),
+                        child: Container(
+                    child: Card(
+                       elevation: 20,
+                      color: Colors.yellow,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      
+                          
+                          child: Column(
+                            children: [
+                             ListTile(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              title: Text(
+                                  'วันที่สั่ง : ${_Import_product![index].Import_date.toString()}'),
+                              subtitle: Text(
+                                  'ที่มา : ${_Import_product![index].source_name.toString()}'),
+                              tileColor: Colors.yellow,
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return import_history_detail(
+                                      _Import_product![index]
+                                          .Import_order_id
+                                          .toString(),
+                                      _Import_product![index]
+                                          .Import_product_pricetotal
+                                          .toString());
+                                }));
+                              },
+                            ),
+                          ]),
                         ),
                       ),
                     ),
                   )),
         ),
-      ),
-    ));
+      ))));
+    
   }
 }
 
@@ -346,8 +369,9 @@ class _import_order_detailState extends State<import_order_detail> {
           ],
         ),
         appBar: AppBar(
+          centerTitle: true,
           title: Text('รายละเอียดการสั่งซื้อ'),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Color(0xFFff9e00),
         ),
         backgroundColor: Colors.grey[100],
         body: SingleChildScrollView(
@@ -454,8 +478,9 @@ class _import_history_detailState extends State<import_history_detail> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text('รายละเอียดการสั่งซื้อ'),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Color(0xFFff9100),
         ),
         backgroundColor: Colors.grey[100],
         body: SingleChildScrollView(

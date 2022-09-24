@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
@@ -181,6 +182,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
     return Scaffold(
       backgroundColor: Colorz.complexDrawerBlack,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Color(0xFF571089),
         title: Text('เพิ่มโปรโมชั่นให้สินค้า'),
       ),
@@ -203,8 +205,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                 decoration: BoxDecoration(
                                   //background color of dropdown button
                                   border: Border.all(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      width: 1), //border of dropdown button
+                                      color: Colors.white), //border of dropdown button
                                   borderRadius: BorderRadius.circular(
                                       30), //border raiuds of dropdown button
                                 ),
@@ -256,12 +257,12 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                 decoration: BoxDecoration(
                                   //background color of dropdown button
                                   border: Border.all(
-                                      color: Colors.black38,
-                                      width: 1), //border of dropdown button
+                                      color: Colors.white), //border of dropdown button
                                   borderRadius: BorderRadius.circular(
                                       30), //border raiuds of dropdown button
                                 ),
                                 child: DropdownButton(
+                                  dropdownColor: Colorz.complexDrawerBlack,
                                   value: promotion,
                                   onChanged: (String? newValue) {
                                     setState(() {
@@ -280,7 +281,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                         child: Padding(
                                           padding:
                                               const EdgeInsets.only(left: 20),
-                                          child: Text(value),
+                                          child: Text(value,style: TextStyle(color: Colors.white ),),
                                         ),
                                       ),
                                     );
@@ -290,7 +291,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                       padding: EdgeInsets.only(right: 20),
                                       child: Icon(Icons.arrow_downward)),
                                   iconEnabledColor:
-                                      Color.fromARGB(255, 0, 0, 0), //Icon color
+                                      Color.fromARGB(255, 255, 255, 255), //Icon color
 
                                   //dropdown background color
                                   underline: Container(), //remove underline
@@ -302,7 +303,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                               initialValue:
                                   DateFormat('วันที่ d เดือน MMMM ปี y', 'th')
                                       .format(startDate)
-                                      .toString(),
+                                      .toString(),style: TextStyle(color: Colors.white),
                               onTap: () {
                                 _selectstartDate(context);
                               },
@@ -312,19 +313,26 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                   errorText: "กรุณาป้อนข้อมูล"),
                               autofocus: false,
                               decoration: InputDecoration(
+                                enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
                                 suffixIcon: new IconButton(
                                   onPressed: () {
                                     _selectstartDate(context);
                                   },
                                   icon: Icon(
-                                    Icons.edit_calendar,
+                                    Icons.edit_calendar,color: Colors.white,
                                   ),
                                 ),
-                                label: Text('วันที่เริ่มโปรโมชั่น'),
+                                label: Text('วันที่เริ่มโปรโมชั่น',style: TextStyle(color: Colors.white),),
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
+                                
                                   borderSide:
-                                      const BorderSide(color: Colors.black),
+                                      const BorderSide(color: Colors.white),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
@@ -333,9 +341,9 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                             TextFormField(
                               readOnly: true,
                               initialValue:
-                                  DateFormat('วันที่ d เดือน MMMM ปี y', 'th')
+                                  DateFormat('วันที่ d เดือน MMMM ปี y', 'th',)
                                       .format(endDate)
-                                      .toString(),
+                                      .toString(),style: TextStyle(color: Colors.white),
                               onTap: () {
                                 _selectendDate(context);
                               },
@@ -344,14 +352,20 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                   errorText: "กรุณาป้อนข้อมูล"),
                               autofocus: false,
                               decoration: InputDecoration(
+                                enabledBorder: const OutlineInputBorder(
+      // width: 0.0 produces a thin "hairline" border
+      borderRadius: const BorderRadius.all(Radius.circular(30)), 
+      borderSide: const BorderSide(color: Colors.white),
+     
+    ),
                                 suffixIcon: new Icon(
-                                  Icons.edit_calendar,
+                                  Icons.edit_calendar,color: Colors.white,
                                 ),
-                                label: Text('วันที่หมดอายุโปโมชั่น'),
+                                label: Text('วันที่หมดอายุโปโมชั่น',style: TextStyle(color: Colors.white),),
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
                                   borderSide:
-                                      const BorderSide(color: Colors.black),
+                                      const BorderSide(color: Colors.white),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
@@ -359,9 +373,10 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                             SizedBox(height: 20),
                             DecoratedBox(
                               decoration: BoxDecoration(
+                                
                                 //background color of dropdown button
                                 border: Border.all(
-                                    color: Colors.black38,
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                     width: 1), //border of dropdown button
                                 borderRadius: BorderRadius.circular(
                                     30), //border raiuds of dropdown button
@@ -378,7 +393,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                               BorderRadius.circular(32.0)),
                                       //////// HERE
                                     ),
-                                    child: Text('เพิ่มโปรโมชั่นให้สินค้า'),
+                                    child: Text('เพิ่มโปรโมชั่นให้สินค้า',style: TextStyle(color: Colors.white),),
                                     onPressed: () {
                                       if (fromKey.currentState!.validate()) {
                                         fromKey.currentState!.save();
@@ -398,7 +413,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Divider(
-                  color: Colors.black,
+                  color:Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
 
@@ -415,39 +430,39 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                               child: Container(
                                 child: DataTable(
                                     columns: [
-                                      DataColumn(label: Text('ชื่อสินค้า')),
-                                      DataColumn(label: Text('ชื่อโปรโมชั่น')),
-                                      DataColumn(label: Text('ส่วนลด')),
-                                      DataColumn(label: Text('วันที่เริ่ม')),
-                                      DataColumn(label: Text('วันที่สิ้นสุด')),
-                                      DataColumn(label: Text('ลบ')),
+                                      DataColumn(label: Text('ชื่อสินค้า',style: TextStyle(color: Colors.white),),),
+                                      DataColumn(label: Text('ชื่อโปรโมชั่น',style: TextStyle(color: Colors.white),)),
+                                      DataColumn(label: Text('ส่วนลด',style: TextStyle(color: Colors.white),)),
+                                      DataColumn(label: Text('วันที่เริ่ม',style: TextStyle(color: Colors.white),)),
+                                      DataColumn(label: Text('วันที่สิ้นสุด',style: TextStyle(color: Colors.white),)),
+                                      DataColumn(label: Text('ลบ',style: TextStyle(color: Colors.white),)),
                                     ],
                                     rows: _product_promotion!
                                         .map(
                                           (Promotion) => DataRow(cells: [
                                             DataCell(Text(Promotion.product_name
-                                                .toString())),
+                                                .toString(),style: TextStyle(color: Colors.white),)),
                                             DataCell(Text(Promotion
                                                 .promotion_name
-                                                .toString())),
+                                                .toString(),style: TextStyle(color: Colors.white),)),
                                             DataCell(Text(Promotion
                                                 .promotion_value
-                                                .toString())),
+                                                .toString(),style: TextStyle(color: Colors.white),)),
                                             DataCell(Text(Promotion.start_date
-                                                .toString())),
+                                                .toString(),style: TextStyle(color: Colors.white),)),
                                             DataCell(Text(
-                                                Promotion.end_date.toString())),
+                                                Promotion.end_date.toString(),style: TextStyle(color: Colors.white),)),
                                             DataCell(IconButton(
-                                              icon: Icon(Icons.delete),
+                                              icon: Icon(Icons.delete,color: Colors.white,),
                                               onPressed: () {
                                                 showDialog<bool>(
                                                     context: context,
                                                     builder: (context) {
                                                       return AlertDialog(
                                                         title: const Text(
-                                                            'ลบข้อมูล'),
+                                                            'ลบข้อมูล',style: TextStyle(color: Colors.white),),
                                                         content: const Text(
-                                                            'ต้องการที่จะลบประเภทสินค้านี้ใช้ไหม?'),
+                                                            'ต้องการที่จะลบประเภทสินค้านี้ใช้ไหม?',style: TextStyle(color: Colors.white),),
                                                         actions: <Widget>[
                                                           ElevatedButton(
                                                             onPressed: () =>
@@ -455,7 +470,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                                                         context)
                                                                     .pop(),
                                                             child: const Text(
-                                                                "ไม่"),
+                                                                "ไม่",style: TextStyle(color: Colors.white),),
                                                           ),
                                                           ElevatedButton(
                                                             onPressed: () {
@@ -485,7 +500,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                                                           });
                                                             },
                                                             child: const Text(
-                                                                "ใช่"),
+                                                                "ใช่",style: TextStyle(color: Colors.white),),
                                                           ),
                                                         ],
                                                       );

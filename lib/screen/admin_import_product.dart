@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:project_bekery/drawer/Constants/Constants.dart';
+import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/model/adminbasket.dart';
 import 'package:project_bekery/model/product_model.dart';
 import 'package:project_bekery/screen/quantity.dart';
@@ -58,51 +60,66 @@ class _admin_import_sourceState extends State<admin_import_source> {
         body: SliderDrawer(
       appBar: SliderAppBar(
         appBarHeight: 85,
-        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        appBarColor: Color(0xFFff8500),
         title: Container(
           child: Center(
               child: const Text(
-            'เลือกร้านที่จะนำเข้า',
+            'นำเข้าสินค้า',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-          )),
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          ),
         ),
       ),
-      slider: AdminAppBar(),
+      slider: ComplexDrawer(),
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Colors.white,
         child: ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: _filtersource != null ? (_filtersource?.length ?? 0) : 0,
             itemBuilder: (_, index) => Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      color: Colors.orangeAccent,
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        title: Text(_source![index].source_name.toString()),
-                        subtitle: Text(
-                            'รหัสแหล่งที่มา : ${_source![index].source_id.toString()}'),
-                        tileColor: Colors.orangeAccent,
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return import_product_menu(
-                                _source![index].source_id,
-                                _source![index].source_name);
-                          }));
-                        },
+                 child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            right: 8.0, left: 8.0, bottom: 8.0),
+                        child: Container(
+                  child:  Card(
+                      elevation: 20,
+                      color: Colors.yellow,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
+                        child: Column(
+                          children: [ ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            title: Text(_source![index].source_name.toString(),
+                                    style: TextStyle(
+                                        color: Colors.black),),
+                            subtitle: Text(
+                                'รหัสแหล่งที่มา : ${_source![index].source_id.toString()}',
+                                    style: TextStyle(
+                                        color: Colors.black),),
+                            tileColor: Colors.yellow,
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return import_product_menu(
+                                    _source![index].source_id,
+                                    _source![index].source_name);
+                              }));
+                            },
+                          ),
+                        ]),
+                      ),//*
                     ),
                   ),
                 )),
-      ),
-    ));
+      ))));
+    
   }
 }
 
@@ -148,25 +165,25 @@ class _import_product_menuState extends State<import_product_menu> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Colors.white.withOpacity(0.1),
+        backgroundColor: Color(0xFFff8500),
         elevation: 0,
         title: Center(
             child: Text(
           '${widget.source_name.toString()}',
           style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
         )),
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.shopping_cart,
-              color: Color.fromARGB(255, 0, 0, 0),
+              color: Colors.white,
             ),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -178,7 +195,7 @@ class _import_product_menuState extends State<import_product_menu> {
         ],
       ),
       body: Container(
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Colors.white,
         child: GridView.builder(
           itemCount: _filterproduct != null ? (_filterproduct?.length ?? 0) : 0,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -236,7 +253,7 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
       height: 225,
       width: 150,
       decoration: BoxDecoration(
-          color: Colors.orangeAccent.withOpacity(0.4),
+          color: Colors.yellow,
           borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -679,25 +696,25 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Colors.white,
             ),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          backgroundColor: Colors.white.withOpacity(0.1),
+          backgroundColor: Color(0xFFff8500),
           elevation: 0,
           title: Center(
               child: const Text(
             'รายการสินค้า',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           )),
           actions: <Widget>[
             IconButton(
               icon: Icon(
                 Icons.refresh,
-                color: Color.fromARGB(255, 0, 0, 0),
+                color: Colors.white,
               ),
               onPressed: () {
                 _getBasket();
@@ -708,7 +725,7 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
+          color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView.builder(

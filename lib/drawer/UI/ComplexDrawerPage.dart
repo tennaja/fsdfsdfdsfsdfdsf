@@ -2,7 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:project_bekery/drawer/Constants/Constants.dart';
 import 'package:project_bekery/drawer/Models/CDM.dart';
 import 'package:project_bekery/drawer/Widgets/Widgets.dart';
+import 'package:project_bekery/screen/addproducttype.dart';
+import 'package:project_bekery/screen/addpromotion.dart';
 import 'package:project_bekery/screen/admin_addproduct_promotion.dart';
+import 'package:project_bekery/screen/admin_import_order.dart';
+import 'package:project_bekery/screen/admin_import_product.dart';
+import 'package:project_bekery/screen/admin_orderall.dart';
+import 'package:project_bekery/screen/admin_orderlist.dart';
+import 'package:project_bekery/screen/admin_productall.dart';
+import 'package:project_bekery/screen/admin_report_order.dart';
+import 'package:project_bekery/screen/admin_userlist.dart';
+import 'package:project_bekery/screen/float_add_order.dart';
 
 class ComplexDrawerPage extends StatefulWidget {
   const ComplexDrawerPage({Key? key}) : super(key: key);
@@ -85,9 +95,25 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
               child: ListView(
                 children: [
                   Container(
+                          color: Color(0xFFba181b),
+                          child: ListTile(
+                            leading: Icon(Icons.person, color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_orderlist();
+                              }));
+                            },
+                            title: Text(
+                              'หน้ารับออเดอร์',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                  Container(
                     color: Color(0xFF47126b),
                     child: ExpansionTile(
-                      leading: Icon(Icons.abc, color: Colors.white),
+                      leading: Icon(Icons.settings, color: Colors.white),
                       title: Txt(
                         text: 'แก้ไขข้อมูล',
                         color: Colors.white,
@@ -96,7 +122,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF571089),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                            leading: Icon(Icons.add, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -112,8 +138,13 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF6411ad),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
-                            onTap: () {},
+                            leading: Icon(Icons.add, color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return add_product_order();
+                              }));
+                            },
                             title: Text(
                               'เพิ่มสินค้า',
                               style: TextStyle(color: Colors.white),
@@ -123,8 +154,13 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF6d23b6),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
-                            onTap: () {},
+                            leading: Icon(Icons.add, color: Colors.white),
+                             onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return addpromotion();
+                              }));
+                            },
                             title: Text(
                               'เพิ่มโปรโมชั่น',
                               style: TextStyle(color: Colors.white),
@@ -134,8 +170,13 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF822faf),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
-                            onTap: () {},
+                            leading: Icon(Icons.add, color: Colors.white),
+                             onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return addproducttype();
+                              }));
+                            },
                             title: Text(
                               'เพิ่มประเภทสินค้า',
                               style: TextStyle(color: Colors.white),
@@ -146,32 +187,87 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                     ),
                   ),
                   Container(
+                    color: Color(0xFFff7900),
+                    child: ExpansionTile(
+                      leading: Icon(Icons.import_export, color: Colors.white),
+                      title: Txt(
+                        text: 'นำเข้า',
+                        color: Colors.white,
+                      ),
+                      children: [
+                        Container(
+                          color: Color(0xFFff8500),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_import_source();
+                              }));
+                            },
+                            title: Text(
+                              'นำเข้าสินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFFff9100),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return adminhistoryimport();
+                              }));
+                            },
+                            title: Text(
+                              'ประวัติการนำเข้าสินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFFff9e00),
+                          child: ListTile(
+                            leading: Icon(Icons.abc, color: Colors.white),
+                           onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_import_order();
+                              }));
+                            },
+                            title: Text(
+                              'รายงานนำเข้าสินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                       
+                      ],
+                    ),
+                  ),
+                   Container(
                     color: Color(0xFF036666),
                     child: ExpansionTile(
-                      leading: Icon(Icons.abc, color: Colors.white),
+                      leading: Icon(Icons.list, color: Colors.white),
                       title: Txt(
                         text: 'รายงาน',
                         color: Colors.white,
                       ),
                       children: [
                         Container(
-                          color: Color(0xFF14746f),
-                          child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
-                            onTap: () {},
-                            title: Text(
-                              '',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        Container(
                           color: Color(0xFF248277),
                           child: ListTile(
                             leading: Icon(Icons.abc, color: Colors.white),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_orderall();
+                              }));
+                            },
                             title: Text(
-                              '',
+                              'รายงานการขาย',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -180,9 +276,14 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           color: Color(0xFF358f80),
                           child: ListTile(
                             leading: Icon(Icons.abc, color: Colors.white),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_report();
+                              }));
+                            },
                             title: Text(
-                              '',
+                              'รายงานยอดการขาย',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -191,16 +292,40 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           color: Color(0xFF469d89),
                           child: ListTile(
                             leading: Icon(Icons.abc, color: Colors.white),
-                            onTap: () {},
+                             onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_allproduct();
+                              }));
+                            },
                             title: Text(
-                              '',
+                              'รายงานสินค้าในคลัง',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ),
+                        
+                        
                       ],
                     ),
                   ),
+                   Container(
+                          color: Color(0xFF072ac8),
+                          child: ListTile(
+                            leading: Icon(Icons.person, color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_Userlist();
+                              }));
+                            },
+                            title: Text(
+                              'รายชื่อผู้ใช้',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        
                 ],
               ),
             ),
@@ -217,7 +342,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
       child: ListTile(
         leading: Image(image: AssetImage('assets/images/app_logo.png')),
         title: Txt(
-          text: "AumgPao",
+          text: "AungPao",
           fontSize: 18,
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -370,13 +495,13 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
     return Container(
       color: Colorz.complexDrawerBlueGrey,
       child: ListTile(
-        leading: accountButton(usePadding: false),
+        leading: Icon(Icons.admin_panel_settings,color: Colors.white,),
         title: Txt(
-          text: "Prem Shanhi",
+          text: "Ten Wachirawit",
           color: Colors.white,
         ),
         subtitle: Txt(
-          text: "Web Designer",
+          text: "Admin",
           color: Colors.white70,
         ),
       ),
