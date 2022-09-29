@@ -126,8 +126,8 @@ class _order_rice_sqlState extends State<order_rice_sql> {
       height: 225,
       width: 150,
       decoration: BoxDecoration(
-          color: Colors.orangeAccent.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(10)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -158,27 +158,29 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                   child: Text(
                     widget.product_name.toString(),
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontSize: 12
                     ),
                   ),
                 ),
+                SizedBox(height: 5,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 5),
-                      child: Text(widget.product_price),
+                      child: Text(widget.product_price,style: TextStyle( fontSize: 10),),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 5),
                       child: Text(
                         '${widget.export_product.toString()} ขายแล้ว',
                         style: TextStyle(
-                            fontSize: 12, color: Colors.black.withOpacity(0.7)),
+                            fontSize: 10, color: Colors.black.withOpacity(0.7),),
                       ),
                     ),
                   ],
                 ),
+                SizedBox(height: 5,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -188,11 +190,20 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                           height: 30,
                           width: 145,
                           child: OutlinedButton(
+                            style: ButtonStyle(
+  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+      side: BorderSide(color: Colors.red)
+    )
+  )
+),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: const [
                                   Text(
                                     "รายละเอียดสินค้า",
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(color: Colors.black,fontSize: 11),
                                   ),
                                   Icon(
                                     Icons.manage_search,

@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bekery/drawer/Constants/Constants.dart';
 import 'package:project_bekery/drawer/Models/CDM.dart';
 import 'package:project_bekery/drawer/Widgets/Widgets.dart';
+import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/screen/addproducttype.dart';
 import 'package:project_bekery/screen/addpromotion.dart';
 import 'package:project_bekery/screen/admin_addproduct_promotion.dart';
@@ -95,21 +97,21 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
               child: ListView(
                 children: [
                   Container(
-                          color: Color(0xFFba181b),
-                          child: ListTile(
-                            leading: Icon(Icons.person, color: Colors.white),
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return admin_orderlist();
-                              }));
-                            },
-                            title: Text(
-                              'หน้ารับออเดอร์',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
+                    color: Color(0xFF274c77),
+                    child: ListTile(
+                      leading: Icon(Icons.person, color: Colors.white),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return admin_orderlist();
+                        }));
+                      },
+                      title: Text(
+                        'หน้ารับออเดอร์',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
                   Container(
                     color: Color(0xFF47126b),
                     child: ExpansionTile(
@@ -155,7 +157,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           color: Color(0xFF6d23b6),
                           child: ListTile(
                             leading: Icon(Icons.add, color: Colors.white),
-                             onTap: () {
+                            onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return addpromotion();
@@ -171,7 +173,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           color: Color(0xFF822faf),
                           child: ListTile(
                             leading: Icon(Icons.add, color: Colors.white),
-                             onTap: () {
+                            onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return addproducttype();
@@ -187,7 +189,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                     ),
                   ),
                   Container(
-                    color: Color(0xFFff7900),
+                    color: Color(0xFFf9a620),
                     child: ExpansionTile(
                       leading: Icon(Icons.import_export, color: Colors.white),
                       title: Txt(
@@ -231,7 +233,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           color: Color(0xFFff9e00),
                           child: ListTile(
                             leading: Icon(Icons.abc, color: Colors.white),
-                           onTap: () {
+                            onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return admin_import_order();
@@ -243,11 +245,10 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                             ),
                           ),
                         ),
-                       
                       ],
                     ),
                   ),
-                   Container(
+                  Container(
                     color: Color(0xFF036666),
                     child: ExpansionTile(
                       leading: Icon(Icons.list, color: Colors.white),
@@ -292,7 +293,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           color: Color(0xFF469d89),
                           child: ListTile(
                             leading: Icon(Icons.abc, color: Colors.white),
-                             onTap: () {
+                            onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return admin_allproduct();
@@ -304,28 +305,42 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                             ),
                           ),
                         ),
-                        
-                        
                       ],
                     ),
                   ),
+                  Container(
+                    color: Color(0xFF6d2e46),
+                    child: ListTile(
+                      leading: Icon(Icons.person, color: Colors.white),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return admin_Userlist();
+                        }));
+                      },
+                      title: Text(
+                        'รายชื่อผู้ใช้',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
                    Container(
-                          color: Color(0xFF072ac8),
-                          child: ListTile(
-                            leading: Icon(Icons.person, color: Colors.white),
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return admin_Userlist();
-                              }));
-                            },
-                            title: Text(
-                              'รายชื่อผู้ใช้',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        
+                    color: Color(0xFF6c534e),
+                    child: ListTile(
+                      leading: Icon(Icons.logout_outlined, color: Colors.white),
+                      onTap: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                                  CupertinoPageRoute(
+                                      builder: (context) => LoginPage()),
+                                  (_) => false,
+                                );
+                      },
+                      title: Text(
+                        'ออกจากระบบ',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -495,7 +510,10 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
     return Container(
       color: Colorz.complexDrawerBlueGrey,
       child: ListTile(
-        leading: Icon(Icons.admin_panel_settings,color: Colors.white,),
+        leading: Icon(
+          Icons.admin_panel_settings,
+          color: Colors.white,
+        ),
         title: Txt(
           text: "Ten Wachirawit",
           color: Colors.white,

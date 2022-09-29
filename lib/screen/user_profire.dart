@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:project_bekery/drawer/Constants/Constants.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/profile.dart';
@@ -134,7 +135,7 @@ class _user_profileState extends State<user_profile> {
             icon: Icon(Icons.save),
           ),
           appBarHeight: 85,
-          appBarColor: Color.fromARGB(255, 255, 222, 178),
+          appBarColor: Colors.greenAccent,
           title: Container(
             child: Center(
                 child: const Text(
@@ -150,7 +151,7 @@ class _user_profileState extends State<user_profile> {
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
+          color: Colorz.complexDrawerBlack,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
@@ -175,19 +176,25 @@ class _user_profileState extends State<user_profile> {
                                         username = name!;
                                       },
                                       autofocus: false,
-                                      initialValue: "${user![0].user_name}",
+                                      initialValue: "${user![0].user_name}",style: TextStyle(color: Colors.white),
                                       decoration: InputDecoration(
+                                        enabledBorder: const OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(30)),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                         fillColor: Colors.white,
                                         prefixIcon: const Icon(
                                           Icons.person,
-                                          color: Colors.black,
+                                          color: Colors.white,
                                         ),
                                         border: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: Colors.black),
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                        ),
+                                    borderRadius: BorderRadius.circular(30),
+                                    
+                                  ),
                                       ),
                                     ),
                                   ),
@@ -200,17 +207,25 @@ class _user_profileState extends State<user_profile> {
                                         usersurname = surname!;
                                       },
                                       autofocus: false,
-                                      initialValue: "${user![0].user_surname}",
+                                      initialValue: "${user![0].user_surname}",style: TextStyle(color: Colors.white),
                                       decoration: InputDecoration(
-                                        label: Text('นามสกุล'),
+                                        enabledBorder: const OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(30)),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                        label: Text('นามสกุล',style: TextStyle(color: Colors.white),),
                                         prefixIcon: const Icon(
                                           Icons.person,
-                                          color: Colors.black,
+                                          color: Colors.white,
                                         ),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                        ),
+                                       border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    
+                                  ),
                                       ),
                                     ),
                                   ),
@@ -223,17 +238,26 @@ class _user_profileState extends State<user_profile> {
                                 onSaved: (email) {
                                   useremail = email!;
                                 },
-                                enabled: false,
+                                
                                 autofocus: false,
-                                initialValue: "${user![0].user_email}",
+                                initialValue: "${user![0].user_email}",style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                  label: Text('อีเมล์'),
+                                   enabledBorder: const OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(30)),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                  label: Text('อีเมล์',style: TextStyle(color: Colors.white),),
                                   prefixIcon: const Icon(
                                     Icons.email,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30),
+                                    
                                   ),
                                 ),
                               ),
@@ -245,12 +269,20 @@ class _user_profileState extends State<user_profile> {
                                   userphone = phone!;
                                 },
                                 autofocus: false,
-                                initialValue: "${user![0].user_phone}",
+                                initialValue: "${user![0].user_phone}",style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                  label: Text('เบอร์โทรศัพท์'),
+                                  enabledBorder: const OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(30)),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                  label: Text('เบอร์โทรศัพท์',style: TextStyle(color: Colors.white),),
                                   prefixIcon: const Icon(
                                     Icons.local_phone,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30),
@@ -262,17 +294,25 @@ class _user_profileState extends State<user_profile> {
                               ),
                               TextFormField(
                                 readOnly: true,
-                                initialValue: "${user![0].user_password}",
+                                initialValue: "${user![0].user_password}",style: TextStyle(color: Colors.white),
                                 obscureText: _isObscure,
                                 decoration: InputDecoration(
+                                  enabledBorder: const OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(30)),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     prefixIcon: const Icon(
                                       Icons.key,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(30),
                                     ),
-                                    labelText: 'รหัสผ่าน',
+                                    label: Text("รหัสผ่าน",style: TextStyle(color: Colors.white),),
                                     // this button is used to toggle the password visibility
                                     suffixIcon: IconButton(
                                         icon: Icon(_isObscure

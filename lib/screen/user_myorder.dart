@@ -93,7 +93,7 @@ class _user_orderState extends State<user_order> {
           },
         ),
         appBarHeight: 85,
-        appBarColor: Color.fromARGB(255, 255, 222, 178),
+        appBarColor: Colors.greenAccent,
         title: Container(
           child: Center(
               child: const Text(
@@ -107,63 +107,68 @@ class _user_orderState extends State<user_order> {
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Colors.white,
         child: ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
             itemBuilder: (_, index) => Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      color: Colors.orangeAccent,
-                      child: ListTile(
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.black,
+                  child: Card(
+                      elevation: 20,
+                                color: Colors.yellow,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(children: [
+                     
+                        ListTile(
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              if (user_order![index].order_status ==
+                                  'ยังไม่มีใครรับ') {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return user_order_detail_cancel(
+                                    user_order![index].order_id.toString(),
+                                    user_order![index].total_price.toString(),
+                                    user_order![index]
+                                        .order_responsible_person
+                                        .toString(),
+                                    user_order![index].date.toString(),
+                                  );
+                                }));
+                              } else {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return user_order_detail_onlysee(
+                                    user_order![index].order_id.toString(),
+                                    user_order![index].total_price.toString(),
+                                    user_order![index]
+                                        .order_responsible_person
+                                        .toString(),
+                                    user_order![index].date.toString(),
+                                  );
+                                }));
+                              }
+                            },
                           ),
-                          onPressed: () {
-                            if (user_order![index].order_status ==
-                                'ยังไม่มีใครรับ') {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return user_order_detail_cancel(
-                                  user_order![index].order_id.toString(),
-                                  user_order![index].total_price.toString(),
-                                  user_order![index]
-                                      .order_responsible_person
-                                      .toString(),
-                                  user_order![index].date.toString(),
-                                );
-                              }));
-                            } else {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return user_order_detail_onlysee(
-                                  user_order![index].order_id.toString(),
-                                  user_order![index].total_price.toString(),
-                                  user_order![index]
-                                      .order_responsible_person
-                                      .toString(),
-                                  user_order![index].date.toString(),
-                                );
-                              }));
-                            }
-                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          title: Text(
+                              '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
+                          subtitle: Text(
+                              'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
                         ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        title: Text(
-                            '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
-                        subtitle: Text(
-                            'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
-                      ),
+                      ]),
                     ),
                   ),
                 )),
       ),
-    ));
+    );
   }
 }
 
@@ -365,7 +370,7 @@ class user_order_detaill_cancelState extends State<user_order_detail_cancel> {
               width: 250,
               child: FloatingActionButton.extended(
                 icon: Icon(Icons.cancel),
-                backgroundColor: Colors.orangeAccent,
+                backgroundColor: Colors.redAccent,
                 heroTag: '1',
                 onPressed: () {
                   Art_Services()
@@ -397,7 +402,7 @@ class user_order_detaill_cancelState extends State<user_order_detail_cancel> {
               Navigator.pop(context);
             },
           ),
-          backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+          backgroundColor: Colors.greenAccent,
           elevation: 0,
           title: Center(
               child: const Text(
@@ -410,73 +415,81 @@ class user_order_detaill_cancelState extends State<user_order_detail_cancel> {
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
+          color: Colors.white,
           child: SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: SingleChildScrollView(
-                  child: Container(
-                    height: 600,
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Text('${widget.import_order_id}'),
-                          SizedBox(height: 20),
-                          Text('สั่งในวันที่ : ${widget.orderdate}'),
-                          SizedBox(height: 20),
-                          Text(
-                              'รับผิดชอบโดย :${widget.order_responsible_person}'),
-                          SizedBox(height: 20),
-                          ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: _Import_product != null
-                                ? (_Import_product?.length ?? 0)
-                                : 0,
-                            itemBuilder: (_, index) => Container(
-                              margin: EdgeInsets.all(5),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                          'ชื่อสินค้า : ${_Import_product![index].product_name}'),
-                                      Text(
-                                          'จำนวน : ${_Import_product![index].product_amount}'),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                          'ราคาต่อชิ้น : ${_Import_product![index].product_price}'),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                ],
+                  child: Card(
+                     elevation: 20,
+                                
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(children: [
+                    Container(
+                      height: 600,
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Text('${widget.import_order_id}'),
+                            SizedBox(height: 20),
+                            Text('สั่งในวันที่ : ${widget.orderdate}'),
+                            SizedBox(height: 20),
+                            Text(
+                                'รับผิดชอบโดย :${widget.order_responsible_person}'),
+                            SizedBox(height: 20),
+                            ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: _Import_product != null
+                                  ? (_Import_product?.length ?? 0)
+                                  : 0,
+                              itemBuilder: (_, index) => Container(
+                                margin: EdgeInsets.all(5),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            'ชื่อสินค้า : ${_Import_product![index].product_name}'),
+                                        Text(
+                                            'จำนวน : ${_Import_product![index].product_amount}'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                            'ราคาต่อชิ้น : ${_Import_product![index].product_price}'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                  'ราคารวม : ${widget.Import_product_pricetotal}'),
-                            ],
-                          ),
-                        ],
+                            SizedBox(height: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                    'ราคารวม : ${widget.Import_product_pricetotal}'),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+                  ]),
                 )),
           ),
-        ));
+        )));
   }
 }

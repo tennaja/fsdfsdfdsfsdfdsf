@@ -61,7 +61,10 @@ class _addproducttypeState extends State<addproducttype> {
                     status = 'เพิ่มข้อมูล';
                   });
                 },
-                icon: Icon(Icons.add,color: Colors.white,)),
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                )),
             appBarHeight: 85,
             appBarColor: Color(0xFF822faf),
             title: Container(
@@ -101,12 +104,16 @@ class _addproducttypeState extends State<addproducttype> {
                                     autofocus: false,
                                     decoration: InputDecoration(
                                       enabledBorder: const OutlineInputBorder(
-      // width: 0.0 produces a thin "hairline" border
-      borderRadius: const BorderRadius.all(Radius.circular(30)), 
-      borderSide: const BorderSide(color: Colors.white),
-     
-    ),
-                                      label: Text('ชื่อประเภทสินค้า',style: TextStyle(color: Colors.white),),
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(30)),
+                                        borderSide: const BorderSide(
+                                            color: Colors.white),
+                                      ),
+                                      label: Text(
+                                        'ชื่อประเภทสินค้า',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                       fillColor: Colors.white,
                                       border: OutlineInputBorder(
                                         borderSide: const BorderSide(
@@ -118,7 +125,6 @@ class _addproducttypeState extends State<addproducttype> {
                                   SizedBox(height: 20),
                                   DecoratedBox(
                                     decoration: BoxDecoration(
-                                      
                                       //background color of dropdown button
                                       border: Border.all(
                                           color: Colors.white,
@@ -220,18 +226,23 @@ class _addproducttypeState extends State<addproducttype> {
                                         errorText: "กรุณาป้อนข้อมูล"),
                                     onSaved: (name) {
                                       setState(() {
-                                        producttype_name = name ;
+                                        producttype_name = name;
                                       });
                                     },
                                     autofocus: false,
                                     decoration: InputDecoration(
-                                       enabledBorder: const OutlineInputBorder(
-      // width: 0.0 produces a thin "hairline" border
-      borderRadius: const BorderRadius.all(Radius.circular(30)), 
-      borderSide: const BorderSide(color: Colors.white,),
-     
-    ),
-                                      label: Text('ชื่อประเภทสินค้า',style: TextStyle(color: Colors.white),),
+                                      enabledBorder: const OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(30)),
+                                        borderSide: const BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      label: Text(
+                                        'ชื่อประเภทสินค้า',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                       fillColor: Colors.white,
                                       border: OutlineInputBorder(
                                         borderSide: const BorderSide(
@@ -263,7 +274,11 @@ class _addproducttypeState extends State<addproducttype> {
                                                         32.0)),
                                             //////// HERE
                                           ),
-                                          child: Text('แก้ไขข้อมูล',style: TextStyle(color: Colors.black),),
+                                          child: Text(
+                                            'แก้ไขข้อมูล',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
                                           onPressed: () async {
                                             print(
                                                 'ID producttype : ${current_producttypeid}');
@@ -354,84 +369,111 @@ class _addproducttypeState extends State<addproducttype> {
                                 child: Container(
                                   child: DataTable(
                                       columns: [
-                                        DataColumn(label: Text('ID',style: TextStyle(color: Colors.white),)),
-                                        DataColumn(label: Text('ชื่อสินค้า',style: TextStyle(color: Colors.white),)),
-                                        DataColumn(label: Text('ลบ',style: TextStyle(color: Colors.white),)),
-                                        DataColumn(label: Text('แก้ไข',style: TextStyle(color: Colors.white),)),
+                                        DataColumn(
+                                            label: Text(
+                                          'ID',
+                                          style: TextStyle(color: Colors.white),
+                                        )),
+                                        DataColumn(
+                                            label: Text(
+                                          'ชื่อสินค้า',
+                                          style: TextStyle(color: Colors.white),
+                                        )),
+                                        DataColumn(
+                                            label: Text(
+                                          'ลบ',
+                                          style: TextStyle(color: Colors.white),
+                                        )),
+                                        DataColumn(
+                                            label: Text(
+                                          'แก้ไข',
+                                          style: TextStyle(color: Colors.white),
+                                        )),
                                       ],
                                       rows: _producttype!
                                           .map(
                                             (importorder) => DataRow(cells: [
-                                              DataCell(Text(importorder
-                                                  .product_type_id
-                                                  .toString(),style: TextStyle(color: Colors.white),)),
-                                              DataCell(Text(importorder
-                                                  .product_type_name
-                                                  .toString(),style: TextStyle(color: Colors.white),)),
-                                              DataCell(importorder
-                                                          .product_type_id ==
-                                                      "0"
-                                                  ? Container()
-                                                  : IconButton(
-                                                      icon: Icon(Icons.delete,color: Colors.white,),
-                                                      onPressed: () {
-                                                        showDialog<bool>(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return AlertDialog(
-                                                                title: const Text(
-                                                                    'ลบข้อมูล'),
-                                                                content: const Text(
-                                                                    'ต้องการที่จะลบประเภทสินค้านี้ใช้ไหม?'),
-                                                                actions: <
-                                                                    Widget>[
-                                                                  ElevatedButton(
-                                                                    onPressed: () =>
-                                                                        Navigator.of(context)
-                                                                            .pop(),
-                                                                    child: const Text(
-                                                                        "ไม่"),
-                                                                  ),
-                                                                  ElevatedButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      Art_Services()
-                                                                          .deleteproducttype(importorder
-                                                                              .product_type_id
-                                                                              .toString())
-                                                                          .then((value) =>
+                                              DataCell(Text(
+                                                importorder.product_type_id
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
+                                              DataCell(Text(
+                                                importorder.product_type_name
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
+                                              DataCell(
+                                                  importorder.product_type_id ==
+                                                          "0"
+                                                      ? Container()
+                                                      : IconButton(
+                                                          icon: Icon(
+                                                            Icons.delete,
+                                                            color: Colors.white,
+                                                          ),
+                                                          onPressed: () {
+                                                            showDialog<bool>(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return AlertDialog(
+                                                                    title: const Text(
+                                                                        'ลบข้อมูล'),
+                                                                    content:
+                                                                        const Text(
+                                                                            'ต้องการที่จะลบประเภทสินค้านี้ใช้ไหม?'),
+                                                                    actions: <
+                                                                        Widget>[
+                                                                      ElevatedButton(
+                                                                        onPressed:
+                                                                            () =>
+                                                                                Navigator.of(context).pop(),
+                                                                        child: const Text(
+                                                                            "ไม่"),
+                                                                      ),
+                                                                      ElevatedButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          Art_Services().deleteproducttype(importorder.product_type_id.toString()).then((value) =>
                                                                               {
                                                                                 Fluttertoast.showToast(msg: "ลบ ${importorder.product_type_name.toString()} เรียบร้อย", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Color.fromARGB(255, 255, 0, 0), textColor: Colors.white, fontSize: 16.0),
                                                                                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                                                   return addproducttype();
                                                                                 }))
                                                                               });
-                                                                    },
-                                                                    child: const Text(
-                                                                        "ใช่"),
-                                                                  ),
-                                                                ],
-                                                              );
+                                                                        },
+                                                                        child: const Text(
+                                                                            "ใช่"),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                });
+                                                          },
+                                                        )),
+                                              DataCell(
+                                                  importorder.product_type_id ==
+                                                          "0"
+                                                      ? Container()
+                                                      : IconButton(
+                                                          icon: Icon(
+                                                            Icons.edit,
+                                                            color: Colors.white,
+                                                          ),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              current_producttypeid =
+                                                                  '${importorder.product_type_id}';
+                                                              current_producttypename =
+                                                                  '${importorder.product_type_name}';
+                                                              status =
+                                                                  'แก้ไขข้อมูล';
                                                             });
-                                                      },
-                                                    )),
-                                              DataCell(importorder
-                                                          .product_type_id ==
-                                                      "0"
-                                                  ? Container()
-                                                  : IconButton(
-                                                      icon: Icon(Icons.edit,color: Colors.white,),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          current_producttypeid =
-                                                              '${importorder.product_type_id}';
-                                                          current_producttypename =
-                                                              '${importorder.product_type_name}';
-                                                          status =
-                                                              'แก้ไขข้อมูล';
-                                                        });
-                                                      },
-                                                    )),
+                                                          },
+                                                        )),
                                             ]),
                                           )
                                           .toList()),

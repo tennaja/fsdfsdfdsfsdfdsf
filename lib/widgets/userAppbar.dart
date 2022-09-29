@@ -38,7 +38,7 @@ class _UserAppBarState extends State<UserAppBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.orangeAccent.withOpacity(0.5),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -46,7 +46,7 @@ class _UserAppBarState extends State<UserAppBar> {
             children: [
               UserAccountsDrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.orangeAccent,
+                  color: Colors.greenAccent,
                 ),
                 accountName: user?.length != 0
                     ? Text('${user?[0].user_name}')
@@ -55,18 +55,18 @@ class _UserAppBarState extends State<UserAppBar> {
                     ? Text('${user?[0].user_email}')
                     : Text('Loadding...'),
                 currentAccountPicture: CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 163, 92, 0),
+                  backgroundColor: Colors.white,
                   child: Icon(
                     Icons.shopping_cart,
-                    color: Colors.orangeAccent,
+                    color: Colors.black,
                     size: 36.0,
                   ),
                 ),
               ),
               Divider(),
               ListTile(
-                title: Text('ร้านค้า'),
-                leading: Icon(Icons.shopping_bag),
+                title: Text('ร้านค้า',style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.shopping_bag,color: Colors.black,),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return Orderpage();
@@ -75,8 +75,8 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('แผนที่'),
-                leading: Icon(Icons.map),
+                title: Text('แผนที่',style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.map,color: Colors.black,),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_MapsPage();
@@ -85,8 +85,8 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('ประวัติการซื้อขาย'),
-                leading: Icon(Icons.history),
+                title: Text('ประวัติการซื้อขาย',style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.history,color: Colors.black,),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_order();
@@ -95,8 +95,8 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('โปรไฟล์'),
-                leading: Icon(Icons.person),
+                title: Text('โปรไฟล์',style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.person,color: Colors.black,),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_profile();
@@ -105,8 +105,8 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('เปลี่ยนรหัส'),
-                leading: Icon(Icons.key),
+                title: Text('เปลี่ยนรหัส',style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.key,color: Colors.black,),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_changepassword();
@@ -115,8 +115,8 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('ออกจากระบบ'),
-                leading: Icon(Icons.logout),
+                title: Text('ออกจากระบบ',style: TextStyle(color: Colors.black),),
+                leading: Icon(Icons.logout,color: Colors.black,),
                 onTap: () {
                   showDialog<bool>(
                       context: context,

@@ -56,46 +56,48 @@ class _admin_import_orderState extends State<admin_import_order> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         body: SliderDrawer(
-          appBar: SliderAppBar(
-            appBarHeight: 85,
-            appBarColor: Color(0xFFff9e00),
-            title: Container(
-              child: Center(
-                  child: const Text(
-                'รายงานนำเข้าสินค้า',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
-              )),
+            appBar: SliderAppBar(
+              appBarHeight: 85,
+              appBarColor: Color(0xFFff9e00),
+              title: Container(
+                child: Center(
+                    child: const Text(
+                  'รายงานนำเข้าสินค้า',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                )),
+              ),
             ),
-          ),
-          slider: ComplexDrawer(),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: _Import_product != null
-                      ? (_Import_product?.length ?? 0)
-                      : 0,
-                  itemBuilder: (_, index) => Center(
-                        child: Container(
-                      child: Padding(
+            slider: ComplexDrawer(),
+            child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(0),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: _Import_product != null
+                        ? (_Import_product?.length ?? 0)
+                        : 0,
+                    itemBuilder: (_, index) => Center(
+                      child: Container(
+                          child: Padding(
                         padding: const EdgeInsets.only(
                             right: 8.0, left: 8.0, bottom: 8.0),
                         child: Container(
-                        child: Card( elevation: 20,
-                      color: Colors.yellow,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                            child: Column(
-                              children: [ ListTile(
+                          child: Card(
+                            elevation: 20,
+                            color: Colors.yellow,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(children: [
+                              ListTile(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0)),
                                 title: Text(
@@ -120,9 +122,9 @@ class _admin_import_orderState extends State<admin_import_order> {
                           ),
                         ),
                       )),
-            ),
-          ),
-          ))));
+                    ),
+                  ),
+                ))));
   }
 }
 
@@ -182,75 +184,74 @@ class _adminhistoryimportState extends State<adminhistoryimport> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SliderDrawer(
-      appBar: SliderAppBar(
-        appBarHeight: 85,
-        appBarColor: Color(0xFFff9100),
-        title: Container(
-          child: Center(
-              child: const Text(
-            'ประวัติการนำเข้าสินค้า',
-            style: TextStyle(
-                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-          )),
-        ),
-      ),
-      slider: ComplexDrawer(),
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount:
-                  _Import_product != null ? (_Import_product?.length ?? 0) : 0,
-              itemBuilder: (_, index) => Center(
-                    child: Container(
+            appBar: SliderAppBar(
+              appBarHeight: 85,
+              appBarColor: Color(0xFFff9100),
+              title: Container(
+                child: Center(
+                    child: const Text(
+                  'ประวัติการนำเข้าสินค้า',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                )),
+              ),
+            ),
+            slider: ComplexDrawer(),
+            child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: _Import_product != null
+                        ? (_Import_product?.length ?? 0)
+                        : 0,
+                    itemBuilder: (_, index) => Center(
+                        child: Container(
                       child: Padding(
                         padding: const EdgeInsets.only(
                             right: 8.0, left: 8.0, bottom: 8.0),
                         child: Container(
-                    child: Card(
-                       elevation: 20,
-                      color: Colors.yellow,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      
-                          
-                          child: Column(
-                            children: [
-                             ListTile(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              title: Text(
-                                  'วันที่สั่ง : ${_Import_product![index].Import_date.toString()}'),
-                              subtitle: Text(
-                                  'ที่มา : ${_Import_product![index].source_name.toString()}'),
-                              tileColor: Colors.yellow,
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return import_history_detail(
-                                      _Import_product![index]
-                                          .Import_order_id
-                                          .toString(),
-                                      _Import_product![index]
-                                          .Import_product_pricetotal
-                                          .toString());
-                                }));
-                              },
+                          child: Card(
+                            elevation: 20,
+                            color: Colors.yellow,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                          ]),
+                            child: Column(children: [
+                              ListTile(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                title: Text(
+                                    'วันที่สั่ง : ${_Import_product![index].Import_date.toString()}'),
+                                subtitle: Text(
+                                    'ที่มา : ${_Import_product![index].source_name.toString()}'),
+                                tileColor: Colors.yellow,
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return import_history_detail(
+                                        _Import_product![index]
+                                            .Import_order_id
+                                            .toString(),
+                                        _Import_product![index]
+                                            .Import_product_pricetotal
+                                            .toString());
+                                  }));
+                                },
+                              ),
+                            ]),
+                          ),
                         ),
                       ),
-                    ),
-                  )),
-        ),
-      ))));
-    
+                    )),
+                  ),
+                ))));
   }
 }
 

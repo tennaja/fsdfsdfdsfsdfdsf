@@ -95,6 +95,7 @@ class _admin_allproductState extends State<admin_allproduct> {
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView.builder(
+              padding: const EdgeInsets.all(0),
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: _product != null ? (_product?.length ?? 0) : 0,
@@ -104,58 +105,75 @@ class _admin_allproductState extends State<admin_allproduct> {
                         padding: const EdgeInsets.only(
                             right: 8.0, left: 8.0, bottom: 8.0),
                         child: Container(
-                          
-                          child: Card(
-                            elevation: 20,
-                      color: Colors.yellow,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                            child: Column(
-                              children: [
-                                ListTile(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            leading: Image(
-                              image: NetworkImage(
-                                  _product![index].product_image.toString()),
-                              width: 50,
-                              height: 50,
-                            ),
-                            title: Text(
-                                'ชื่อสินค้า : ${_product![index].product_name}'),
-                            subtitle: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    'ขายไป : ${_product![index].export_product}'),
-                                Text(
-                                    'เหลือในคลัง : ${_product![index].product_quantity}'),
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return admin_productdetail(
-                                    _product![index].product_id.toString(),
-                                    _product![index].product_name.toString(),
-                                    _product![index].product_detail.toString(),
-                                    _product![index].product_price.toString(),
-                                    _product![index].product_quantity.toString(),
-                                    _product![index].export_product.toString(),
-                                    _product![index].import_product.toString(),
-                                    _product![index].product_type_id.toString(),
-                                    _product![index].import_price.toString(),
-                                    _product![index].product_image.toString());
-                              }));
-                            },
+                            child: Card(
+                          elevation: 20,
+                          color: Colors.yellow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                              ],
-                            ),
-
-                            
-                          )
-                          /*ListTile(
+                          child: Column(
+                            children: [
+                              ListTile(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                leading: Image(
+                                  image: NetworkImage(_product![index]
+                                      .product_image
+                                      .toString()),
+                                  width: 50,
+                                  height: 50,
+                                ),
+                                title: Text(
+                                    'ชื่อสินค้า : ${_product![index].product_name}'),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        'ขายไป : ${_product![index].export_product}'),
+                                    Text(
+                                        'เหลือในคลัง : ${_product![index].product_quantity}'),
+                                  ],
+                                ),
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return admin_productdetail(
+                                        _product![index].product_id.toString(),
+                                        _product![index]
+                                            .product_name
+                                            .toString(),
+                                        _product![index]
+                                            .product_detail
+                                            .toString(),
+                                        _product![index]
+                                            .product_price
+                                            .toString(),
+                                        _product![index]
+                                            .product_quantity
+                                            .toString(),
+                                        _product![index]
+                                            .export_product
+                                            .toString(),
+                                        _product![index]
+                                            .import_product
+                                            .toString(),
+                                        _product![index]
+                                            .product_type_id
+                                            .toString(),
+                                        _product![index]
+                                            .import_price
+                                            .toString(),
+                                        _product![index]
+                                            .product_image
+                                            .toString());
+                                  }));
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                            /*ListTile(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             leading: Image(
@@ -192,7 +210,7 @@ class _admin_allproductState extends State<admin_allproduct> {
                               }));
                             },
                           ),*/
-                        ),
+                            ),
                       ),
                     ),
                   )),
@@ -453,8 +471,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
               decoration: BoxDecoration(
                 //background color of dropdown button
                 border: Border.all(
-                    color: Colors.white,
-                    width: 1), //border of dropdown button
+                    color: Colors.white, width: 1), //border of dropdown button
                 borderRadius: BorderRadius.circular(
                     30), //border raiuds of dropdown button
               ),
@@ -593,15 +610,19 @@ class _admin_productdetailState extends State<admin_productdetail> {
                             product_name = name.toString();
                           },
                           autofocus: false,
-                          initialValue: widget.product_name.toString(),style: TextStyle(color: Colors.white),
+                          initialValue: widget.product_name.toString(),
+                          style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             enabledBorder: const OutlineInputBorder(
-      // width: 0.0 produces a thin "hairline" border
-      borderRadius: const BorderRadius.all(Radius.circular(30)), 
-      borderSide: const BorderSide(color: Colors.white),
-     
-    ),
-                            label: Text('ชื่อสินค้า',style: TextStyle(color: Colors.white),),
+                              // width: 0.0 produces a thin "hairline" border
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(30)),
+                              borderSide: const BorderSide(color: Colors.white),
+                            ),
+                            label: Text(
+                              'ชื่อสินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.black),
@@ -618,15 +639,19 @@ class _admin_productdetailState extends State<admin_productdetail> {
                             product_detail = detail.toString();
                           },
                           autofocus: false,
-                          initialValue: widget.product_detail.toString(),style: TextStyle(color: Colors.white),
+                          initialValue: widget.product_detail.toString(),
+                          style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             enabledBorder: const OutlineInputBorder(
-      // width: 0.0 produces a thin "hairline" border
-      borderRadius: const BorderRadius.all(Radius.circular(30)), 
-      borderSide: const BorderSide(color: Colors.white),
-     
-    ),
-                            label: Text('รายละเอียดสินค้า',style: TextStyle(color: Colors.white),),
+                              // width: 0.0 produces a thin "hairline" border
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(30)),
+                              borderSide: const BorderSide(color: Colors.white),
+                            ),
+                            label: Text(
+                              'รายละเอียดสินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.white),
@@ -641,7 +666,8 @@ class _admin_productdetailState extends State<admin_productdetail> {
                             Container(
                               width: 150,
                               child: TextFormField(
-                                initialValue: widget.product_price.toString(),style: TextStyle(color: Colors.white),
+                                initialValue: widget.product_price.toString(),
+                                style: TextStyle(color: Colors.white),
                                 validator: RequiredValidator(
                                     errorText: "กรุณาป้อนข้อมูล"),
                                 keyboardType: TextInputType.number,
@@ -651,12 +677,16 @@ class _admin_productdetailState extends State<admin_productdetail> {
                                 autofocus: false,
                                 decoration: InputDecoration(
                                   enabledBorder: const OutlineInputBorder(
-      // width: 0.0 produces a thin "hairline" border
-      borderRadius: const BorderRadius.all(Radius.circular(30)), 
-      borderSide: const BorderSide(color: Colors.white),
-     
-    ),
-                                  label: Text('ราคา',style: TextStyle(color: Colors.white),),
+                                    // width: 0.0 produces a thin "hairline" border
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(30)),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white),
+                                  ),
+                                  label: Text(
+                                    'ราคา',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                     borderSide:
@@ -678,15 +708,20 @@ class _admin_productdetailState extends State<admin_productdetail> {
                                 },
                                 autofocus: false,
                                 initialValue:
-                                    widget.product_quantity.toString(),style: TextStyle(color: Colors.white),
+                                    widget.product_quantity.toString(),
+                                style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
                                   enabledBorder: const OutlineInputBorder(
-      // width: 0.0 produces a thin "hairline" border
-      borderRadius: const BorderRadius.all(Radius.circular(30)), 
-      borderSide: const BorderSide(color: Colors.white),
-     
-    ),
-                                  label: Text('จำนวน',style: TextStyle(color: Colors.white),),
+                                    // width: 0.0 produces a thin "hairline" border
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(30)),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white),
+                                  ),
+                                  label: Text(
+                                    'จำนวน',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                     borderSide:

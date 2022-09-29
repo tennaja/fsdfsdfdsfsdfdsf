@@ -81,7 +81,7 @@ class _MapsPageState extends State<user_MapsPage> {
               },
               icon: Icon(Icons.near_me)),
           appBarHeight: 85,
-          appBarColor: Color.fromARGB(255, 255, 222, 178),
+          appBarColor: Colors.greenAccent,
           title: Container(
             child: Center(
                 child: const Text(

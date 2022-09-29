@@ -89,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 body: Container(
                   width: double.infinity,
                   height: double.infinity,
-                  color: Colors.white,
+                  color: Colors.pinkAccent.withOpacity(0.2),
                   child: SingleChildScrollView(
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -386,11 +386,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.pinkAccent,
-                                    
                                     padding: const EdgeInsets.fromLTRB(
                                         30, 10, 30, 10),
-                                         
                                   ),
                                   child: const Text(
                                     'ลงทะเบียน',

@@ -109,6 +109,7 @@ class _admin_orderallState extends State<admin_orderall> {
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView.builder(
+              padding: const EdgeInsets.all(0),
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount:
@@ -185,7 +186,6 @@ class _admin_orderallState extends State<admin_orderall> {
                             alignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
-                                
                                 onPressed: () {
                                   Navigator.push(
                                       context,
