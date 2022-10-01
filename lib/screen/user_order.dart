@@ -309,19 +309,21 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white.withOpacity(0.1),
+        backgroundColor: Colors.greenAccent,
         elevation: 0,
         title: Center(
             child: const Text(
           'รายการสินค้า',
           style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontSize: 24,
+              fontWeight: FontWeight.bold),
         )),
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.shopping_cart,
-              color: Color.fromARGB(255, 0, 0, 0),
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
             onPressed: () async {
               String email = await SessionManager().get("email");
@@ -334,30 +336,10 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
         ],
       ),
       resizeToAvoidBottomInset: false,
-      floatingActionButton: SizedBox(
-        width: 50,
-        height: 50,
-        child: FittedBox(
-          child: FloatingActionButton(
-            backgroundColor: Color.fromRGBO(30, 246, 30, 10),
-            child: Center(
-              child: Icon(
-                Icons.add_circle_rounded,
-                size: 50,
-              ),
-            ),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return add_product_order();
-              }));
-            },
-          ),
-        ),
-      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Color.fromARGB(255, 209, 254, 228),
         child: GridView.builder(
           itemCount: _filterproduct != null ? (_filterproduct?.length ?? 0) : 0,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

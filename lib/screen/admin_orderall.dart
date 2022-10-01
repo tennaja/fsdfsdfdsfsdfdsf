@@ -60,6 +60,7 @@ class _admin_orderallState extends State<admin_orderall> {
     return Scaffold(
         body: SliderDrawer(
       appBar: SliderAppBar(
+        drawerIconColor: Colors.white,
         trailing: PopupMenuButton(
           icon: Icon(
             Icons.filter_alt_outlined,
@@ -91,7 +92,7 @@ class _admin_orderallState extends State<admin_orderall> {
           },
         ),
         appBarHeight: 85,
-        appBarColor: Color(0xFF036666),
+        appBarColor: Color(0xFFbe95c4),
         title: Container(
           child: Center(
               child: const Text(
@@ -115,14 +116,19 @@ class _admin_orderallState extends State<admin_orderall> {
               itemCount:
                   _Export_product != null ? (_Export_product?.length ?? 0) : 0,
               itemBuilder: (_, index) => Center(
-                    child: Card(
-                      elevation: 20,
-                      color: Colors.yellow,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
+                     child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            right: 8.0, left: 8.0, bottom: 8.0),
+                        child: Container(
+                            child: Card(
+                          elevation: 20,
+                          color: Colors.yellow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Column(
+                            children: [
                           ListTile(
                             leading: _Export_product![index].order_status ==
                                     'ยังไม่มีใครรับ'
@@ -152,7 +158,7 @@ class _admin_orderallState extends State<admin_orderall> {
                                               )
                                             : Container(),
                             title: Text(
-                                'รหัสการสั่ง : ${_Export_product![index].order_id}'),
+                                'สั่งซื้อโดย : ${_Export_product![index].user_name} ${_Export_product![index].user_surname}'),
                             subtitle: Text(
                                 'จำนวนรายการ : ${_Export_product![index].product_amount}'),
                           ),
@@ -186,6 +192,7 @@ class _admin_orderallState extends State<admin_orderall> {
                             alignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
+                              
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -202,11 +209,19 @@ class _admin_orderallState extends State<admin_orderall> {
                                                       .order_responsible_person
                                                       .toString())));
                                 },
+                
                                 child: const Text('รายละเอียด >'),
-                              ),
+                                 style: ElevatedButton.styleFrom(
+                                   shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0)
+        ),
+                                  primary: Colors.red),
+                                 
+),
+                             ] ),
                             ],
                           ),
-                        ],
+                            )),
                       ),
                     ),
 /*
@@ -282,7 +297,7 @@ class _admin_oderall_detailState extends State<admin_oderall_detail> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('รายละเอียดการขาย'),
-        backgroundColor: Color(0xFF036666),
+        backgroundColor: Color(0xFFbe95c4),
       ),
       backgroundColor: Colors.grey[100],
       body: Column(

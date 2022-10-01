@@ -54,6 +54,7 @@ class _admin_allproductState extends State<admin_allproduct> {
     return Scaffold(
         body: SliderDrawer(
       appBar: SliderAppBar(
+        drawerIconColor: Colors.white,
         trailing: PopupMenuButton(
           icon: Icon(
             Icons.filter_alt_outlined,
@@ -77,7 +78,7 @@ class _admin_allproductState extends State<admin_allproduct> {
           },
         ),
         appBarHeight: 85,
-        appBarColor: Color(0xFF469d89),
+        appBarColor: Color(0xFFbe95c4),
         title: Container(
           child: Center(
               child: const Text(
@@ -109,13 +110,13 @@ class _admin_allproductState extends State<admin_allproduct> {
                           elevation: 20,
                           color: Colors.yellow,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(30),
                           ),
                           child: Column(
                             children: [
                               ListTile(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
+                                    borderRadius: BorderRadius.circular(30.0)),
                                 leading: Image(
                                   image: NetworkImage(_product![index]
                                       .product_image
@@ -402,7 +403,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
                 height: 35,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF469d89),
+                      primary: Color(0xFFbe95c4),
                       elevation: 3,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0)),
@@ -480,7 +481,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
                 height: 35,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF469d89),
+                      primary: Color(0xFFbe95c4),
                       elevation: 3,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0)),
@@ -519,7 +520,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Color(0xFF469d89),
+        backgroundColor: Color(0xFFbe95c4),
         elevation: 0,
         title: Center(
             child: const Text(
@@ -562,7 +563,7 @@ class _admin_productdetailState extends State<admin_productdetail> {
                     height: 35,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF469d89),
+                        primary: Color(0xFFbe95c4),
                         elevation: 3,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32.0)),

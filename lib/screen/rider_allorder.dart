@@ -53,13 +53,14 @@ class _rider_allorderState extends State<rider_allorder> {
         body: SliderDrawer(
           appBar: SliderAppBar(
             appBarHeight: 85,
-            appBarColor: Color.fromARGB(255, 255, 222, 178),
+            appBarColor: Colors.white,
             title: Container(
               child: Center(
                   child: const Text(
                 'รายการสั่งซื้อ',
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.blue
+                    ,
                     fontSize: 24,
                     fontWeight: FontWeight.bold),
               )),
@@ -67,9 +68,10 @@ class _rider_allorderState extends State<rider_allorder> {
           ),
           slider: RiderAppBar(),
           child: Container(
+            
             width: double.infinity,
             height: double.infinity,
-            color: Colors.orangeAccent.withOpacity(0.5),
+            color: Color.fromARGB(255, 238, 238, 238),
             child: Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: ListView.builder(
@@ -77,11 +79,18 @@ class _rider_allorderState extends State<rider_allorder> {
                   shrinkWrap: true,
                   itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
                   itemBuilder: (_, index) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            color: Colors.orangeAccent,
-                            child: ListTile(
+                        child: Container(
+                              child: Padding(
+                            padding: const EdgeInsets.only(
+                                right: 8.0, left: 8.0, bottom: 8.0),
+                            child: Container(
+                              child: Card(
+                                elevation: 20,
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Column(children: [ ListTile(
                               trailing: IconButton(
                                 icon: Icon(
                                   Icons.arrow_forward_ios,
@@ -100,14 +109,14 @@ class _rider_allorderState extends State<rider_allorder> {
                                 },
                               ),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
+                                  borderRadius: BorderRadius.circular(30.0)),
                               title: Text(
                                   '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
                               subtitle: Text(
                                   'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
-                              tileColor: Colors.orangeAccent,
+                              tileColor: Colors.white,
                             ),
-                          ),
+                         ]))) ),
                         ),
                       )),
             ),
@@ -177,18 +186,20 @@ class _import_order_detailState extends State<user_order_detail> {
             },
             label: Text("ยืนยันการส่ง"),
             icon: Icon(Icons.near_me),
-            backgroundColor: Colors.orangeAccent,
+            backgroundColor: Colors.green,
           ),
         ),
         appBar: AppBar(
-          title: Text('รายละเอียดการสั่งซื้อ'),
-          backgroundColor: Colors.blueAccent,
+          centerTitle: true
+          ,
+          title: Text('รายละเอียดการสั่งซื้อ',style: TextStyle(color: Colors.blue),),
+          backgroundColor: Colors.white,
         ),
         backgroundColor: Colors.grey[100],
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
+          color: Color.fromARGB(255, 238, 238, 238),
           child: SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.all(20),

@@ -56,6 +56,7 @@ class _addpromotionState extends State<addpromotion> {
     return Scaffold(
       body: SliderDrawer(
         appBar: SliderAppBar(
+          drawerIconColor: Colors.white,
           trailing: IconButton(
               onPressed: () {
                 setState(() {
@@ -64,7 +65,7 @@ class _addpromotionState extends State<addpromotion> {
               },
               icon: Icon(Icons.add,color: Colors.white,)),
           appBarHeight: 85,
-          appBarColor: Color(0xFF6d23b6),
+          appBarColor: Color(0xFF5e548e),
           title: Container(
             child: Center(
                 child: const Text(
@@ -159,7 +160,7 @@ class _addpromotionState extends State<addpromotion> {
                                   height: 40,
                                   child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        primary: Color(0xFF6d23b6),
+                                        primary: Color(0xFF5e548e),
                                         elevation: 3,
                                         shape: RoundedRectangleBorder(
                                             borderRadius:

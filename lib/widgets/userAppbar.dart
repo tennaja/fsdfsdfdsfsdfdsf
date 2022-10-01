@@ -65,18 +65,32 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('ร้านค้า',style: TextStyle(color: Colors.black),),
-                leading: Icon(Icons.shopping_bag,color: Colors.black,),
+                title: Text(
+                  'ร้านค้า',
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(
+                  Icons.shopping_bag,
+                  color: Colors.black,
+                ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return Orderpage();
                   }));
                 },
               ),
-              Divider(),
+              Divider(
+                color: Color.fromARGB(255, 140, 140, 140),
+              ),
               ListTile(
-                title: Text('แผนที่',style: TextStyle(color: Colors.black),),
-                leading: Icon(Icons.map,color: Colors.black,),
+                title: Text(
+                  'แผนที่',
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(
+                  Icons.map,
+                  color: Colors.black,
+                ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_MapsPage();
@@ -85,8 +99,14 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('ประวัติการซื้อขาย',style: TextStyle(color: Colors.black),),
-                leading: Icon(Icons.history,color: Colors.black,),
+                title: Text(
+                  'ประวัติการซื้อขาย',
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(
+                  Icons.history,
+                  color: Colors.black,
+                ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_order();
@@ -95,8 +115,14 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('โปรไฟล์',style: TextStyle(color: Colors.black),),
-                leading: Icon(Icons.person,color: Colors.black,),
+                title: Text(
+                  'โปรไฟล์',
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(
+                  Icons.person,
+                  color: Colors.black,
+                ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_profile();
@@ -105,8 +131,14 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('เปลี่ยนรหัส',style: TextStyle(color: Colors.black),),
-                leading: Icon(Icons.key,color: Colors.black,),
+                title: Text(
+                  'เปลี่ยนรหัส',
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(
+                  Icons.key,
+                  color: Colors.black,
+                ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_changepassword();
@@ -115,8 +147,14 @@ class _UserAppBarState extends State<UserAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('ออกจากระบบ',style: TextStyle(color: Colors.black),),
-                leading: Icon(Icons.logout,color: Colors.black,),
+                title: Text(
+                  'ออกจากระบบ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(
+                  Icons.logout,
+                  color: Colors.black,
+                ),
                 onTap: () {
                   showDialog<bool>(
                       context: context,

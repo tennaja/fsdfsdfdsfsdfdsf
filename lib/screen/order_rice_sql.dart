@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -119,124 +120,316 @@ class order_rice_sql extends StatefulWidget {
 }
 
 class _order_rice_sqlState extends State<order_rice_sql> {
+  String? promotionname;
+  List<Product_promotion>? _product_promotion;
+
+  void initState() {
+    super.initState();
+    _getpromotion();
+  }
+
+  _getpromotion() {
+    print("function working");
+    print(
+      widget.product_id,
+    );
+    print(DateFormat('yyyy-MM-d').format(DateTime.now()).toString());
+    Art_Services()
+        .getonlyvalue_product_promotion(widget.product_id,
+            DateFormat('yyyy-MM-d').format(DateTime.now()).toString())
+        .then((promotion) {
+      setState(() {
+        _product_promotion = promotion;
+        promotionname = _product_promotion![0].promotion_value.toString();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 2, right: 2, top: 2),
-      height: 225,
-      width: 150,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 10,
-            ),
-          ),
-          Center(
-            child: Image.network(
-              widget.product_image,
-              width: 100,
-              height: 100,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 20,
-            ),
-          ),
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Text(
-                    widget.product_name.toString(),
-                    style: TextStyle(
-                      fontSize: 12
+    return promotionname == null
+        ? Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Container(
+              margin: EdgeInsets.only(left: 2, right: 2, top: 2),
+              height: 225,
+              width: 150,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10,
                     ),
                   ),
+                  Center(
+                    child: Image.network(
+                      widget.product_image,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 20,
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            widget.product_name.toString(),
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: Text(
+                                widget.product_price,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: Text(
+                                '${widget.export_product.toString()} ขายแล้ว',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5, top: 5),
+                              child: Container(
+                                  height: 30,
+                                  width: 145,
+                                  child: OutlinedButton(
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0),
+                                                  side: BorderSide(
+                                                      color: Colors.red)))),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: const [
+                                          Text(
+                                            "รายละเอียดสินค้า",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 11),
+                                          ),
+                                          Icon(
+                                            Icons.manage_search,
+                                            size: 10,
+                                            color: Colors.black,
+                                          )
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return product_detail_sql(
+                                              widget.product_id.toString(),
+                                              widget.product_name.toString(),
+                                              widget.product_image.toString(),
+                                              widget.product_detail.toString(),
+                                              widget.product_price.toString(),
+                                              widget.product_quantity
+                                                  .toString(),
+                                              widget.export_product.toString(),
+                                              widget.import_product.toString(),
+                                              widget.product_type_id.toString(),
+                                              widget.proudct_promotion
+                                                  .toString());
+                                        }));
+                                      })),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Badge(
+              elevation: 5,
+              animationType: BadgeAnimationType.scale,
+              position: BadgePosition.topEnd(),
+              badgeContent: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '- ${promotionname}%',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
-                SizedBox(height: 5,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              child: Container(
+                margin: EdgeInsets.only(left: 2, right: 2, top: 2),
+                height: 225,
+                width: 150,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(widget.product_price,style: TextStyle( fontSize: 10),),
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                      ),
+                    ),
+                    Center(
+                      child: Image.network(
+                        widget.product_image,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: Text(
-                        '${widget.export_product.toString()} ขายแล้ว',
-                        style: TextStyle(
-                            fontSize: 10, color: Colors.black.withOpacity(0.7),),
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Text(
+                              widget.product_name.toString(),
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  widget.product_price,
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5),
+                                child: Text(
+                                  '${widget.export_product.toString()} ขายแล้ว',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.black.withOpacity(0.7),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 5, top: 5),
+                                child: Container(
+                                    height: 30,
+                                    width: 145,
+                                    child: OutlinedButton(
+                                        style: ButtonStyle(
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.0),
+                                                    side: BorderSide(
+                                                        color: Colors.red)))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: const [
+                                            Text(
+                                              "รายละเอียดสินค้า",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 11),
+                                            ),
+                                            Icon(
+                                              Icons.manage_search,
+                                              size: 10,
+                                              color: Colors.black,
+                                            )
+                                          ],
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return product_detail_sql(
+                                                widget.product_id.toString(),
+                                                widget.product_name.toString(),
+                                                widget.product_image.toString(),
+                                                widget.product_detail
+                                                    .toString(),
+                                                widget.product_price.toString(),
+                                                widget.product_quantity
+                                                    .toString(),
+                                                widget.export_product
+                                                    .toString(),
+                                                widget.import_product
+                                                    .toString(),
+                                                widget.product_type_id
+                                                    .toString(),
+                                                widget.proudct_promotion
+                                                    .toString());
+                                          }));
+                                        })),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 5,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5, top: 5),
-                      child: Container(
-                          height: 30,
-                          width: 145,
-                          child: OutlinedButton(
-                            style: ButtonStyle(
-  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20.0),
-      side: BorderSide(color: Colors.red)
-    )
-  )
-),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    "รายละเอียดสินค้า",
-                                    style: TextStyle(color: Colors.black,fontSize: 11),
-                                  ),
-                                  Icon(
-                                    Icons.manage_search,
-                                    size: 10,
-                                    color: Colors.black,
-                                  )
-                                ],
-                              ),
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return product_detail_sql(
-                                      widget.product_id.toString(),
-                                      widget.product_name.toString(),
-                                      widget.product_image.toString(),
-                                      widget.product_detail.toString(),
-                                      widget.product_price.toString(),
-                                      widget.product_quantity.toString(),
-                                      widget.export_product.toString(),
-                                      widget.import_product.toString(),
-                                      widget.product_type_id.toString(),
-                                      widget.proudct_promotion.toString());
-                                }));
-                              })),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }
 

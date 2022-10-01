@@ -75,6 +75,7 @@ class _admin_reportState extends State<admin_report> {
     return Scaffold(
         body: SliderDrawer(
             appBar: SliderAppBar(
+              drawerIconColor: Colors.white,
               trailing: IconButton(
                 icon: const Icon(
                   Icons.calendar_month,
@@ -85,7 +86,7 @@ class _admin_reportState extends State<admin_report> {
                 },
               ),
               appBarHeight: 85,
-              appBarColor: const Color(0xFF358f80),
+              appBarColor: const Color(0xFFbe95c4),
               title: Container(
                 child: const Center(
                     child: Text(

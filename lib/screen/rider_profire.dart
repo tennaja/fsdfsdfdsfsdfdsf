@@ -133,16 +133,16 @@ class _user_profileState extends State<rider_profire> {
               }
               setState(() {});
             },
-            icon: Icon(Icons.save),
+            icon: Icon(Icons.save,color: Colors.blue,),
           ),
           appBarHeight: 85,
-          appBarColor: Color.fromARGB(255, 255, 222, 178),
+          appBarColor: Colors.white,
           title: Container(
             child: Center(
                 child: const Text(
               'แก้ไขโปรไฟล์',
               style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.blue,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             )),
@@ -152,7 +152,7 @@ class _user_profileState extends State<rider_profire> {
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
+          color: Color.fromARGB(255, 238, 238, 238),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
@@ -183,11 +183,11 @@ class _user_profileState extends State<rider_profire> {
                                         fillColor: Colors.white,
                                         prefixIcon: const Icon(
                                           Icons.person,
-                                          color: Colors.black,
+                                          color: Colors.blue,
                                         ),
                                         border: OutlineInputBorder(
                                           borderSide: const BorderSide(
-                                              color: Colors.black),
+                                              color: Colors.blue),
                                           borderRadius:
                                               BorderRadius.circular(30),
                                         ),
@@ -209,7 +209,7 @@ class _user_profileState extends State<rider_profire> {
                                         label: Text('นามสกุล'),
                                         prefixIcon: const Icon(
                                           Icons.person,
-                                          color: Colors.black,
+                                          color: Colors.blue,
                                         ),
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -234,7 +234,7 @@ class _user_profileState extends State<rider_profire> {
                                   label: Text('อีเมล์'),
                                   prefixIcon: const Icon(
                                     Icons.email,
-                                    color: Colors.black,
+                                    color: Colors.blue,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30),
@@ -254,7 +254,7 @@ class _user_profileState extends State<rider_profire> {
                                   label: Text('เบอร์โทรศัพท์'),
                                   prefixIcon: const Icon(
                                     Icons.local_phone,
-                                    color: Colors.black,
+                                    color: Colors.blue,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30),
@@ -271,7 +271,7 @@ class _user_profileState extends State<rider_profire> {
                                 decoration: InputDecoration(
                                     prefixIcon: const Icon(
                                       Icons.key,
-                                      color: Colors.black,
+                                      color: Colors.blue,
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(30),

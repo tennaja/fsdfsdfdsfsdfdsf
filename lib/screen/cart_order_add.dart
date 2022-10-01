@@ -165,7 +165,6 @@ class _cart_order_addState extends State<cart_order_add> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          backgroundColor: Color.fromARGB(255, 252, 187, 101),
                           title: const Text('ยืนยันการสั่งซื้อ'),
                           content: Text('ยืนยันการสั่งซื้อใช้ไหม?'),
                           actions: <Widget>[

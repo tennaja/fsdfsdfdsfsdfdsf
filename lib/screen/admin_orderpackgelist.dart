@@ -10,14 +10,14 @@ import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
 
-class admin_orderlist extends StatefulWidget {
-  const admin_orderlist({Key? key}) : super(key: key);
+class admin_orderpackgelist extends StatefulWidget {
+  const admin_orderpackgelist({Key? key}) : super(key: key);
 
   @override
-  State<admin_orderlist> createState() => _admin_orderlistState();
+  State<admin_orderpackgelist> createState() => _admin_orderlistState();
 }
 
-class _admin_orderlistState extends State<admin_orderlist> {
+class _admin_orderlistState extends State<admin_orderpackgelist> {
   List<Export_product>? _Export_product;
   List<Export_product>? _filterImport_product;
   List<int> datalength = [];
@@ -28,7 +28,7 @@ class _admin_orderlistState extends State<admin_orderlist> {
     initializeDateFormatting();
     super.initState();
     _Export_product = [];
-    _getImport_product('รอการยืนยันจาก Admin');
+    _getImport_product('รอการยืนยันการเเพ็คของ');
   }
 
   _getImport_product(where) {
@@ -48,7 +48,7 @@ class _admin_orderlistState extends State<admin_orderlist> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Color(0xFF231942),
-          title: Text('ยืนยันรับออเดอร์'),
+          title: Text('ยืนยันการเเพ็คสินค้า'),
         ),
         drawer: /*AdminAppBar(),*/
             ComplexDrawer(),
@@ -163,20 +163,23 @@ class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
               FloatingActionButton.extended(
                 heroTag: 1,
                 onPressed: () async {
-                  Art_Services().accept_order(widget.order_id).then((value) => {
-                        Fluttertoast.showToast(
-                            msg: "จัดส่งเรียบร้อย",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Color.fromARGB(255, 0, 255, 30),
-                            textColor: Colors.white,
-                            fontSize: 16.0),
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return admin_orderlist();
-                        }))
-                      });
+                  Art_Services()
+                      .acceptpackge_order(widget.order_id)
+                      .then((value) => {
+                            Fluttertoast.showToast(
+                                msg: "จัดส่งเรียบร้อย",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor:
+                                    Color.fromARGB(255, 0, 255, 30),
+                                textColor: Colors.white,
+                                fontSize: 16.0),
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return admin_orderpackgelist();
+                            }))
+                          });
                 },
                 label: Text("รับออเดอร์"),
                 icon: Icon(Icons.near_me),
@@ -196,7 +199,7 @@ class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
                             fontSize: 16.0),
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return admin_orderlist();
+                          return admin_orderpackgelist();
                         }))
                       });
                 },

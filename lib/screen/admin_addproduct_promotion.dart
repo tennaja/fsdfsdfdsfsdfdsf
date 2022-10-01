@@ -183,7 +183,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
       backgroundColor: Colorz.complexDrawerBlack,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0xFF571089),
+        backgroundColor: Color(0xFF5e548e),
         title: Text('เพิ่มโปรโมชั่นให้สินค้า'),
       ),
       drawer: ComplexDrawer(),
@@ -402,7 +402,7 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                 height: 40,
                                 child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      primary: Color(0xFF571089),
+                                      primary: Color(0xFF5e548e),
                                       elevation: 3,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -524,14 +524,16 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                                         title: const Text(
                                                           'ลบข้อมูล',
                                                           style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
+                                                              color: Color
+                                                                  .fromARGB(255,
+                                                                      0, 0, 0)),
                                                         ),
                                                         content: const Text(
                                                           'ต้องการที่จะลบประเภทสินค้านี้ใช้ไหม?',
                                                           style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
+                                                              color: Color
+                                                                  .fromARGB(255,
+                                                                      0, 0, 0)),
                                                         ),
                                                         actions: <Widget>[
                                                           ElevatedButton(

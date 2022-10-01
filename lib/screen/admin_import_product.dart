@@ -59,8 +59,9 @@ class _admin_import_sourceState extends State<admin_import_source> {
     return Scaffold(
         body: SliderDrawer(
             appBar: SliderAppBar(
+              drawerIconColor: Colors.white,
               appBarHeight: 85,
-              appBarColor: Color(0xFFff8500),
+              appBarColor: Color(0xFF9f86c0),
               title: Container(
                 child: Center(
                   child: const Text(
@@ -93,12 +94,12 @@ class _admin_import_sourceState extends State<admin_import_source> {
                           elevation: 20,
                           color: Colors.yellow,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(30),
                           ),
                           child: Column(children: [
                             ListTile(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
+                                  borderRadius: BorderRadius.circular(30.0)),
                               title: Text(
                                 _source![index].source_name.toString(),
                                 style: TextStyle(color: Colors.black),
@@ -174,7 +175,7 @@ class _import_product_menuState extends State<import_product_menu> {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Color(0xFFff8500),
+        backgroundColor: Color(0xFF9f86c0),
         elevation: 0,
         title: Center(
             child: Text(
@@ -253,16 +254,16 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 2, right: 2, top: 2),
-      height: 225,
+      height: 150,
       width: 150,
       decoration: BoxDecoration(
-          color: Colors.yellow, borderRadius: BorderRadius.circular(10)),
+          color: Colors.yellow, borderRadius: BorderRadius.circular(30)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(
-              top: 10,
+              top: 15,
             ),
           ),
           Center(
@@ -275,15 +276,16 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
           ),
           Padding(
             padding: const EdgeInsets.only(
-              top: 20,
+              top: 20,left: 5
             ),
           ),
           Container(
+            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 5),
+                  padding: const EdgeInsets.only(left: 15),
                   child: Text(
                     widget.product_name.toString(),
                     style: TextStyle(
@@ -291,30 +293,42 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
                     ),
                   ),
                 ),
+                SizedBox(height: 5,),
                 Row(
+                  
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 5),
+                      padding: const EdgeInsets.only(left: 15),
                       child: Text('ราคา : ${widget.product_price}'),
                     ),
                   ],
                 ),
+                SizedBox(height: 10,),
                 Row(
+                  
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsets.only(bottom: 5, top: 5, left: 5),
+                          const EdgeInsets.only(bottom: 5, top: 5, left: 8),
                       child: Container(
+                        
                           alignment: Alignment.bottomCenter,
                           height: 30,
-                          width: 145,
+                          width: 170,
                           child: OutlinedButton(
+                             style: OutlinedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+         borderRadius: BorderRadius.circular(18.0),
+      ),
+      side: BorderSide(width: 2, color: Color.fromARGB(255, 148, 151, 148)),
+   ),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: const [
                                   Text(
                                     "รายละเอียดสินค้า",
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(color: Colors.black,fontSize: 12),
                                   ),
                                   Icon(
                                     Icons.manage_search,
@@ -471,7 +485,7 @@ class _import_product_detailState extends State<import_product_detail> {
             left: height / 42.2,
             right: height / 42.2),
         decoration: BoxDecoration(
-            color: Colors.red[50],
+            color: Colors.purple[50],
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(height / 42.2 * 2),
                 topRight: Radius.circular(height / 42.2 * 2))),
@@ -589,7 +603,7 @@ class _Import_quantityState extends State<Import_quantity> {
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(height / 42.2),
-                color: AppColors.MainColor,
+                color: Colors.purple[200],
               )),
         ),
       ],
@@ -704,7 +718,7 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
               Navigator.of(context).pop();
             },
           ),
-          backgroundColor: Color(0xFFff8500),
+          backgroundColor: Color(0xFF9f86c0),
           elevation: 0,
           title: Center(
               child: const Text(
@@ -735,9 +749,20 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
                 shrinkWrap: true,
                 itemCount: _basket != null ? (_basket?.length ?? 0) : 0,
                 itemBuilder: (_, index) => Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
+                      child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          right: 8.0, left: 8.0, bottom: 8.0),
+                      child: Container(
+                        child: Card(
+                          elevation: 20,
+                          color: Colors.yellow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Column(children: [ ListTile(
+                             shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0)),
                           leading: Image(
                               image: NetworkImage(
                                   _basket![index].product_image.toString())),
@@ -751,12 +776,12 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
                                   'ราคารวม : ${_basket![index].basket_product_pricetotal.toString()}'),
                             ],
                           ),
-                          tileColor: Colors.orangeAccent,
+                          tileColor: Colors.yellow,
                           onTap: () {},
                         ),
-                      ),
+                      ]),
                     )),
           ),
-        ));
+        ))))));
   }
 }

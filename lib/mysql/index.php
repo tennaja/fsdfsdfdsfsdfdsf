@@ -290,7 +290,12 @@
 
     if("GET_EXPORT_PRODUCT" == $action){
         $db_data = array();
-        $sql = "SELECT * FROM user_order where order_status = '$where'";
+        $sql = "SELECT user_order.order_id,user_order.order_by,user_order.user_latitude,user_order.user_longitude,user_order.order_responsible_person,user_order.order_responsible_person,
+        user_order.order_status,user_order.order_date,user_order.product_amount,user_order.total_price,user.user_name,user.user_surname
+        FROM user_order
+        INNER JOIN user
+        ON user_order.order_by = user.user_email
+        where order_status = '$where'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -798,7 +803,23 @@
     }
 
     if("ACCEPT_ORDER" == $action){ 
+        $sql = "UPDATE user_order SET order_status = 'รอการยืนยันการเเพ็คของ' WHERE order_id = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("ACCEPTPACKGE_ORDER" == $action){ 
         $sql = "UPDATE user_order SET order_status = 'ยังไม่มีใครรับ' WHERE order_id = '$where'";
+        $result = $conn->query($sql);
+        echo "success";
+        $conn->close();
+        return;
+    }
+
+    if("WAITCANCEL_ORDER" == $action){ 
+        $sql = "UPDATE user_order SET order_status = 'รอการตอบกลับการยกเลิก' WHERE order_id = '$where'";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();

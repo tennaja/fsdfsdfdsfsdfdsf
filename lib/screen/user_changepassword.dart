@@ -17,7 +17,7 @@ class user_changepassword extends StatefulWidget {
 
 class _user_changepasswordState extends State<user_changepassword> {
   final fromKey = GlobalKey<FormState>();
-  String? user_email, password1, password2;
+  String? user_email, password1, password2, originpassword;
   List<User>? user = [];
   void initState() {
     super.initState();
@@ -57,20 +57,6 @@ class _user_changepasswordState extends State<user_changepassword> {
     return Scaffold(
       body: SliderDrawer(
         appBar: SliderAppBar(
-          trailing: IconButton(
-            onPressed: () {
-              if (fromKey.currentState!.validate()) {
-                fromKey.currentState!.save();
-                if (password1 == password2) {
-                  print('สามารถเปลี่ยนได้}');
-                  _changepassword(password1);
-                } else {
-                  print('ไม่สามารถเปลี่ยนได้}');
-                }
-              }
-            },
-            icon: Icon(Icons.save),
-          ),
           appBarHeight: 85,
           appBarColor: Color.fromARGB(255, 255, 222, 178),
           title: Container(
@@ -93,75 +79,135 @@ class _user_changepasswordState extends State<user_changepassword> {
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
-                    children: [
-                      Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
+                    children: <Widget>[
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Form(
+                          key: fromKey,
+                          child: Column(children: [
                             const SizedBox(
                               height: 20,
                             ),
-                            Form(
-                                key: fromKey,
-                                child: Column(children: [
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  TextFormField(
-                                    validator: RequiredValidator(
-                                        errorText: "กรุณาป้อนข้อมูล"),
-                                    onSaved: (password) {
-                                      setState(() {
-                                        password1 = password;
-                                      });
-                                    },
-                                    autofocus: false,
-                                    decoration: InputDecoration(
-                                      label: Text('ใส่รหัสผ่านใหม่'),
-                                      prefixIcon: const Icon(
-                                        Icons.key,
-                                        color: Colors.black,
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  TextFormField(
-                                    validator: RequiredValidator(
-                                        errorText: "กรุณาป้อนข้อมูล"),
-                                    onSaved: (password) {
-                                      setState(() {
-                                        password2 = password;
-                                      });
-                                    },
-                                    autofocus: false,
-                                    decoration: InputDecoration(
-                                      label: Text('ยืนยันรหัสผ่าน'),
-                                      prefixIcon: const Icon(
-                                        Icons.key,
-                                        color: Colors.black,
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                ]))
-                          ],
-                        ),
-                      ),
+                            TextFormField(
+                              validator: RequiredValidator(
+                                  errorText: "กรุณาป้อนข้อมูล"),
+                              onSaved: (password) {
+                                setState(() {
+                                  originpassword = password;
+                                });
+                              },
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                label: Text('ใส่รหัสเดิม'),
+                                prefixIcon: const Icon(
+                                  Icons.key,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormField(
+                              validator: RequiredValidator(
+                                  errorText: "กรุณาป้อนข้อมูล"),
+                              onSaved: (password) {
+                                setState(() {
+                                  password1 = password;
+                                });
+                              },
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                label: Text('ใส่รหัสผ่านใหม่'),
+                                prefixIcon: const Icon(
+                                  Icons.key,
+                                  color: Colors.black,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormField(
+                              validator: RequiredValidator(
+                                  errorText: "กรุณาป้อนข้อมูล"),
+                              onSaved: (password) {
+                                setState(() {
+                                  password2 = password;
+                                });
+                              },
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                label: Text('ยืนยันรหัสผ่าน'),
+                                prefixIcon: const Icon(
+                                  Icons.key,
+                                  color: Colors.black,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ]))
                     ],
                   ),
+                  Column(
+                    children: [
+                      Container(
+                        width: 200,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            user_email = await SessionManager().get("email");
+                            if (fromKey.currentState!.validate()) {
+                              fromKey.currentState!.save();
+                              Art_Services()
+                                  .Loginuser(user_email, originpassword)
+                                  .then((value) {
+                                if (value.isEmpty) {
+                                  Fluttertoast.showToast(
+                                      msg: "รหัสเดิมไม่ถูกต้อง",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor:
+                                          Color.fromARGB(255, 255, 0, 0),
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                } else {
+                                  if (password1 != password2) {
+                                    Fluttertoast.showToast(
+                                        msg: "รหัสที่กรอกไม่เหมือนกัน",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor:
+                                            Color.fromARGB(255, 255, 0, 0),
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                  } else {
+                                    _changepassword(password1);
+                                  }
+                                }
+                              });
+                            }
+                          },
+                          child: Text('เปลี่ยนรหัส'),
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),

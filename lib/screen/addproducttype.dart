@@ -55,6 +55,7 @@ class _addproducttypeState extends State<addproducttype> {
     return Scaffold(
       body: SliderDrawer(
           appBar: SliderAppBar(
+            drawerIconColor: Colors.white,
             trailing: IconButton(
                 onPressed: () {
                   setState(() {
@@ -66,7 +67,7 @@ class _addproducttypeState extends State<addproducttype> {
                   color: Colors.white,
                 )),
             appBarHeight: 85,
-            appBarColor: Color(0xFF822faf),
+            appBarColor: Color(0xFF5e548e),
             title: Container(
               child: Center(
                   child: const Text(
@@ -137,7 +138,7 @@ class _addproducttypeState extends State<addproducttype> {
                                       height: 40,
                                       child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                            primary: Color(0xFF822faf),
+                                            primary: Color(0xFF5e548e),
                                             elevation: 3,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:

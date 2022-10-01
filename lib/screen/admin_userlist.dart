@@ -43,6 +43,7 @@ class _admin_UserlistState extends State<admin_Userlist> {
     return Scaffold(
         body: SliderDrawer(
             appBar: SliderAppBar(
+              drawerIconColor: Colors.white,
               trailing: PopupMenuButton(
                 icon: Icon(
                   Icons.filter_alt_outlined,
@@ -66,7 +67,7 @@ class _admin_UserlistState extends State<admin_Userlist> {
                 },
               ),
               appBarHeight: 85,
-              appBarColor: Color(0xFF6d2e46),
+              appBarColor: Color(0xFFe0b1cb),
               title: Container(
                 child: Center(
                     child: const Text(
@@ -105,7 +106,7 @@ class _admin_UserlistState extends State<admin_Userlist> {
                             child: Column(children: [
                               ListTile(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
+                                    borderRadius: BorderRadius.circular(30.0)),
                                 title: Text(
                                     'ชื่อสมาชิก : ${user?[index].user_name}  ${user?[index].user_surname}'),
                                 subtitle:
@@ -250,7 +251,7 @@ class _admin_userdetailState extends State<admin_userdetail> {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Color(0xFF6d2e46),
+        backgroundColor: Color(0xFFe0b1cb),
         elevation: 0,
         title: Center(
             child: const Text(

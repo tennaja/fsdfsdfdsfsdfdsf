@@ -1088,6 +1088,34 @@ class Art_Services {
     }
   }
 
+  Future<String> acceptpackge_order(where1) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "ACCEPTPACKGE_ORDER";
+      map["where"] = where1; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("acceptpackge_order >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return '${e}';
+    }
+  }
+
+  Future<String> waitcancel_order(where1) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "WAITCANCEL_ORDER";
+      map["where"] = where1; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("acceptpackge_order >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return '${e}';
+    }
+  }
+
   Future<List<Import_detail>> getallimport_detail() async {
     try {
       var map = <String, dynamic>{};
