@@ -89,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 body: Container(
                   width: double.infinity,
                   height: double.infinity,
-                  color: Colors.pinkAccent.withOpacity(0.2),
+                  color: Colors.white,
                   child: SingleChildScrollView(
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -103,7 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 40,
-                                color: Colors.black),
+                                color: Colors.blue),
                           ),
                           const SizedBox(
                             height: 60,
@@ -125,7 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           fillColor: Colors.white,
                                           prefixIcon: const Icon(
                                             Icons.person,
-                                            color: Colors.black,
+                                            color: Colors.blue,
                                           ),
                                           border: OutlineInputBorder(
                                             borderSide: const BorderSide(
@@ -150,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           hintText: 'นามสกุล',
                                           prefixIcon: const Icon(
                                             Icons.person,
-                                            color: Colors.black,
+                                            color: Colors.blue,
                                           ),
                                           border: OutlineInputBorder(
                                             borderRadius:
@@ -180,7 +180,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     hintText: 'โปรดใส่อีเมลล์',
                                     prefixIcon: const Icon(
                                       Icons.email,
-                                      color: Colors.black,
+                                      color: Colors.blue,
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(30),
@@ -200,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     hintText: 'โปรดใส่เบอร์โทร',
                                     prefixIcon: const Icon(
                                       Icons.local_phone,
-                                      color: Colors.black,
+                                      color: Colors.blue,
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(30),
@@ -222,7 +222,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   decoration: InputDecoration(
                                     prefixIcon: const Icon(
                                       Icons.lock,
-                                      color: Colors.black,
+                                      color: Colors.blue,
                                     ),
                                     hintText: 'โปรดใส่พาสเวิร์ด',
                                     border: OutlineInputBorder(
@@ -247,7 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   decoration: InputDecoration(
                                     prefixIcon: const Icon(
                                       Icons.lock,
-                                      color: Colors.black,
+                                      color: Colors.blue,
                                     ),
                                     hintText: 'ยืนยันพาสเวิร์ด',
                                     border: OutlineInputBorder(
@@ -258,61 +258,102 @@ class _RegisterPageState extends State<RegisterPage> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    print(customer.name);
-                                    print(customer.surname);
-                                    print(customer.email);
-                                    print(customer.password);
-                                    if (fromKey.currentState!.validate()) {
-                                      fromKey.currentState!.save();
-                                      // ignore: avoid_print
-                                      try {
-                                        Art_Services()
-                                            .getonlyUser(customer.email)
-                                            .then((value) {
-                                          print('USER ---> ${value.length}');
-                                          if (value.isNotEmpty) {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "มีผู้ใช้อีเมลนี้มีผู้ใช้แล้ว",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 255, 0, 0),
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                          } else if (customer.password.length <=
-                                              5) {
-                                            Fluttertoast.showToast(
-                                                msg: "รหัสผ่านสั้นเกินไป",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 255, 0, 0),
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                          } else if (customer.phone.length !=
-                                              10) {
-                                            Fluttertoast.showToast(
-                                                msg: "เบอร์โทรไม่ตรงตามแบบ",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 255, 0, 0),
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                          } else {
-                                            _addEmployee(
-                                                customer.name,
-                                                customer.surname,
-                                                customer.phone,
-                                                customer.email,
-                                                customer.password);
+                                SizedBox(
+                                  width: 340,
+                                  height: 50,
+                                  child: OutlinedButton(
+                                    onPressed: () async {
+                                      print(customer.name);
+                                      print(customer.surname);
+                                      print(customer.email);
+                                      print(customer.password);
+                                      if (fromKey.currentState!.validate()) {
+                                        fromKey.currentState!.save();
+                                        // ignore: avoid_print
+                                        try {
+                                          Art_Services()
+                                              .getonlyUser(customer.email)
+                                              .then((value) {
+                                            print('USER ---> ${value.length}');
+                                            if (value.isNotEmpty) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "มีผู้ใช้อีเมลนี้มีผู้ใช้แล้ว",
+                                                  toastLength: Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Color.fromARGB(
+                                                      255, 255, 0, 0),
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                            } else if (customer.password.length <=
+                                                5) {
+                                              Fluttertoast.showToast(
+                                                  msg: "รหัสผ่านสั้นเกินไป",
+                                                  toastLength: Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Color.fromARGB(
+                                                      255, 255, 0, 0),
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                            } else if (customer.phone.length !=
+                                                10) {
+                                              Fluttertoast.showToast(
+                                                  msg: "เบอร์โทรไม่ตรงตามแบบ",
+                                                  toastLength: Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Color.fromARGB(
+                                                      255, 255, 0, 0),
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                            } else {
+                                              _addEmployee(
+                                                  customer.name,
+                                                  customer.surname,
+                                                  customer.phone,
+                                                  customer.email,
+                                                  customer.password);
 
+                                              Fluttertoast.showToast(
+                                                  msg: "Register success",
+                                                  toastLength: Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.green,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                              Navigator.pop(context);
+                                            }
+                                          });
+
+                                          /*
+                                          await FirebaseAuth.instance
+                                              .createUserWithEmailAndPassword(
+                                                  email: customer.email,
+                                                  password: customer.password)
+                                              .then((result) {
+                                           
+                                           
+                                          final FirebaseAuth auth =
+                                              FirebaseAuth.instance;
+                                          var list = [];
+                                          _usersCollection
+                                              .doc("${customer.email}")
+                                              .set({
+                                            "id": customer.id,
+                                            "name": customer.name,
+                                            "surname": customer.surname,
+                                            "email": customer.email,
+                                            "password": customer.password,
+                                            "Role": "customer",
+                                            "u_latitude": '',
+                                            "u_longitude": '',
+                                            "user_cart":
+                                                FieldValue.arrayUnion(list),
+                                          }).then((value) {
+                                            fromKey.currentState!.reset();
                                             Fluttertoast.showToast(
                                                 msg: "Register success",
                                                 toastLength: Toast.LENGTH_SHORT,
@@ -322,51 +363,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 textColor: Colors.white,
                                                 fontSize: 16.0);
                                             Navigator.pop(context);
-                                          }
-                                        });
+                                          });*/
 
-                                        /*
-                                        await FirebaseAuth.instance
-                                            .createUserWithEmailAndPassword(
-                                                email: customer.email,
-                                                password: customer.password)
-                                            .then((result) {
-                                         
-                                         
-                                        final FirebaseAuth auth =
-                                            FirebaseAuth.instance;
-                                        var list = [];
-                                        _usersCollection
-                                            .doc("${customer.email}")
-                                            .set({
-                                          "id": customer.id,
-                                          "name": customer.name,
-                                          "surname": customer.surname,
-                                          "email": customer.email,
-                                          "password": customer.password,
-                                          "Role": "customer",
-                                          "u_latitude": '',
-                                          "u_longitude": '',
-                                          "user_cart":
-                                              FieldValue.arrayUnion(list),
-                                        }).then((value) {
-                                          fromKey.currentState!.reset();
+                                          // ignore: empty_catches, unused_catch_clause
+                                        } on FirebaseAuthException catch (e) {
+                                          print(e.code);
                                           Fluttertoast.showToast(
-                                              msg: "Register success",
+                                              msg: "${e.message}",
                                               toastLength: Toast.LENGTH_SHORT,
                                               gravity: ToastGravity.BOTTOM,
                                               timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.green,
+                                              backgroundColor: Colors.red,
                                               textColor: Colors.white,
                                               fontSize: 16.0);
-                                          Navigator.pop(context);
-                                        });*/
-
-                                        // ignore: empty_catches, unused_catch_clause
-                                      } on FirebaseAuthException catch (e) {
-                                        print(e.code);
+                                        }
+                                      } else {
                                         Fluttertoast.showToast(
-                                            msg: "${e.message}",
+                                            msg: "error",
                                             toastLength: Toast.LENGTH_SHORT,
                                             gravity: ToastGravity.BOTTOM,
                                             timeInSecForIosWeb: 1,
@@ -374,25 +387,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                             textColor: Colors.white,
                                             fontSize: 16.0);
                                       }
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "error",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        30, 10, 30, 10),
-                                  ),
-                                  child: const Text(
-                                    'ลงทะเบียน',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                    },
+                                  style: OutlinedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+         borderRadius: BorderRadius.circular(30.0),
+      ),
+      side: BorderSide(width: 2, color: Colors.blue),
+   ),
+                                    child: const Text(
+                                      'ลงทะเบียน',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),

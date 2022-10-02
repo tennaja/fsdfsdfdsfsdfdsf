@@ -41,27 +41,25 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
-          color: Colors.pinkAccent.withOpacity(0.2),
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/background.jpg'),
-                      fit: BoxFit.fitWidth),
-                ),
+               
                 width: 500,
                 height: 325,
                 child: SizedBox(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    child: Image.asset(
-                      'assets/images/app_logo.png',
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 70),
+                    child: Container(
                       width: 100,
                       height: 100,
-                      scale: 0.5,
-                      fit: BoxFit.cover,
+                      child: Image.asset(
+                        'assets/images/app_logo.png',
+                        width: 100,
+                        height: 100,
+                        scale: 0.5,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -88,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: 'โปรดใส่อีเมลล์',
                                 prefixIcon: const Icon(
                                   Icons.email,
-                                  color: Colors.black,
+                                  color: Colors.blue,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
@@ -107,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                               maxLines: 1,
                               obscureText: true,
                               decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.lock),
+                                prefixIcon: const Icon(Icons.lock,color: Colors.blue,),
                                 hintText: 'โปรดใส่พาสเวิร์ด',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
@@ -117,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                                 customer.password = password!;
                               },
                             ),
+                            SizedBox(height: 20,),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Row(
@@ -200,10 +199,11 @@ class _LoginPageState extends State<LoginPage> {
                                 ],
                               ),
                             ),
+                            SizedBox(height: 10,),
                             Container(
                               width: 340,
                               height: 50,
-                              child: ElevatedButton(
+                              child: OutlinedButton(
                                 onPressed: () {
                                   if (fromKey.currentState!.validate()) {
                                     fromKey.currentState!.save();
@@ -336,20 +336,12 @@ class _LoginPageState extends State<LoginPage> {
       
                                   */
                                 },
-                                style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.white),
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.pinkAccent.withOpacity(0.8)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            side: BorderSide(
-                                                color: Colors.pinkAccent)))),
+                                 style: OutlinedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+         borderRadius: BorderRadius.circular(30.0),
+      ),
+      side: BorderSide(width: 2, color: Colors.blue),
+   ),
                                 child: const Text(
                                   'เข้าสู่ระบบ',
                                   style: TextStyle(

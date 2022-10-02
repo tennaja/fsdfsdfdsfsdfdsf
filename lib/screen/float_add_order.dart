@@ -292,7 +292,7 @@ class _add_product_orderState extends State<add_product_order> {
                                   border: OutlineInputBorder(
                                     borderSide:
                                         const BorderSide(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
                               ),

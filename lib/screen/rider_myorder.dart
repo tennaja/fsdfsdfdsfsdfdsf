@@ -61,71 +61,76 @@ class _rider_myorderState extends State<rider_myorder> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         body: SliderDrawer(
-          appBar: SliderAppBar(
-            appBarHeight: 85,
-            appBarColor: Colors.white,
-            title: Container(
-              child: Center(
-                  child: const Text(
-                'รายการงานของฉัน',
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
-              )),
+            appBar: SliderAppBar(
+              drawerIconColor: Colors.blue,
+              appBarHeight: 85,
+              appBarColor: Colors.white,
+              title: Container(
+                child: Center(
+                    child: const Text(
+                  'รายการงานของฉัน',
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                )),
+              ),
             ),
-          ),
-          slider: RiderAppBar(),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Color.fromARGB(255, 238, 238, 238),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
-                itemBuilder: (_, index) => Center(
-                     child: Container(
-                              child: Padding(
-                            padding: const EdgeInsets.only(
-                                right: 8.0, left: 8.0, bottom: 8.0),
-                            child: Container(
-                              child: Card(
-                                elevation: 20,
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(children: [ ListTile(
+            slider: RiderAppBar(),
+            child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Color.fromARGB(255, 238, 238, 238),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(5),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
+                  itemBuilder: (_, index) => Center(
+                    child: Container(
+                        child: Padding(
+                      padding: const EdgeInsets.only(
+                          right: 8.0, left: 8.0, bottom: 8.0),
+                      child: Container(
+                        child: Card(
+                            elevation: 20,
+                            color: Colors.white,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            trailing: IconButton(
-                              icon: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return user_order_detail(
-                                      user_order![index].order_id.toString(),
-                                      user_order![index]
-                                          .total_price
-                                          .toString());
-                                }));
-                              },
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            title: Text(
-                                '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
-                            subtitle: Text(
-                                'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
-                            tileColor: Colors.white,
-                          ),
-                        ])),
+                            child: Column(children: [
+                              ListTile(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.blue,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return user_order_detail(
+                                          user_order![index]
+                                              .order_id
+                                              .toString(),
+                                          user_order![index]
+                                              .total_price
+                                              .toString());
+                                    }));
+                                  },
+                                ),
+                                title: Text(
+                                    '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
+                                subtitle: Text(
+                                    'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
+                                tileColor: Colors.white,
+                              ),
+                            ])),
                       ),
                     )),
-          ),
-        ))));
+                  ),
+                ))));
   }
 }
 
@@ -397,70 +402,82 @@ class _rider_historyState extends State<rider_history> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SliderDrawer(
-      appBar: SliderAppBar(
-        appBarHeight: 85,
-        appBarColor: Colors.white,
-        title: Container(
-          child: Center(
-              child: const Text(
-            'ประวัติการส่งของ',
-            style: TextStyle(
-                color: Colors.blue, fontSize: 24, fontWeight: FontWeight.bold),
-          )),
-        ),
-      ),
-      slider: RiderAppBar(),
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Color.fromARGB(255, 238, 238, 238),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: user_order != null ? (user_order?.length ?? 0) : 0,
-              itemBuilder: (_, index) => Center(
-                    child: Container(
-                              child: Padding(
-                            padding: const EdgeInsets.only(
-                                right: 8.0, left: 8.0, bottom: 8.0),
-                            child: Container(
-                              child: Card(
-                                elevation: 20,
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+            appBar: SliderAppBar(
+              drawerIconColor: Colors.blue,
+              appBarHeight: 85,
+              appBarColor: Colors.white,
+              title: Container(
+                child: Center(
+                    child: const Text(
+                  'ประวัติการส่งของ',
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                )),
+              ),
+            ),
+            slider: RiderAppBar(),
+            child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Color.fromARGB(255, 238, 238, 238),
+                child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(5),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount:
+                          user_order != null ? (user_order?.length ?? 0) : 0,
+                      itemBuilder: (_, index) => Center(
+                        child: Container(
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 8.0, left: 8.0, bottom: 8.0),
+                              child: Container(
+                                child: Card(
+                                  elevation: 20,
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Column(children: [
+                                    ListTile(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0)),
+                                      trailing: IconButton(
+                                        icon: Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.blue,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return user_order_history_detail(
+                                                user_order![index]
+                                                    .order_id
+                                                    .toString(),
+                                                user_order![index]
+                                                    .total_price
+                                                    .toString());
+                                          }));
+                                        },
+                                      ),
+                                      title: Text(
+                                          '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
+                                      subtitle: Text(
+                                          'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
+                                      tileColor: Colors.white,
+                                    ),
+                                  ]),
                                 ),
-                                child: Column(children: [ ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return user_order_history_detail(
-                                    user_order![index].order_id.toString(),
-                                    user_order![index].total_price.toString());
-                              }));
-                            },
-                          ),
-                          title: Text(
-                              '${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${user_order![index].date}'))}'),
-                          subtitle: Text(
-                              'สถานะของรายการ : ${user_order![index].order_status.toString()}'),
-                          tileColor: Colors.white,
+                              )),
                         ),
-                      ]),
-                    ),
-                  )),
-        ),
-      ),
-    )))));
+                      ),
+                    )))));
   }
 }
 
@@ -507,7 +524,7 @@ class user_order_history_detailState extends State<user_order_history_detail> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Colors.blue,
             ),
             onPressed: () {
               Navigator.pop(context);

@@ -101,6 +101,7 @@ class _user_profileState extends State<rider_profire> {
     return Scaffold(
       body: SliderDrawer(
         appBar: SliderAppBar(
+          drawerIconColor: Colors.blue,
           trailing: IconButton(
             onPressed: () {
               if (fromKey.currentState!.validate()) {
@@ -133,7 +134,10 @@ class _user_profileState extends State<rider_profire> {
               }
               setState(() {});
             },
-            icon: Icon(Icons.save,color: Colors.blue,),
+            icon: Icon(
+              Icons.save,
+              color: Colors.blue,
+            ),
           ),
           appBarHeight: 85,
           appBarColor: Colors.white,
@@ -150,16 +154,20 @@ class _user_profileState extends State<rider_profire> {
         ),
         slider: RiderAppBar(),
         child: Container(
+          
           width: double.infinity,
           height: double.infinity,
           color: Color.fromARGB(255, 238, 238, 238),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
+              
               child: Column(
                 children: [
                   Container(
+                    
                     child: Column(
+                      
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[

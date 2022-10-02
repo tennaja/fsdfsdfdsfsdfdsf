@@ -100,7 +100,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                   Container(
                     color: Color(0xFF231942),
                     child: ExpansionTile(
-                      leading: Icon(Icons.list, color: Colors.white),
+                      leading: Icon(Icons.shopping_basket, color: Colors.white),
                       title: Txt(
                         text: 'ออเดอร์',
                         color: Colors.white,
@@ -109,7 +109,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF231942),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                            leading: Icon(Icons.shopping_basket, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -125,7 +125,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF231942),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                            leading: Icon(Icons.shopping_basket, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -151,7 +151,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                       ),
                       children: [
                         Container(
-                          color: Color(0xFF571089),
+                          color: Color(0xFF5e548e),
                           child: ListTile(
                             leading: Icon(Icons.add, color: Colors.white),
                             onTap: () {
@@ -167,7 +167,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           ),
                         ),
                         Container(
-                          color: Color(0xFF6411ad),
+                          color: Color(0xFF5e548e),
                           child: ListTile(
                             leading: Icon(Icons.add, color: Colors.white),
                             onTap: () {
@@ -183,7 +183,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           ),
                         ),
                         Container(
-                          color: Color(0xFF6d23b6),
+                          color: Color(0xFF5e548e),
                           child: ListTile(
                             leading: Icon(Icons.add, color: Colors.white),
                             onTap: () {
@@ -199,7 +199,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           ),
                         ),
                         Container(
-                          color: Color(0xFF822faf),
+                          color: Color(0xFF5e548e),
                           child: ListTile(
                             leading: Icon(Icons.add, color: Colors.white),
                             onTap: () {
@@ -229,7 +229,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF9f86c0),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                            leading: Icon(Icons.import_export, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -245,7 +245,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF9f86c0),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                            leading: Icon(Icons.import_export, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -261,7 +261,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF9f86c0),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                            leading: Icon(Icons.import_export, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -289,7 +289,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFFbe95c4),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                            leading: Icon(Icons.list, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -305,7 +305,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFFbe95c4),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                            leading: Icon(Icons.list, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -321,7 +321,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFFbe95c4),
                           child: ListTile(
-                            leading: Icon(Icons.abc, color: Colors.white),
+                           leading: Icon(Icons.list, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -358,11 +358,31 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                     child: ListTile(
                       leading: Icon(Icons.logout_outlined, color: Colors.white),
                       onTap: () {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          CupertinoPageRoute(builder: (context) => LoginPage()),
-                          (_) => false,
+                  showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('ออกจากระบบ'),
+                          content: const Text('ต้องการที่จะออกจากระบบไหม?'),
+                          actions: <Widget>[
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text("ไม่"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  CupertinoPageRoute(
+                                      builder: (context) => LoginPage()),
+                                  (_) => false,
+                                );
+                              },
+                              child: const Text("ใช่"),
+                            ),
+                          ],
                         );
-                      },
+                      });
+                },
                       title: Text(
                         'ออกจากระบบ',
                         style: TextStyle(color: Colors.white),

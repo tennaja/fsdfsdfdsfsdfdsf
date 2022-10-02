@@ -48,11 +48,23 @@ class _UserAppBarState extends State<RiderAppBar> {
                   color: Colors.white,
                 ),
                 accountName: rider?.length != 0
-                    ? Text('${rider?[0].rider_name}',style: TextStyle(color: Colors.black),)
-                    : Text('Loadding...',style: TextStyle(color: Colors.black),),
+                    ? Text(
+                        '${rider?[0].rider_name}',
+                        style: TextStyle(color: Colors.black),
+                      )
+                    : Text(
+                        'Loadding...',
+                        style: TextStyle(color: Colors.black),
+                      ),
                 accountEmail: rider?.length != 0
-                    ? Text('${rider?[0].rider_email}',style: TextStyle(color: Colors.black),)
-                    : Text('Loadding...',style: TextStyle(color: Colors.black),),
+                    ? Text(
+                        '${rider?[0].rider_email}',
+                        style: TextStyle(color: Colors.black),
+                      )
+                    : Text(
+                        'Loadding...',
+                        style: TextStyle(color: Colors.black),
+                      ),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Icon(
@@ -65,7 +77,10 @@ class _UserAppBarState extends State<RiderAppBar> {
               Divider(),
               ListTile(
                 title: Text('รายการสั่งซื้อ'),
-                leading: Icon(Icons.assignment_late,color: Colors.blue,),
+                leading: Icon(
+                  Icons.assignment_late,
+                  color: Colors.blue,
+                ),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -76,7 +91,10 @@ class _UserAppBarState extends State<RiderAppBar> {
               Divider(),
               ListTile(
                 title: Text('แผนที่'),
-                leading: Icon(Icons.map,color: Colors.blue,),
+                leading: Icon(
+                  Icons.map,
+                  color: Colors.blue,
+                ),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
                   /*
@@ -88,19 +106,24 @@ class _UserAppBarState extends State<RiderAppBar> {
               Divider(),
               ListTile(
                 title: Text('รายการงานของฉัน'),
-                leading: Icon(Icons.assignment_outlined,color: Colors.blue,),
+                leading: Icon(
+                  Icons.assignment_outlined,
+                  color: Colors.blue,
+                ),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return rider_myorder();
                   }));
                 },
-                
               ),
               Divider(),
               ListTile(
                 title: Text('ประวัติงานของฉัน'),
-                leading: Icon(Icons.history,color: Colors.blue,),
+                leading: Icon(
+                  Icons.history,
+                  color: Colors.blue,
+                ),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -111,7 +134,10 @@ class _UserAppBarState extends State<RiderAppBar> {
               Divider(),
               ListTile(
                 title: Text('โปรไฟล์'),
-                leading: Icon(Icons.person,color: Colors.blue,),
+                leading: Icon(
+                  Icons.person,
+                  color: Colors.blue,
+                ),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -122,7 +148,10 @@ class _UserAppBarState extends State<RiderAppBar> {
               Divider(),
               ListTile(
                 title: Text('เปลี่ยนรหัส'),
-                leading: Icon(Icons.key,color: Colors.blue,),
+                leading: Icon(
+                  Icons.key,
+                  color: Colors.blue,
+                ),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -133,7 +162,10 @@ class _UserAppBarState extends State<RiderAppBar> {
               Divider(),
               ListTile(
                 title: Text('ออกจากระบบ'),
-                leading: Icon(Icons.logout,color: Colors.blue,),
+                leading: Icon(
+                  Icons.logout,
+                  color: Colors.blue,
+                ),
                 trailing: Icon(Icons.arrow_forward_ios_rounded),
                 onTap: () {
                   showDialog<bool>(

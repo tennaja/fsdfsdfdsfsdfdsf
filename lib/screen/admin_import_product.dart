@@ -275,12 +275,9 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              top: 20,left: 5
-            ),
+            padding: const EdgeInsets.only(top: 20, left: 5),
           ),
           Container(
-            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -293,9 +290,10 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
                     ),
                   ),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
                 Row(
-                  
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
@@ -304,31 +302,35 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
-                  
                   children: [
                     Padding(
                       padding:
                           const EdgeInsets.only(bottom: 5, top: 5, left: 8),
                       child: Container(
-                        
                           alignment: Alignment.bottomCenter,
                           height: 30,
                           width: 170,
                           child: OutlinedButton(
-                             style: OutlinedButton.styleFrom(
-      shape: RoundedRectangleBorder(
-         borderRadius: BorderRadius.circular(18.0),
-      ),
-      side: BorderSide(width: 2, color: Color.fromARGB(255, 148, 151, 148)),
-   ),
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                                side: BorderSide(
+                                    width: 2,
+                                    color: Color.fromARGB(255, 148, 151, 148)),
+                              ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: const [
                                   Text(
                                     "รายละเอียดสินค้า",
-                                    style: TextStyle(color: Colors.black,fontSize: 12),
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 12),
                                   ),
                                   Icon(
                                     Icons.manage_search,
@@ -739,49 +741,54 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
           ],
         ),
         body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _basket != null ? (_basket?.length ?? 0) : 0,
-                itemBuilder: (_, index) => Center(
-                      child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          right: 8.0, left: 8.0, bottom: 8.0),
-                      child: Container(
-                        child: Card(
-                          elevation: 20,
-                          color: Colors.yellow,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.white,
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: _basket != null ? (_basket?.length ?? 0) : 0,
+                    itemBuilder: (_, index) => Center(
+                            child: Container(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                right: 8.0, left: 8.0, bottom: 8.0),
+                            child: Container(
+                                child: Card(
+                              elevation: 20,
+                              color: Colors.yellow,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Column(children: [
+                                ListTile(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
+                                  leading: Image(
+                                      image: NetworkImage(_basket![index]
+                                          .product_image
+                                          .toString())),
+                                  title: Text(
+                                      _basket![index].product_name.toString()),
+                                  subtitle: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          'จำนวน : ${_basket![index].basket_product_quantity.toString()}'),
+                                      Text(
+                                          'ราคารวม : ${_basket![index].basket_product_pricetotal.toString()}'),
+                                    ],
+                                  ),
+                                  tileColor: Colors.yellow,
+                                  onTap: () {},
+                                ),
+                              ]),
+                            )),
                           ),
-                          child: Column(children: [ ListTile(
-                             shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0)),
-                          leading: Image(
-                              image: NetworkImage(
-                                  _basket![index].product_image.toString())),
-                          title: Text(_basket![index].product_name.toString()),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  'จำนวน : ${_basket![index].basket_product_quantity.toString()}'),
-                              Text(
-                                  'ราคารวม : ${_basket![index].basket_product_pricetotal.toString()}'),
-                            ],
-                          ),
-                          tileColor: Colors.yellow,
-                          onTap: () {},
-                        ),
-                      ]),
-                    )),
-          ),
-        ))))));
+                        ))))));
   }
 }
