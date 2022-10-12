@@ -212,7 +212,7 @@ class _cart_order_addState extends State<cart_order_add> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Colors.blue,
             ),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -220,19 +220,19 @@ class _cart_order_addState extends State<cart_order_add> {
               }));
             },
           ),
-          backgroundColor: Colors.greenAccent,
+          backgroundColor: Color.fromARGB(255, 238, 238, 238),
           elevation: 0,
           title: Center(
               child: const Text(
             'รายการสินค้า',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.blue, fontSize: 24, fontWeight: FontWeight.bold),
           )),
           actions: <Widget>[
             IconButton(
               icon: Icon(
                 Icons.refresh,
-                color: Color.fromARGB(255, 0, 0, 0),
+                color: Colors.blue,
               ),
               onPressed: () {
                 _getBasket();
@@ -240,172 +240,175 @@ class _cart_order_addState extends State<cart_order_add> {
             )
           ],
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Card(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount:
-                        userbasket != null ? (userbasket?.length ?? 0) : 0,
-                    itemBuilder: (_, index) => Container(
-                      margin: EdgeInsets.all(5),
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        leading: Image(
-                          image: NetworkImage(
-                              userbasket![index].product_image.toString()),
-                          width: 50,
-                          height: 50,
-                        ),
-                        title: Text(userbasket![index].product_name.toString()),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                                'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
-                          ],
-                        ),
-                        tileColor: Color.fromARGB(255, 255, 192, 111),
-                        trailing: IconButton(
-                            onPressed: () {
-                              showDialog<bool>(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: const Text('ยกเลิกการซื้อ'),
-                                      content: Text(
-                                          'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
-                                      actions: <Widget>[
-                                        ElevatedButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: const Text(
-                                            "ไม่",
-                                            style:
-                                                TextStyle(color: Colors.black),
+        body: Container(
+          padding: EdgeInsets.only(top: 30),
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Card(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount:
+                          userbasket != null ? (userbasket?.length ?? 0) : 0,
+                      itemBuilder: (_, index) => Container(
+                        margin: EdgeInsets.all(5),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          leading: Image(
+                            image: NetworkImage(
+                                userbasket![index].product_image.toString()),
+                            width: 50,
+                            height: 50,
+                          ),
+                          title: Text(userbasket![index].product_name.toString()),
+                          subtitle: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
+                            ],
+                          ),
+                          tileColor: Color.fromARGB(255, 255, 192, 111),
+                          trailing: IconButton(
+                              onPressed: () {
+                                showDialog<bool>(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('ยกเลิกการซื้อ'),
+                                        content: Text(
+                                            'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
+                                        actions: <Widget>[
+                                          ElevatedButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            child: const Text(
+                                              "ไม่",
+                                              style:
+                                                  TextStyle(color: Colors.black),
+                                            ),
                                           ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Art_Services()
-                                                .deleteonlybasket(
-                                                    userbasket![index]
-                                                        .user_basket_id)
-                                                .then((value) => {
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
-                                                          toastLength: Toast
-                                                              .LENGTH_SHORT,
-                                                          gravity: ToastGravity
-                                                              .BOTTOM,
-                                                          timeInSecForIosWeb: 1,
-                                                          backgroundColor:
-                                                              Color.fromARGB(
-                                                                  255,
-                                                                  255,
-                                                                  0,
-                                                                  0),
-                                                          textColor:
-                                                              Colors.white,
-                                                          fontSize: 16.0),
-                                                      _getBasket(),
-                                                      Navigator.pop(context),
-                                                    });
-                                          },
-                                          child: const Text("ใช่",
-                                              style: TextStyle(
-                                                  color: Colors.black)),
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            },
-                            icon: Icon(Icons.delete)),
-                        onTap: () {},
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Art_Services()
+                                                  .deleteonlybasket(
+                                                      userbasket![index]
+                                                          .user_basket_id)
+                                                  .then((value) => {
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
+                                                            toastLength: Toast
+                                                                .LENGTH_SHORT,
+                                                            gravity: ToastGravity
+                                                                .BOTTOM,
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    255,
+                                                                    0,
+                                                                    0),
+                                                            textColor:
+                                                                Colors.white,
+                                                            fontSize: 16.0),
+                                                        _getBasket(),
+                                                        Navigator.pop(context),
+                                                      });
+                                            },
+                                            child: const Text("ใช่",
+                                                style: TextStyle(
+                                                    color: Colors.black)),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
+                              icon: Icon(Icons.delete)),
+                          onTap: () {},
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 100),
-              child: Container(
-                height: 90,
-                child: Card(
-                  elevation: 20,
-                  color: Colors.greenAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
-                    children: [
-                      ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "รวมเบื้องต้น",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              Text(
-                                "${simpletotal}",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ],
-                          ),
-                          subtitle: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "ส่วนลด ",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                  Text(
-                                    "- ${disconttotal}",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "ราคารวม ",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                  Text(
-                                    "${simpletotal - disconttotal}",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                    ],
+              Padding(
+                padding: const EdgeInsets.only(bottom: 100),
+                child: Container(
+                  height: 90,
+                  child: Card(
+                    elevation: 20,
+                    color: Colors.greenAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      children: [
+                        ListTile(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "รวมเบื้องต้น",
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                Text(
+                                  "${simpletotal}",
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
+                            subtitle: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "ส่วนลด ",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Text(
+                                      "- ${disconttotal}",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "ราคารวม ",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Text(
+                                      "${simpletotal - disconttotal}",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
   }
 }

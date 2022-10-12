@@ -57,14 +57,15 @@ class _OrderpageState extends State<Orderpage> {
       extendBodyBehindAppBar: true,
       body: SliderDrawer(
         appBar: SliderAppBar(
+          drawerIconColor: Colors.blue,
           appBarHeight: 85,
-          appBarColor: Colors.greenAccent,
+          appBarColor: Colors.white,
           title: Container(
             child: Center(
                 child: const Text(
               'รายการสินค้า',
               style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.blue,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             )),
@@ -76,7 +77,7 @@ class _OrderpageState extends State<Orderpage> {
             child: IconButton(
               icon: Icon(
                 Icons.shopping_cart,
-                color: Colors.white,
+                color: Colors.blue,
               ),
               onPressed: () async {
                 String email = await SessionManager().get("email");
@@ -92,7 +93,8 @@ class _OrderpageState extends State<Orderpage> {
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Color.fromARGB(255, 209, 254, 228),
+          color: Color.fromARGB(255, 238, 238, 238),
+
           child: Padding(
             padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
             child: ListView(
@@ -131,7 +133,7 @@ class _OrderpageState extends State<Orderpage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [Text("ข้าวสาร"), Text("ทั้งหมด")],
                   ),
-                ),*/
+                ),*/SizedBox(height: 20,),
                 Container(
                   height: 50.0,
                   child: ListView(
@@ -146,7 +148,7 @@ class _OrderpageState extends State<Orderpage> {
                                       borderRadius:
                                           BorderRadius.circular(30.0))),
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.greenAccent),
+                                  Colors.white),
                             ),
                             onPressed: () {
                               Navigator.push(context,
@@ -154,7 +156,7 @@ class _OrderpageState extends State<Orderpage> {
                                 return data_product_sql_more('1');
                               }));
                             },
-                            child: Text('ข้าวสาร'),
+                            child: Text('ข้าวสาร',style: TextStyle(color: Colors.blue),),
                           ),
                           ElevatedButton(
                             style: ButtonStyle(
@@ -163,7 +165,7 @@ class _OrderpageState extends State<Orderpage> {
                                       borderRadius:
                                           BorderRadius.circular(30.0))),
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.greenAccent),
+                                  Colors.white),
                             ),
                             onPressed: () {
                               Navigator.push(context,
@@ -171,7 +173,7 @@ class _OrderpageState extends State<Orderpage> {
                                 return data_product_sql_more('2');
                               }));
                             },
-                            child: Text('อุปกรณ์เครื่องใช้ในครัว'),
+                            child: Text('อุปกรณ์เครื่องใช้ในครัว',style: TextStyle(color: Colors.blue),),
                           ),
                           ElevatedButton(
                             style: ButtonStyle(
@@ -180,7 +182,7 @@ class _OrderpageState extends State<Orderpage> {
                                       borderRadius:
                                           BorderRadius.circular(30.0))),
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.greenAccent),
+                                  Colors.white),
                             ),
                             onPressed: () {
                               Navigator.push(context,
@@ -188,7 +190,7 @@ class _OrderpageState extends State<Orderpage> {
                                 return data_product_sql_more('3');
                               }));
                             },
-                            child: Text('เครื่องปรุง'),
+                            child: Text('เครื่องปรุง',style: TextStyle(color: Colors.blue),),
                           )
                         ],
                       ),
@@ -303,19 +305,19 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.black,
+            color: Colors.blue,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Colors.white,
         elevation: 0,
         title: Center(
             child: const Text(
           'รายการสินค้า',
           style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: Colors.blue,
               fontSize: 24,
               fontWeight: FontWeight.bold),
         )),
@@ -323,7 +325,7 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
           IconButton(
             icon: Icon(
               Icons.shopping_cart,
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: Colors.blue,
             ),
             onPressed: () async {
               String email = await SessionManager().get("email");
@@ -339,7 +341,7 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Color.fromARGB(255, 209, 254, 228),
+        color: Color.fromARGB(255, 238, 238, 238),
         child: GridView.builder(
           itemCount: _filterproduct != null ? (_filterproduct?.length ?? 0) : 0,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -47,54 +47,65 @@ class _user_profileState extends State<rider_profire> {
   Widget build(BuildContext context) {
     if (rider?.length == 0) {
       return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
+        body: SliderDrawer(
+          appBar: SliderAppBar(
+            drawerIconColor: Colors.blue,
+            trailing: IconButton(
+              onPressed: () {
+                if (fromKey.currentState!.validate()) {
+                  fromKey.currentState!.save();
+                  print(
+                      'ID : ${rider![0].rider_id}\n Name : ${rider![0].rider_name}\n Surname : ${rider![0].rider_surname} \n Email : ${rider![0].rider_email}\n Phone : ${rider![0].rider_phone}');
+                  Art_Services()
+                      .update_rider(rider![0].rider_id, username, usersurname,
+                          useremail, 'rider', userphone)
+                      .then((value) => {
+                            Fluttertoast.showToast(
+                                msg: "แก้ไขข้อมูลเรียบร้อย",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Color.fromARGB(255, 9, 255, 0),
+                                textColor: Colors.white,
+                                fontSize: 16.0),
+                          });
+                  // ignore: avoid_print
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "error",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+                setState(() {});
+              },
+              icon: Icon(
+                Icons.save,
+                color: Colors.blue,
+              ),
             ),
-            onPressed: () {
-              showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('ออกจากระบบ'),
-                      content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text("ไม่"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginPage()),
-                              (_) => false,
-                            );
-                          },
-                          child: const Text("ใช่"),
-                        ),
-                      ],
-                    );
-                  });
-            },
+            appBarHeight: 85,
+            appBarColor: Colors.white,
+            title: Container(
+              child: Center(
+                  child: const Text(
+                'แก้ไขโปรไฟล์',
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
+              )),
+            ),
           ),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          elevation: 0,
-          title: Center(
-              child: const Text(
-            'รายชื่อสมาชิก',
-            style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-          )),
-          actions: <Widget>[],
-        ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.orangeAccent.withOpacity(0.5),
+          slider: RiderAppBar(),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Color.fromARGB(255, 238, 238, 238),
+          ),
         ),
       );
     }
@@ -102,43 +113,6 @@ class _user_profileState extends State<rider_profire> {
       body: SliderDrawer(
         appBar: SliderAppBar(
           drawerIconColor: Colors.blue,
-          trailing: IconButton(
-            onPressed: () {
-              if (fromKey.currentState!.validate()) {
-                fromKey.currentState!.save();
-                print(
-                    'ID : ${rider![0].rider_id}\n Name : ${rider![0].rider_name}\n Surname : ${rider![0].rider_surname} \n Email : ${rider![0].rider_email}\n Phone : ${rider![0].rider_phone}');
-                Art_Services()
-                    .update_rider(rider![0].rider_id, username, usersurname,
-                        useremail, 'rider', userphone)
-                    .then((value) => {
-                          Fluttertoast.showToast(
-                              msg: "แก้ไขข้อมูลเรียบร้อย",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Color.fromARGB(255, 9, 255, 0),
-                              textColor: Colors.white,
-                              fontSize: 16.0),
-                        });
-                // ignore: avoid_print
-              } else {
-                Fluttertoast.showToast(
-                    msg: "error",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-              setState(() {});
-            },
-            icon: Icon(
-              Icons.save,
-              color: Colors.blue,
-            ),
-          ),
           appBarHeight: 85,
           appBarColor: Colors.white,
           title: Container(
@@ -154,20 +128,17 @@ class _user_profileState extends State<rider_profire> {
         ),
         slider: RiderAppBar(),
         child: Container(
-          
           width: double.infinity,
           height: double.infinity,
           color: Color.fromARGB(255, 238, 238, 238),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
-              
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    
                     child: Column(
-                      
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
@@ -298,6 +269,57 @@ class _user_profileState extends State<rider_profire> {
                               ),
                             ]))
                       ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    width: 250,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      )),
+                      onPressed: () {
+                        if (fromKey.currentState!.validate()) {
+                          fromKey.currentState!.save();
+                          print(
+                              'ID : ${rider![0].rider_id}\n Name : ${rider![0].rider_name}\n Surname : ${rider![0].rider_surname} \n Email : ${rider![0].rider_email}\n Phone : ${rider![0].rider_phone}');
+                          Art_Services()
+                              .update_rider(rider![0].rider_id, username,
+                                  usersurname, useremail, 'rider', userphone)
+                              .then((value) => {
+                                    Fluttertoast.showToast(
+                                        msg: "แก้ไขข้อมูลเรียบร้อย",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor:
+                                            Color.fromARGB(255, 9, 255, 0),
+                                        textColor: Colors.white,
+                                        fontSize: 16.0),
+                                  });
+                          // ignore: avoid_print
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "error",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => rider_profire()));
+                      },
+                      child: Text('บันทึกข้อมูล'),
                     ),
                   ),
                 ],

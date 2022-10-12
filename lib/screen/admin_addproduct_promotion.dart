@@ -480,6 +480,11 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                         'ลบ',
                                         style: TextStyle(color: Colors.white),
                                       )),
+                                      DataColumn(
+                                          label: Text(
+                                        'สถานะ',
+                                        style: TextStyle(color: Colors.white),
+                                      )),
                                     ],
                                     rows: _product_promotion!
                                         .map(
@@ -587,6 +592,9 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                                     });
                                               },
                                             )),
+                                            DataCell(textstatus(
+                                                Promotion.product_id,
+                                                Promotion.promotion_id)),
                                           ]),
                                         )
                                         .toList()),
@@ -599,6 +607,67 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class textstatus extends StatefulWidget {
+  String? product_id, promotion_id;
+  textstatus(this.product_id, this.promotion_id, {Key? key}) : super(key: key);
+
+  @override
+  State<textstatus> createState() => _textstatusState();
+}
+
+class _textstatusState extends State<textstatus> {
+  String? promotionname;
+  List<Product_promotion>? _product_promotion;
+  int datalenght = 0;
+
+  _getpromotion() {
+    print("function working");
+    print(
+      widget.product_id,
+    );
+    print(
+      widget.promotion_id,
+    );
+    print(DateFormat('yyyy-MM-d').format(DateTime.now()).toString());
+    Art_Services()
+        .getonly_product_promotion_status(
+            widget.product_id,
+            widget.promotion_id,
+            DateFormat('yyyy-MM-d').format(DateTime.now()).toString())
+        .then((promotion) {
+      setState(() {
+        _product_promotion = promotion;
+        promotionname = _product_promotion![0].promotion_value.toString();
+        datalenght = promotion.length;
+      });
+    });
+  }
+
+  void initState() {
+    super.initState();
+    _getpromotion();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: datalenght == 0
+          ? Container(
+              child: Text(
+                'ไม่พร้อมใช้งาน',
+                style: TextStyle(color: Colors.red),
+              ),
+            )
+          : Container(
+              child: Text(
+                'พร้อมใช้งาน',
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
     );
   }
 }

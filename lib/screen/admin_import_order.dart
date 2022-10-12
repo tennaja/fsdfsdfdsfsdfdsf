@@ -141,7 +141,7 @@ _updateImport(
   import_product,
 ) async {
   try {
-    var url = Uri.parse('https://artfinalproject.000webhostapp.com/');
+    var url = Uri.parse('https://projectart434.000webhostapp.com/');
     print('funtion working....');
     var map = <String, dynamic>{};
     map["action"] = "ADD_PRODUCT";

@@ -140,8 +140,12 @@ class _order_rice_sqlState extends State<order_rice_sql> {
         .then((promotion) {
       setState(() {
         _product_promotion = promotion;
-        promotionname = _product_promotion![0].promotion_value.toString();
       });
+      if (promotion.isEmpty) {
+        promotionname = null;
+      } else {
+        promotionname = _product_promotion![0].promotion_value.toString();
+      }
     });
   }
 

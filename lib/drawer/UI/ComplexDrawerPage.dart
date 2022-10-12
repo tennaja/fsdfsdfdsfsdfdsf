@@ -10,6 +10,7 @@ import 'package:project_bekery/screen/admin_addproduct_promotion.dart';
 import 'package:project_bekery/screen/admin_import_order.dart';
 import 'package:project_bekery/screen/admin_import_product.dart';
 import 'package:project_bekery/screen/admin_orderall.dart';
+import 'package:project_bekery/screen/admin_ordercancellist.dart';
 import 'package:project_bekery/screen/admin_orderlist.dart';
 import 'package:project_bekery/screen/admin_orderpackgelist.dart';
 import 'package:project_bekery/screen/admin_productall.dart';
@@ -109,7 +110,8 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF231942),
                           child: ListTile(
-                            leading: Icon(Icons.shopping_basket, color: Colors.white),
+                            leading: Icon(Icons.shopping_basket,
+                                color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -125,7 +127,8 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF231942),
                           child: ListTile(
-                            leading: Icon(Icons.shopping_basket, color: Colors.white),
+                            leading: Icon(Icons.shopping_basket,
+                                color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -134,6 +137,23 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                             },
                             title: Text(
                               'หน้ายืนยันการแพ็คของ',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFF231942),
+                          child: ListTile(
+                            leading: Icon(Icons.shopping_basket,
+                                color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return admin_ordercancellist();
+                              }));
+                            },
+                            title: Text(
+                              'หน้าออเดอร์ถูกตีกลับ',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -229,7 +249,8 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF9f86c0),
                           child: ListTile(
-                            leading: Icon(Icons.import_export, color: Colors.white),
+                            leading:
+                                Icon(Icons.import_export, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -245,7 +266,8 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF9f86c0),
                           child: ListTile(
-                            leading: Icon(Icons.import_export, color: Colors.white),
+                            leading:
+                                Icon(Icons.import_export, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -261,7 +283,8 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFF9f86c0),
                           child: ListTile(
-                            leading: Icon(Icons.import_export, color: Colors.white),
+                            leading:
+                                Icon(Icons.import_export, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -321,7 +344,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         Container(
                           color: Color(0xFFbe95c4),
                           child: ListTile(
-                           leading: Icon(Icons.list, color: Colors.white),
+                            leading: Icon(Icons.list, color: Colors.white),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -358,31 +381,33 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                     child: ListTile(
                       leading: Icon(Icons.logout_outlined, color: Colors.white),
                       onTap: () {
-                  showDialog<bool>(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('ออกจากระบบ'),
-                          content: const Text('ต้องการที่จะออกจากระบบไหม?'),
-                          actions: <Widget>[
-                            ElevatedButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text("ไม่"),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  CupertinoPageRoute(
-                                      builder: (context) => LoginPage()),
-                                  (_) => false,
-                                );
-                              },
-                              child: const Text("ใช่"),
-                            ),
-                          ],
-                        );
-                      });
-                },
+                        showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('ออกจากระบบ'),
+                                content:
+                                    const Text('ต้องการที่จะออกจากระบบไหม?'),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text("ไม่"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                        CupertinoPageRoute(
+                                            builder: (context) => LoginPage()),
+                                        (_) => false,
+                                      );
+                                    },
+                                    child: const Text("ใช่"),
+                                  ),
+                                ],
+                              );
+                            });
+                      },
                       title: Text(
                         'ออกจากระบบ',
                         style: TextStyle(color: Colors.white),

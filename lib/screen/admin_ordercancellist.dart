@@ -9,26 +9,27 @@ import 'package:project_bekery/model/export_product.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
+import 'package:http/http.dart' as http;
 
-class admin_orderlist extends StatefulWidget {
-  const admin_orderlist({Key? key}) : super(key: key);
+class admin_ordercancellist extends StatefulWidget {
+  const admin_ordercancellist({Key? key}) : super(key: key);
 
   @override
-  State<admin_orderlist> createState() => _admin_orderlistState();
+  State<admin_ordercancellist> createState() => _admin_ordercancellistState();
 }
 
-class _admin_orderlistState extends State<admin_orderlist> {
+class _admin_ordercancellistState extends State<admin_ordercancellist> {
   List<Export_product>? _Export_product;
   List<Export_product>? _filterImport_product;
   List<int> datalength = [];
-  int? datadetaillength = 0;
+  int? datadetaillength;
 
   void initState() {
     Intl.defaultLocale = 'th';
     initializeDateFormatting();
     super.initState();
     _Export_product = [];
-    _getImport_product('รอการยืนยันจาก Admin');
+    _getImport_product('ยกเลิกโดยrider');
   }
 
   _getImport_product(where) {
@@ -48,14 +49,14 @@ class _admin_orderlistState extends State<admin_orderlist> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Color(0xFF231942),
-          title: Text('ยืนยันรับออเดอร์'),
+          title: Text('รอการยกเลิกจากแอดมิน'),
         ),
         drawer: /*AdminAppBar(),*/
             ComplexDrawer(),
         body: Container(
             width: double.infinity,
             height: double.infinity,
-            child: datadetaillength == 0
+            child: datalength == 0
                 ? Container(
                     child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -65,10 +66,7 @@ class _admin_orderlistState extends State<admin_orderlist> {
                         height: 100,
                         width: 100,
                       ),
-                      Text('รับงานทั้งหมดเรียบร้อยแล้ว',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ))
+                      Text('รับงานทั้งหมดเรียบร้อยแล้ว')
                     ],
                   ))
                 : ListView.builder(
@@ -79,28 +77,98 @@ class _admin_orderlistState extends State<admin_orderlist> {
                         : 0,
                     itemBuilder: (_, index) => Center(
                           child: Container(
-                              child: Padding(
-                            padding: const EdgeInsets.only(
-                                right: 8.0, left: 8.0, bottom: 8.0),
-                            child: Container(
-                              child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 8.0, left: 8.0, bottom: 8.0),
+                              child: Container(
+                                  child: Card(
                                 elevation: 20,
                                 color: Colors.yellow,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
-                                child: Column(children: [
-                                  ListTile(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.0)),
-                                    title: Text(
-                                        'รหัสออเดอร์ : ${DateFormat('วันที่ d เดือน MMMM ปี y', 'th').format(DateTime.parse('${_Export_product![index].date}'))}'),
-                                    subtitle: Text(
-                                        'ที่มา : ${_Export_product![index].order_by}'),
-                                    tileColor: Colors.yellow,
-                                    onTap: () {
-                                      Navigator.push(context,
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.cancel,
+                                        color: Color.fromARGB(255, 255, 0, 0),
+                                      ),
+                                      title: Text(
+                                          'สั่งซื้อโดย : ${_Export_product![index].user_name} ${_Export_product![index].user_surname}'),
+                                      subtitle: Text(
+                                          'จำนวนรายการ : ${_Export_product![index].product_amount}'),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20),
+                                          child: Text(
+                                            'วันที่สั่ง ${_Export_product![index].date}',
+                                            style: TextStyle(
+                                                color: Colors.black
+                                                    .withOpacity(0.6)),
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.discount_rounded,
+                                              color: Colors.lightGreen,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                                '${_Export_product![index].total_price} .-  '),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    ButtonBar(
+                                        alignment: MainAxisAlignment.end,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return admin_oderlist_detail(
+                                                    _Export_product![index]
+                                                        .order_id
+                                                        .toString(),
+                                                    _Export_product![index]
+                                                        .total_price
+                                                        .toString(),
+                                                    _Export_product![index]
+                                                        .order_responsible_person
+                                                        .toString());
+                                              }));
+                                            },
+                                            child: const Text('รายละเอียด >'),
+                                            style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.0)),
+                                                primary: Colors.red),
+                                          ),
+                                        ]),
+                                  ],
+                                ),
+                              )),
+                            ),
+                          ),
+                        ))));
+  }
+}
+
+/*
+
+Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return admin_oderlist_detail(
                                             _Export_product![index]
@@ -113,16 +181,8 @@ class _admin_orderlistState extends State<admin_orderlist> {
                                                 .order_responsible_person
                                                 .toString());
                                       }));
-                                    },
-                                  ),
-                                ]),
-                              ),
-                            ),
-                          )),
-                        ))));
-  }
-}
 
+*/
 class admin_oderlist_detail extends StatefulWidget {
   final String order_id, total_price, order_responsible_person;
   const admin_oderlist_detail(
@@ -136,6 +196,7 @@ class admin_oderlist_detail extends StatefulWidget {
 
 class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
   List<Export_product_detail>? _orderdetail;
+  int datalenght = 0;
   @override
   void initState() {
     super.initState();
@@ -148,10 +209,30 @@ class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
     Art_Services().getorder_detail(widget.order_id).then((value) {
       setState(() {
         _orderdetail = value;
+        datalenght = value.length;
       });
 
       print('จำนวข้อมูล : ${value.length}');
     });
+  }
+
+  _updateImport(product_name, import_product) async {
+    print('UPDATE ACTIVATION');
+    print('ชื่อสินค้า : ${product_name}');
+    print('จำนวนการคืน : ${import_product}');
+    try {
+      var url = Uri.parse('https://projectart434.000webhostapp.com/');
+      print('funtion working....');
+      var map = <String, dynamic>{};
+      map["action"] = "ADD_PRODUCT";
+      map['sql'] =
+          "UPDATE product SET  product_quantity = product_quantity + ${import_product} WHERE product_name = '${product_name}'";
+      final response = await http.post(url, body: map);
+      print("AddProduct >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
   }
 
   @override
@@ -166,42 +247,42 @@ class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
               FloatingActionButton.extended(
                 heroTag: 1,
                 onPressed: () async {
-                  Art_Services().accept_order(widget.order_id).then((value) => {
-                        Fluttertoast.showToast(
-                            msg: "จัดส่งเรียบร้อย",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Color.fromARGB(255, 0, 255, 30),
-                            textColor: Colors.white,
-                            fontSize: 16.0),
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return admin_orderlist();
-                        }))
-                      });
+                  Art_Services().rider_update_order('ยังไม่มีคนรับผิดชอบ',
+                      'ยังไม่มีใครรับ', widget.order_id.toString());
                 },
-                label: Text("รับออเดอร์"),
+                label: Text(
+                  "มอบหมายงานให้คนอื่น",
+                  style: TextStyle(fontSize: 12),
+                ),
                 icon: Icon(Icons.near_me),
                 backgroundColor: Colors.green,
               ),
               FloatingActionButton.extended(
                 heroTag: 2,
                 onPressed: () async {
-                  Art_Services().cancel_order(widget.order_id).then((value) => {
-                        Fluttertoast.showToast(
-                            msg: "ยกเลิกการสั่งเรียบร้อย",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Color.fromARGB(255, 255, 0, 0),
-                            textColor: Colors.white,
-                            fontSize: 16.0),
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return admin_orderlist();
-                        }))
-                      });
+                  for (var i = 0; i < datalenght; i++) {
+                    print('ชื่อสินค้า : ${_orderdetail![i].product_name}');
+                    print(
+                        'จำนวนของสินค้า : ${_orderdetail![i].product_amount}');
+                    _updateImport(
+                      _orderdetail![i].product_name.toString(),
+                      int.parse(_orderdetail![i].product_amount.toString()),
+                    );
+                  }
+                  Art_Services().cancel_order(widget.order_id).then((value) {
+                    Fluttertoast.showToast(
+                        msg: "คืนของเข้าคลังเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return admin_ordercancellist();
+                    }));
+                  });
                 },
                 label: Text("ยกเลิกออเดอร์"),
                 icon: Icon(Icons.near_me),

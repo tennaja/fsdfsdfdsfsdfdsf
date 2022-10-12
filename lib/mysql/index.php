@@ -536,6 +536,20 @@
         
     }
 
+    if("UPDATE_MAP_RIDER" == $action){
+        $latitude = $_POST['latitude'];
+        $longitude = $_POST['longitude'];
+        $sql = "UPDATE rider SET rider_latitude = '$latitude',rider_longtitude = '$longitude' WHERE rider_email = '$where'";
+        if($conn->query($sql) === TRUE){
+            echo "success";
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+        
+    }
+
 
     if('DELETE_EMP' == $action){
         $user_id = $_POST['user_id'];
@@ -818,8 +832,9 @@
         return;
     }
 
-    if("WAITCANCEL_ORDER" == $action){ 
-        $sql = "UPDATE user_order SET order_status = 'รอการตอบกลับการยกเลิก' WHERE order_id = '$where'";
+    if("WAITCANCEL_ORDER" == $action){
+        $where2 = $_POST['where2'];
+        $sql = "UPDATE user_order SET order_status = '$where2' WHERE order_id = '$where'";
         $result = $conn->query($sql);
         echo "success";
         $conn->close();
@@ -972,6 +987,26 @@
         INNER JOIN product ON product_promotion.product_id = product.product_id 
         INNER JOIN promotion ON product_promotion.promotion_id = promotion.promotion_id 
         WHERE product.product_id = '$where' AND '$where2' BETWEEN product_promotion.start_date AND product_promotion.end_date";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $db_data[] = $row;
+            }
+            echo json_encode($db_data);
+        }else{
+            echo "error";
+        }
+        $conn->close();
+        return;
+    }
+
+    if("GET_ONLY_PRODUCT_PROMOTION_STATUS" == $action){ 
+        $where2 = $_POST['where2'];
+        $where3 = $_POST['where3'];
+        $sql = "SELECT product_promotion.promotion_id,promotion.promotion_name,promotion.promotion_value,product.product_id,product.product_name,start_date,end_date FROM product_promotion 
+        INNER JOIN product ON product_promotion.product_id = product.product_id 
+        INNER JOIN promotion ON product_promotion.promotion_id = promotion.promotion_id 
+        WHERE product.product_id = '$where' AND promotion.promotion_id = '$where2' AND '$where3' BETWEEN product_promotion.start_date AND product_promotion.end_date";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){

@@ -42,6 +42,23 @@ class Art_Services {
     }
   }
 
+  Future<String> update_map_rider(latitude, longitude, where) async {
+    try {
+      print(
+          '--------------------------update_map------------------------------');
+      var map = <String, dynamic>{};
+      map["action"] = "UPDATE_MAP_RIDER";
+      map["latitude"] = latitude;
+      map["longitude"] = longitude;
+      map["where"] = where;
+      final response = await http.post(url, body: map);
+      print("update_map_rider >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
   Future<String> addOrderdtail(order_id, product_id, product_amount,
       product_per_pice, product_promotion_name, product_promotion_value) async {
     try {
@@ -1102,14 +1119,15 @@ class Art_Services {
     }
   }
 
-  Future<String> waitcancel_order(where1) async {
+  Future<String> waitcancel_order(where1, where2) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = "WAITCANCEL_ORDER";
-      map["where"] = where1; // rideremail // status
+      map["where"] = where1;
+      map["where2"] = where2; // rideremail // status
       // orderid
       final response = await http.post(url, body: map);
-      print("acceptpackge_order >> Response:: ${response.body}");
+      print("waitcancel_order >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       return '${e}';
@@ -1410,6 +1428,31 @@ class Art_Services {
       map["where2"] = where2;
       final response = await http.post(url, body: map);
       print("getall_product_promotion >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Product_promotion> list =
+            parseResponseproduct_promotion(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Product_promotion>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Product_promotion>[];
+    }
+  }
+
+  Future<List<Product_promotion>> getonly_product_promotion_status(
+      where1, where2, where3) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_ONLY_PRODUCT_PROMOTION_STATUS";
+      map["where"] = where1;
+      map["where2"] = where2;
+      map["where3"] = where3;
+      final response = await http.post(url, body: map);
+      print("getonly_product_promotion_status >> Response:: ${response.body}");
       if (response.statusCode == 200) {
         List<Product_promotion> list =
             parseResponseproduct_promotion(response.body);

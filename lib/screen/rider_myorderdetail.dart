@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/rider_target_map.dart';
 
 class rider_myorderdetail extends StatefulWidget {
@@ -76,7 +77,22 @@ class _rider_myorderdetailState extends State<rider_myorderdetail> {
                     child: FloatingActionButton.extended(
                       heroTag: '2',
                       onPressed: () {
-                        cancel_task(widget.doc).then((value) {
+                        Art_Services()
+                            .waitcancel_order(widget.doc, 'ยกเลิกโดยrider')
+                            .then((value) => {
+                                  Fluttertoast.showToast(
+                                      msg: "ขอยกเลิกการสั่งเรียบร้อย",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor:
+                                          Color.fromARGB(255, 255, 0, 0),
+                                      textColor: Colors.white,
+                                      fontSize: 16.0),
+                                  Navigator.pop(context),
+                                });
+
+                        /*cancel_task(widget.doc).then((value) {
                           setState(() {});
                           Fluttertoast.showToast(
                               msg: "ยกเลิกงานรหัส : ${widget.doc}",
@@ -87,7 +103,7 @@ class _rider_myorderdetailState extends State<rider_myorderdetail> {
                               textColor: Colors.white,
                               fontSize: 16.0);
                           Navigator.pop(context);
-                        });
+                        });*/
                       },
                       label: Text("ยกเลิก"),
                       icon: Icon(Icons.near_me),

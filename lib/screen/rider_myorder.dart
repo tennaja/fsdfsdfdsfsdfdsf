@@ -211,18 +211,21 @@ class _import_order_detailState extends State<user_order_detail> {
                 heroTag: '2',
                 onPressed: () {
                   Art_Services()
-                      .rider_update_order('ยังไม่มีคนรับผิดชอบ',
-                          'ยังไม่มีใครรับ', widget.import_order_id.toString())
+                      .waitcancel_order(
+                          widget.import_order_id, 'ยกเลิกโดยrider')
                       .then((value) => {
-                            Navigator.pop(context),
                             Fluttertoast.showToast(
-                                msg: "ยกเลิกเรียบร้อย",
+                                msg: "ขอยกเลิกการสั่งเรียบร้อย",
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
                                 backgroundColor: Color.fromARGB(255, 255, 0, 0),
                                 textColor: Colors.white,
                                 fontSize: 16.0),
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return rider_myorder();
+                            })),
                           });
                 },
                 label: Text("ยกเลิก"),

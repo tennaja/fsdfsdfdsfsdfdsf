@@ -13,16 +13,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/mysql/service.dart';
+import 'package:project_bekery/widgets/riderAppbar.dart';
 import 'package:project_bekery/widgets/userAppbar.dart';
 
-class user_MapsPage extends StatefulWidget {
-  const user_MapsPage({Key? key}) : super(key: key);
+class rider_MapsPage extends StatefulWidget {
+  const rider_MapsPage({Key? key}) : super(key: key);
 
   @override
   _MapsPageState createState() => _MapsPageState();
 }
 
-class _MapsPageState extends State<user_MapsPage> {
+class _MapsPageState extends State<rider_MapsPage> {
   late Position userLocation;
   late GoogleMapController mapController;
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
@@ -64,7 +65,6 @@ class _MapsPageState extends State<user_MapsPage> {
       extendBodyBehindAppBar: true,
       body: SliderDrawer(
         appBar: SliderAppBar(
-          drawerIconColor: Colors.blue,
           trailing: IconButton(
               onPressed: () {
                 setPolylines();
@@ -80,21 +80,21 @@ class _MapsPageState extends State<user_MapsPage> {
                   },
                 );
               },
-              icon: Icon(Icons.near_me),color: Colors.blue,),
+              icon: Icon(Icons.near_me)),
           appBarHeight: 85,
-          appBarColor: Colors.white,
+          appBarColor: Colors.greenAccent,
           title: Container(
             child: Center(
                 child: const Text(
               'แผนที่ยืนยันตำแหน่ง',
               style: TextStyle(
-                  color: Colors.blue,
+                  color: Colors.black,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             )),
           ),
         ),
-        slider: UserAppBar(),
+        slider: RiderAppBar(),
         child: FutureBuilder(
           future: _getLocation(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -134,7 +134,7 @@ class _MapsPageState extends State<user_MapsPage> {
     print(userLocation.longitude.toString());
     print(user_email.toString());
     Art_Services()
-        .update_map_user(userLocation.latitude.toString(),
+        .update_map_rider(userLocation.latitude.toString(),
             userLocation.longitude.toString(), user_email.toString())
         .then((value) => {
               Fluttertoast.showToast(

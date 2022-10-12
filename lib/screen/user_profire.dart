@@ -51,7 +51,7 @@ class _user_profileState extends State<user_profile> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Colors.blue,
             ),
             onPressed: () {
               showDialog<bool>(
@@ -80,13 +80,13 @@ class _user_profileState extends State<user_profile> {
                   });
             },
           ),
-          backgroundColor: Colors.greenAccent,
+          backgroundColor: Colors.white,
           elevation: 0,
           title: Center(
               child: const Text(
             'แก้ไขโปรไฟล์',
             style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.blue, fontSize: 24, fontWeight: FontWeight.bold),
           )),
           actions: <Widget>[],
         ),
@@ -100,6 +100,7 @@ class _user_profileState extends State<user_profile> {
     return Scaffold(
       body: SliderDrawer(
         appBar: SliderAppBar(
+          drawerIconColor: Colors.blue,
           trailing: IconButton(
             onPressed: () {
               if (fromKey.currentState!.validate()) {
@@ -132,16 +133,16 @@ class _user_profileState extends State<user_profile> {
               }
               setState(() {});
             },
-            icon: Icon(Icons.save),
+            icon: Icon(Icons.save,color: Colors.blue,),
           ),
           appBarHeight: 85,
-          appBarColor: Colors.greenAccent,
+          appBarColor: Colors.white,
           title: Container(
             child: Center(
                 child: const Text(
               'แก้ไขโปรไฟล์',
               style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.blue,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             )),
@@ -332,7 +333,7 @@ class _user_profileState extends State<user_profile> {
                                     suffixIcon: IconButton(
                                         icon: Icon(_isObscure
                                             ? Icons.visibility
-                                            : Icons.visibility_off),
+                                            : Icons.visibility_off,color: Colors.white,),
                                         onPressed: () {
                                           setState(() {
                                             _isObscure = !_isObscure;

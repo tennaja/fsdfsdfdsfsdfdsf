@@ -71,7 +71,10 @@ class _user_changepasswordState extends State<rider_changepassword> {
                 }
               }
             },
-            icon: Icon(Icons.save,color: Colors.blue,),
+            icon: Icon(
+              Icons.save,
+              color: Colors.blue,
+            ),
           ),
           appBarHeight: 85,
           appBarColor: Colors.white,

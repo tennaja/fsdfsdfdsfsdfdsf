@@ -46,19 +46,19 @@ class _UserAppBarState extends State<UserAppBar> {
             children: [
               UserAccountsDrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.greenAccent,
+                  color: Colors.white,
                 ),
                 accountName: user?.length != 0
-                    ? Text('${user?[0].user_name}')
-                    : Text('Loadding...'),
+                    ? Text('${user?[0].user_name}',style: TextStyle(color: Colors.blue),)
+                    : Text('Loadding...',style: TextStyle(color: Colors.blue),),
                 accountEmail: user?.length != 0
-                    ? Text('${user?[0].user_email}')
-                    : Text('Loadding...'),
+                    ? Text('${user?[0].user_email}',style: TextStyle(color: Colors.blue),)
+                    : Text('Loadding...',style: TextStyle(color: Colors.blue),),
                 currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
                   child: Icon(
                     Icons.shopping_cart,
-                    color: Colors.black,
+                    color: Colors.white,
                     size: 36.0,
                   ),
                 ),
@@ -71,7 +71,7 @@ class _UserAppBarState extends State<UserAppBar> {
                 ),
                 leading: Icon(
                   Icons.shopping_bag,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -89,7 +89,7 @@ class _UserAppBarState extends State<UserAppBar> {
                 ),
                 leading: Icon(
                   Icons.map,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -105,7 +105,7 @@ class _UserAppBarState extends State<UserAppBar> {
                 ),
                 leading: Icon(
                   Icons.history,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -121,7 +121,7 @@ class _UserAppBarState extends State<UserAppBar> {
                 ),
                 leading: Icon(
                   Icons.person,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -137,7 +137,7 @@ class _UserAppBarState extends State<UserAppBar> {
                 ),
                 leading: Icon(
                   Icons.key,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -153,7 +153,7 @@ class _UserAppBarState extends State<UserAppBar> {
                 ),
                 leading: Icon(
                   Icons.logout,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
                 onTap: () {
                   showDialog<bool>(

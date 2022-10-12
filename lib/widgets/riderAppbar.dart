@@ -7,6 +7,7 @@ import 'package:project_bekery/mysql/rider.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/rider_allorder.dart';
 import 'package:project_bekery/screen/rider_changepassword.dart';
+import 'package:project_bekery/screen/rider_map.dart';
 import 'package:project_bekery/screen/rider_myorder.dart';
 import 'package:project_bekery/screen/rider_profire.dart';
 
@@ -97,10 +98,9 @@ class _UserAppBarState extends State<RiderAppBar> {
                 ),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
-                  /*
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return user_MapsPage();
-                  }));*/
+                    return rider_MapsPage();
+                  }));
                 },
               ),
               Divider(),
