@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_import, sized_box_for_whitespace, non_constant_identifier_names
 
+import 'dart:ui';
+
 import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +12,8 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:get/get.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/model/product_model.dart';
+import 'package:project_bekery/model/producttype.dart';
+import 'package:project_bekery/model/promotion_model.dart';
 import 'package:project_bekery/model/user_basket.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/user.dart';
@@ -29,14 +33,17 @@ class Orderpage extends StatefulWidget {
 
 class _OrderpageState extends State<Orderpage> {
   List<User_Basket>? userbasket;
-  int? length;
+  List<Producttype>? producttype;
+  int? length, producttypelenght;
   int totalprice = 0;
   @override
   void initState() {
     length ??= 0;
     super.initState();
     userbasket = [];
+    producttype = [];
     _getBasket();
+    _getallproducttype();
   }
 
   _getBasket() async {
@@ -48,6 +55,15 @@ class _OrderpageState extends State<Orderpage> {
         length = basket.length;
       });
       print("Length ${basket.length}");
+    });
+  }
+
+  _getallproducttype() {
+    Art_Services().getall_producttype().then((value) {
+      setState(() {
+        producttype = value;
+        producttypelenght = value.length;
+      });
     });
   }
 
@@ -94,7 +110,6 @@ class _OrderpageState extends State<Orderpage> {
           width: double.infinity,
           height: double.infinity,
           color: Color.fromARGB(255, 238, 238, 238),
-
           child: Padding(
             padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
             child: ListView(
@@ -129,12 +144,6 @@ class _OrderpageState extends State<Orderpage> {
                       scrollDirection: Axis.horizontal,
                     )),
                 /*Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text("ข้าวสาร"), Text("ทั้งหมด")],
-                  ),
-                ),*/SizedBox(height: 20,),
-                Container(
                   height: 50.0,
                   child: ListView(
                     children: [
@@ -148,7 +157,7 @@ class _OrderpageState extends State<Orderpage> {
                                       borderRadius:
                                           BorderRadius.circular(30.0))),
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
+                                  Colors.greenAccent),
                             ),
                             onPressed: () {
                               Navigator.push(context,
@@ -156,7 +165,7 @@ class _OrderpageState extends State<Orderpage> {
                                 return data_product_sql_more('1');
                               }));
                             },
-                            child: Text('ข้าวสาร',style: TextStyle(color: Colors.blue),),
+                            child: Text('ข้าวสาร'),
                           ),
                           ElevatedButton(
                             style: ButtonStyle(
@@ -165,7 +174,7 @@ class _OrderpageState extends State<Orderpage> {
                                       borderRadius:
                                           BorderRadius.circular(30.0))),
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
+                                  Colors.greenAccent),
                             ),
                             onPressed: () {
                               Navigator.push(context,
@@ -173,7 +182,7 @@ class _OrderpageState extends State<Orderpage> {
                                 return data_product_sql_more('2');
                               }));
                             },
-                            child: Text('อุปกรณ์เครื่องใช้ในครัว',style: TextStyle(color: Colors.blue),),
+                            child: Text('อุปกรณ์เครื่องใช้ในครัว'),
                           ),
                           ElevatedButton(
                             style: ButtonStyle(
@@ -182,7 +191,7 @@ class _OrderpageState extends State<Orderpage> {
                                       borderRadius:
                                           BorderRadius.circular(30.0))),
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
+                                  Colors.greenAccent),
                             ),
                             onPressed: () {
                               Navigator.push(context,
@@ -190,13 +199,66 @@ class _OrderpageState extends State<Orderpage> {
                                 return data_product_sql_more('3');
                               }));
                             },
-                            child: Text('เครื่องปรุง',style: TextStyle(color: Colors.blue),),
+                            child: Text('เครื่องปรุง'),
                           )
                         ],
                       ),
                     ],
                   ),
+                ),*/
+
+                Container(
+                  height: 55.0,
+                  child: ListView.builder(
+                      padding: EdgeInsets.all(0),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount:
+                          producttype != null ? (producttype?.length ?? 0) : 0,
+                      itemBuilder: (_, index) => Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: producttype![index].product_type_id == '0'
+                                  ? Container()
+                                  : ElevatedButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0))),
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return data_product_sql_more(
+                                              producttype![index]
+                                                  .product_type_id
+                                                  .toString());
+                                        }));
+                                      },
+                                      child: Text(producttype![index]
+                                          .product_type_name
+                                          .toString(),style: TextStyle(color: Colors.blue),),
+                                    ),
+                            ),
+                          )),
                 ),
+                /*
+                Container(
+                  height: 230,
+                  child: ListView.builder(
+                      padding: EdgeInsets.all(0),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount:
+                          producttype != null ? (producttype?.length ?? 0) : 0,
+                      itemBuilder: ((_, index) => data_product_sql('1'))),
+                ),*/
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   height: 225.0,
@@ -325,7 +387,7 @@ class data_product_sql_moreState extends State<data_product_sql_more> {
           IconButton(
             icon: Icon(
               Icons.shopping_cart,
-              color: Colors.blue,
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
             onPressed: () async {
               String email = await SessionManager().get("email");

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
@@ -15,6 +16,7 @@ import 'package:project_bekery/widgets/app_icon.dart';
 import 'package:project_bekery/widgets/big_text.dart';
 import 'package:project_bekery/widgets/colors.dart';
 import 'package:project_bekery/widgets/exandable_text_widget.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 import 'package:uuid/uuid.dart';
 
 import '../login/login.dart';
@@ -80,6 +82,7 @@ class _admin_import_sourceState extends State<admin_import_source> {
                 height: double.infinity,
                 color: Colors.white,
                 child: ListView.builder(
+                  padding: const EdgeInsets.all(0),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount:
@@ -105,7 +108,7 @@ class _admin_import_sourceState extends State<admin_import_source> {
                                 style: TextStyle(color: Colors.black),
                               ),
                               subtitle: Text(
-                                'รหัสแหล่งที่มา : ${_source![index].source_id.toString()}',
+                                'เบอร์โทรติดต่อ : ${_source![index].source_number.toString()}',
                                 style: TextStyle(color: Colors.black),
                               ),
                               tileColor: Colors.yellow,
@@ -263,16 +266,26 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
         children: [
           Padding(
             padding: const EdgeInsets.only(
-              top: 15,
+              top: 2,
             ),
           ),
           Center(
-            child: Image.network(
+            child: CachedNetworkImage(
+              width: 80,
+              height: 80,
+              imageUrl: widget.product_image,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  CircularProgressIndicator(value: downloadProgress.progress),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+
+            /*
+            Image.network(
               widget.product_image.toString(),
               width: 100,
               height: 100,
               fit: BoxFit.fitWidth,
-            ),
+            ),*/
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20, left: 5),
@@ -303,7 +316,7 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
                   ],
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Row(
                   children: [
@@ -312,8 +325,8 @@ class _import_prodeuc_menuState extends State<import_prodeuc_menu> {
                           const EdgeInsets.only(bottom: 5, top: 5, left: 8),
                       child: Container(
                           alignment: Alignment.bottomCenter,
-                          height: 30,
-                          width: 170,
+                          height: 25,
+                          width: 140,
                           child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -634,17 +647,17 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
 
   _getBasket() {
     print("function working");
-    Art_Services().getadminbasket().then((basket) {
+    Art_Services().getadminbasket(widget.source_id).then((basket) {
       setState(() {
         _basket = basket;
         length = basket.length;
       });
       print("Length ${basket.length}");
-      print(_basket![0].product_name);
     });
   }
 
   _getImportorder(length) {
+    Utils(context).startLoading();
     int Import_totalprice = 0;
     var Import_order_id = Uuid().v1();
     print('length data for loop === ${length}');
@@ -703,7 +716,26 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton.extended(
             onPressed: () {
-              _getImportorder(length);
+              showDialog<bool>(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('สั่งนำเข้าสินค้า'),
+                      content: const Text('ต้องการทำรายการสั่งซื้อไหม?'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("ไม่"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            _getImportorder(length);
+                          },
+                          child: const Text("ใช่"),
+                        ),
+                      ],
+                    );
+                  });
             },
             label: Text("ยืนยันการสั่งซื้อ"),
             icon: Icon(Icons.shopping_bag),
@@ -724,21 +756,10 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
           elevation: 0,
           title: Center(
               child: const Text(
-            'รายการสินค้า',
+            'ตะกร้านำเข้าสินค้า',
             style: TextStyle(
                 color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           )),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.refresh,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                _getBasket();
-              },
-            )
-          ],
         ),
         body: Container(
             width: double.infinity,
@@ -767,10 +788,17 @@ class _AdmincraftimprotproductState extends State<Admincraftimprotproduct> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(30.0)),
-                                  leading: Image(
-                                      image: NetworkImage(_basket![index]
-                                          .product_image
-                                          .toString())),
+                                  leading: CachedNetworkImage(
+                                    imageUrl: _basket![index]
+                                        .product_image
+                                        .toString(),
+                                    progressIndicatorBuilder: (context, url,
+                                            downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress.progress),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ),
                                   title: Text(
                                       _basket![index].product_name.toString()),
                                   subtitle: Row(

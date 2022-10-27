@@ -17,6 +17,7 @@ import 'package:project_bekery/drawer/UI/ComplexDrawerPage.dart';
 import 'package:project_bekery/model/producttype.dart';
 import 'package:project_bekery/model/promotion_model.dart';
 import 'package:project_bekery/mysql/service.dart';
+import 'package:project_bekery/screen/admin_productall.dart';
 import 'package:project_bekery/screen/order_rice_sql.dart';
 import 'package:project_bekery/script/firebaseapi.dart';
 import 'package:project_bekery/model/product.dart';
@@ -24,6 +25,7 @@ import 'package:project_bekery/model/profile.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 import 'package:uuid/uuid.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:http/http.dart' as http;
@@ -46,7 +48,7 @@ _AddProduct(
     producttype,
     improt_price1) async {
   try {
-    var url = Uri.parse('https://artfinalproject.000webhostapp.com/');
+    var url = Uri.parse('https://projectart434.000webhostapp.com/');
     print('funtion working....');
     var map = <String, dynamic>{};
     map["action"] = "ADD_PRODUCT";
@@ -146,14 +148,16 @@ class _add_product_orderState extends State<add_product_order> {
       product_quantity1, improt_price1) async {
     String? producttype;
 
-    Art_Services().getonly_producttype(dropdownValue).then((value) {
+    await Art_Services().getonly_producttype(dropdownValue).then((value) {
       setState(() {
         producttypeidlist = value;
       });
-    }).then((value) {
-      setState(() {
+    });
+    setState(() {
+      if (producttypelist?.length == 0) {
+      } else {
         producttype = producttypeidlist[0].product_type_id;
-      });
+      }
     });
     int i = 0;
     if (image == null) return;
@@ -272,6 +276,8 @@ class _add_product_orderState extends State<add_product_order> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               TextFormField(
+                                style: TextStyle(color: Colors.white),
+                                cursorColor: Colors.white,
                                 validator: RequiredValidator(
                                     errorText: "กรุณาป้อนข้อมูล"),
                                 onSaved: (name) {
@@ -298,6 +304,8 @@ class _add_product_orderState extends State<add_product_order> {
                               ),
                               SizedBox(height: 10),
                               TextFormField(
+                                style: TextStyle(color: Colors.white),
+                                cursorColor: Colors.white,
                                 keyboardType: TextInputType.text,
                                 validator: RequiredValidator(
                                     errorText: "กรุณาป้อนข้อมูล"),
@@ -331,6 +339,8 @@ class _add_product_orderState extends State<add_product_order> {
                                   Container(
                                     width: 150,
                                     child: TextFormField(
+                                      style: TextStyle(color: Colors.white),
+                                      cursorColor: Colors.white,
                                       validator: RequiredValidator(
                                           errorText: "กรุณาป้อนข้อมูล"),
                                       keyboardType: TextInputType.number,
@@ -363,6 +373,8 @@ class _add_product_orderState extends State<add_product_order> {
                                   Container(
                                     width: 150,
                                     child: TextFormField(
+                                      style: TextStyle(color: Colors.white),
+                                      cursorColor: Colors.white,
                                       validator: RequiredValidator(
                                           errorText: "กรุณาป้อนข้อมูล"),
                                       keyboardType: TextInputType.number,
@@ -401,6 +413,8 @@ class _add_product_orderState extends State<add_product_order> {
                                   Container(
                                     width: 150,
                                     child: TextFormField(
+                                      style: TextStyle(color: Colors.white),
+                                      cursorColor: Colors.white,
                                       validator: RequiredValidator(
                                           errorText: "กรุณาป้อนข้อมูล"),
                                       keyboardType: TextInputType.number,
@@ -511,7 +525,9 @@ class _add_product_orderState extends State<add_product_order> {
                                       child: Text('อัปโหลดข้อมูล'),
                                       onPressed: () async {
                                         if (fromKey.currentState!.validate()) {
+                                          Utils(context).startLoading();
                                           if (image == null) {
+                                            Utils(context).stopLoading();
                                             Fluttertoast.showToast(
                                                 msg: "กรุณาเพิ่มรูปภาพก่อน",
                                                 toastLength: Toast.LENGTH_SHORT,
@@ -523,7 +539,7 @@ class _add_product_orderState extends State<add_product_order> {
                                                 fontSize: 16.0);
                                           } else {
                                             fromKey.currentState!.save();
-                                            await uploadimage(
+                                            uploadimage(
                                                     product_name,
                                                     product_detail,
                                                     product_price,
@@ -547,7 +563,12 @@ class _add_product_orderState extends State<add_product_order> {
                                                           textColor:
                                                               Colors.white,
                                                           fontSize: 16.0),
-                                                      Navigator.pop(context),
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return admin_allproduct();
+                                                      }))
                                                     });
                                           }
                                         }

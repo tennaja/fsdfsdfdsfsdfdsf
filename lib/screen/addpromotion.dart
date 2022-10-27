@@ -10,6 +10,7 @@ import 'package:project_bekery/model/promotion_model.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/admin_import_order.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 
 class addpromotion extends StatefulWidget {
   const addpromotion({Key? key}) : super(key: key);
@@ -97,6 +98,8 @@ class _addpromotionState extends State<addpromotion> {
                             children: [
                               SizedBox(height: 20),
                               TextFormField(
+                                style: TextStyle(color: Colors.white),
+                                cursorColor: Colors.white,
                                 validator: RequiredValidator(
                                     errorText: "กรุณาป้อนข้อมูล"),
                                 onSaved: (name) {
@@ -127,6 +130,8 @@ class _addpromotionState extends State<addpromotion> {
                               ),
                               SizedBox(height: 20),
                               TextFormField(
+                                style: TextStyle(color: Colors.white),
+                                cursorColor: Colors.white,
                                 keyboardType: TextInputType.number,
                                 validator: RequiredValidator(
                                     errorText: "กรุณาป้อนข้อมูล"),
@@ -184,6 +189,7 @@ class _addpromotionState extends State<addpromotion> {
                                         print(promotion_value);
                                         if (fromKey.currentState!.validate()) {
                                           fromKey.currentState!.save();
+                                          Utils(context).startLoading();
                                           Art_Services()
                                               .getonly_promotion(
                                                   promotion_name.toString(),
@@ -193,6 +199,8 @@ class _addpromotionState extends State<addpromotion> {
                                                         'จำนวนขอมูลPromotion : ${value.length}'),
                                                     if (value.length > 0)
                                                       {
+                                                        Utils(context)
+                                                            .stopLoading(),
                                                         Fluttertoast.showToast(
                                                             msg:
                                                                 "มีโปรโมชั่นดังกล่าวแล้ว",

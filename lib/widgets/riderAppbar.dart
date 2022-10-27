@@ -91,20 +91,6 @@ class _UserAppBarState extends State<RiderAppBar> {
               ),
               Divider(),
               ListTile(
-                title: Text('แผนที่'),
-                leading: Icon(
-                  Icons.map,
-                  color: Colors.blue,
-                ),
-                trailing: Icon(Icons.arrow_forward_ios_outlined),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return rider_MapsPage();
-                  }));
-                },
-              ),
-              Divider(),
-              ListTile(
                 title: Text('รายการงานของฉัน'),
                 leading: Icon(
                   Icons.assignment_outlined,

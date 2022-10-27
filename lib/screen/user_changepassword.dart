@@ -8,6 +8,8 @@ import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/user_profire.dart';
 import 'package:project_bekery/widgets/userAppbar.dart';
 
+import '../drawer/Constants/Constants.dart';
+
 class user_changepassword extends StatefulWidget {
   const user_changepassword({Key? key}) : super(key: key);
 
@@ -73,14 +75,12 @@ class _user_changepasswordState extends State<user_changepassword> {
         ),
         slider: UserAppBar(),
         child: Container(
-          
           width: double.infinity,
           height: double.infinity,
           color: Color.fromARGB(255, 238, 238, 238),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
-              
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -105,11 +105,27 @@ class _user_changepasswordState extends State<user_changepassword> {
                               },
                               autofocus: false,
                               decoration: InputDecoration(
-                                label: Text('ใส่รหัสเดิม'),
+                                  enabledBorder: const OutlineInputBorder(
+                                    // width: 0.0 produces a thin "hairline" border
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(30)),
+                                    borderSide: const BorderSide(
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                fillColor: Colors.white,
+                                label: Text(
+                                  'ใส่รหัสเดิม',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                                 prefixIcon: const Icon(
-                                  Icons.key,color: Colors.blue,
+                                  Icons.key,
+                                  color: Colors.blue,
                                 ),
                                 border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color:
+                                          Color.fromARGB(255, 255, 255, 255)),
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
@@ -127,13 +143,28 @@ class _user_changepasswordState extends State<user_changepassword> {
                               },
                               autofocus: false,
                               decoration: InputDecoration(
-                                label: Text('ใส่รหัสผ่านใหม่'),
+                                  enabledBorder: const OutlineInputBorder(
+                                    // width: 0.0 produces a thin "hairline" border
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(30)),
+                                    borderSide: const BorderSide(
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                fillColor: Colors.white,
+                                label: Text(
+                                  'ใส่รหัสผ่านใหม่',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                                 prefixIcon: const Icon(
                                   Icons.key,
                                   color: Colors.blue,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
+                                  borderSide: const BorderSide(
+                                    color: Colors.blue,
+                                  ),
                                 ),
                               ),
                             ),
@@ -150,13 +181,28 @@ class _user_changepasswordState extends State<user_changepassword> {
                               },
                               autofocus: false,
                               decoration: InputDecoration(
-                                label: Text('ยืนยันรหัสผ่าน'),
+                                  enabledBorder: const OutlineInputBorder(
+                                    // width: 0.0 produces a thin "hairline" border
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(30)),
+                                    borderSide: const BorderSide(
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                fillColor: Colors.white,
+                                label: Text(
+                                  'ยืนยันรหัสผ่าน',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                                 prefixIcon: const Icon(
                                   Icons.key,
                                   color: Colors.blue,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
+                                  borderSide: const BorderSide(
+                                    color: Colors.blue,
+                                  ),
                                 ),
                               ),
                             ),
@@ -170,7 +216,7 @@ class _user_changepasswordState extends State<user_changepassword> {
                     children: [
                       Container(
                         width: 200,
-                        child: OutlinedButton(
+                        child: ElevatedButton(
                           onPressed: () async {
                             user_email = await SessionManager().get("email");
                             if (fromKey.currentState!.validate()) {
@@ -206,12 +252,6 @@ class _user_changepasswordState extends State<user_changepassword> {
                               });
                             }
                           },
-                            style: OutlinedButton.styleFrom(
-      shape: RoundedRectangleBorder(
-         borderRadius: BorderRadius.circular(30.0),
-      ),
-      side: BorderSide(width: 2, color: Colors.blue),
-   ),
                           child: Text('เปลี่ยนรหัส'),
                         ),
                       )

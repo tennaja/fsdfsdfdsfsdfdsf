@@ -14,6 +14,7 @@ import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/home.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 import 'package:project_bekery/widgets/userAppbar.dart';
 
 class user_profile extends StatefulWidget {
@@ -34,11 +35,13 @@ class _user_profileState extends State<user_profile> {
 
   _getuserdata() async {
     user_email = await SessionManager().get("email");
-    Art_Services().getonlyUser(user_email.toString()).then((datauser) => {
+    await Art_Services().getonlyUser(user_email.toString()).then((datauser) => {
           setState(() {
             user = datauser;
           }),
         });
+    print('user-lat ==> ${user![0].user_latitude}');
+    print('user-long ==> ${user![0].user_longitude}');
   }
 
   bool _isObscure = true;
@@ -51,7 +54,7 @@ class _user_profileState extends State<user_profile> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.blue,
+              color: Colors.black,
             ),
             onPressed: () {
               showDialog<bool>(
@@ -80,13 +83,13 @@ class _user_profileState extends State<user_profile> {
                   });
             },
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.greenAccent,
           elevation: 0,
           title: Center(
               child: const Text(
             'แก้ไขโปรไฟล์',
             style: TextStyle(
-                color: Colors.blue, fontSize: 24, fontWeight: FontWeight.bold),
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           )),
           actions: <Widget>[],
         ),
@@ -101,40 +104,6 @@ class _user_profileState extends State<user_profile> {
       body: SliderDrawer(
         appBar: SliderAppBar(
           drawerIconColor: Colors.blue,
-          trailing: IconButton(
-            onPressed: () {
-              if (fromKey.currentState!.validate()) {
-                fromKey.currentState!.save();
-                print(
-                    'ID : ${user![0].user_id}\n Name : ${user![0].user_name}\n Surname : ${user![0].user_surname} \n Email : ${user![0].user_email}\n Phone : ${user![0].user_phone}');
-                Art_Services()
-                    .update_user(user![0].user_id, username, usersurname,
-                        useremail, 'customer', userphone)
-                    .then((value) => {
-                          Fluttertoast.showToast(
-                              msg: "แก้ไขข้อมูลเรียบร้อย",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Color.fromARGB(255, 9, 255, 0),
-                              textColor: Colors.white,
-                              fontSize: 16.0),
-                        });
-                // ignore: avoid_print
-              } else {
-                Fluttertoast.showToast(
-                    msg: "error",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-              setState(() {});
-            },
-            icon: Icon(Icons.save,color: Colors.blue,),
-          ),
           appBarHeight: 85,
           appBarColor: Colors.white,
           title: Container(
@@ -152,7 +121,7 @@ class _user_profileState extends State<user_profile> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: Colorz.complexDrawerBlack,
+          color: Color.fromARGB(255, 238, 238, 238),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
@@ -178,20 +147,20 @@ class _user_profileState extends State<user_profile> {
                                       },
                                       autofocus: false,
                                       initialValue: "${user![0].user_name}",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.black),
                                       decoration: InputDecoration(
                                         enabledBorder: const OutlineInputBorder(
                                           // width: 0.0 produces a thin "hairline" border
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(30)),
                                           borderSide: const BorderSide(
-                                            color: Colors.white,
+                                            color: Colors.blue,
                                           ),
                                         ),
                                         fillColor: Colors.white,
                                         prefixIcon: const Icon(
                                           Icons.person,
-                                          color: Colors.white,
+                                          color: Colors.blue,
                                         ),
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -210,23 +179,23 @@ class _user_profileState extends State<user_profile> {
                                       },
                                       autofocus: false,
                                       initialValue: "${user![0].user_surname}",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.black),
                                       decoration: InputDecoration(
                                         enabledBorder: const OutlineInputBorder(
                                           // width: 0.0 produces a thin "hairline" border
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(30)),
                                           borderSide: const BorderSide(
-                                            color: Colors.white,
+                                            color: Colors.blue,
                                           ),
                                         ),
                                         label: Text(
                                           'นามสกุล',
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.blue),
                                         ),
                                         prefixIcon: const Icon(
                                           Icons.person,
-                                          color: Colors.white,
+                                          color: Colors.blue,
                                         ),
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -244,29 +213,31 @@ class _user_profileState extends State<user_profile> {
                                 onSaved: (email) {
                                   useremail = email!;
                                 },
+                                enabled: true,
                                 autofocus: false,
                                 initialValue: "${user![0].user_email}",
-                                style: TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  enabledBorder: const OutlineInputBorder(
-                                    // width: 0.0 produces a thin "hairline" border
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(30)),
-                                    borderSide: const BorderSide(
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                style: TextStyle(color: Colors.black),
+                               decoration: InputDecoration(
+                                        enabledBorder: const OutlineInputBorder(
+                                          // width: 0.0 produces a thin "hairline" border
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(30)),
+                                          borderSide: const BorderSide(
+                                            color: Colors.blue,
+                                          ),
+                                        ),
                                   label: Text(
                                     'อีเมล์',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.blue),
                                   ),
                                   prefixIcon: const Icon(
                                     Icons.email,
-                                    color: Colors.white,
+                                    color: Colors.blue,
                                   ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
+                                   border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                        ),
                                 ),
                               ),
                               const SizedBox(
@@ -278,23 +249,23 @@ class _user_profileState extends State<user_profile> {
                                 },
                                 autofocus: false,
                                 initialValue: "${user![0].user_phone}",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                   enabledBorder: const OutlineInputBorder(
                                     // width: 0.0 produces a thin "hairline" border
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(30)),
                                     borderSide: const BorderSide(
-                                      color: Colors.white,
+                                      color: Colors.blue,
                                     ),
                                   ),
                                   label: Text(
                                     'เบอร์โทรศัพท์',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.blue),
                                   ),
                                   prefixIcon: const Icon(
                                     Icons.local_phone,
-                                    color: Colors.white,
+                                    color: Colors.blue,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30),
@@ -304,42 +275,107 @@ class _user_profileState extends State<user_profile> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              TextFormField(
-                                readOnly: true,
-                                initialValue: "${user![0].user_password}",
-                                style: TextStyle(color: Colors.white),
-                                obscureText: _isObscure,
-                                decoration: InputDecoration(
-                                    enabledBorder: const OutlineInputBorder(
-                                      // width: 0.0 produces a thin "hairline" border
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(30)),
-                                      borderSide: const BorderSide(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    prefixIcon: const Icon(
-                                      Icons.key,
-                                      color: Colors.white,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    label: Text(
-                                      "รหัสผ่าน",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    // this button is used to toggle the password visibility
-                                    suffixIcon: IconButton(
-                                        icon: Icon(_isObscure
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,color: Colors.white,),
-                                        onPressed: () {
-                                          setState(() {
-                                            _isObscure = !_isObscure;
-                                          });
-                                        })),
+                              SizedBox(
+                                height: 20,
                               ),
+                              Container(
+                                width: 250,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      )),
+                                  onPressed: () {
+                                    showDialog<bool>(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('แก้ไขโปรไฟล์'),
+                                            content: const Text(
+                                                'ต้องการแก้ไขโปรไฟล์ใช้ไหม?'),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: const Text("ไม่"),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () async {
+                                                  if (fromKey.currentState!
+                                                      .validate()) {
+                                                    Utils(context)
+                                                        .startLoading();
+                                                    fromKey.currentState!
+                                                        .save();
+                                                    print(
+                                                        'ID : ${user![0].user_id}\n Name : ${user![0].user_name}\n Surname : ${user![0].user_surname} \n Email : ${user![0].user_email}\n Phone : ${user![0].user_phone}');
+                                                    await Art_Services()
+                                                        .update_user(
+                                                            user![0].user_id,
+                                                            username,
+                                                            usersurname,
+                                                            useremail,
+                                                            'customer',
+                                                            userphone)
+                                                        .then((value) => {
+                                                              Fluttertoast.showToast(
+                                                                  msg:
+                                                                      "แก้ไขข้อมูลเรียบร้อย",
+                                                                  toastLength: Toast
+                                                                      .LENGTH_SHORT,
+                                                                  gravity:
+                                                                      ToastGravity
+                                                                          .BOTTOM,
+                                                                  timeInSecForIosWeb:
+                                                                      1,
+                                                                  backgroundColor:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          9,
+                                                                          255,
+                                                                          0),
+                                                                  textColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontSize:
+                                                                      16.0),
+                                                            });
+                                                    // ignore: avoid_print
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                        msg: "error",
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity:
+                                                            ToastGravity.BOTTOM,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        textColor: Colors.white,
+                                                        fontSize: 16.0);
+                                                  }
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return user_profile();
+                                                  }));
+                                                },
+                                                child: const Text("ใช่"),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: Text(
+                                    'บันทึกข้อมูล',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              )
                             ]))
                       ],
                     ),

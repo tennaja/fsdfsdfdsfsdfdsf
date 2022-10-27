@@ -6,10 +6,13 @@ import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/user_changepassword.dart';
+import 'package:project_bekery/screen/user_logstatus.dart';
 import 'package:project_bekery/screen/user_map.dart';
+import 'package:project_bekery/screen/user_mymaps.dart';
 import 'package:project_bekery/screen/user_myorder.dart';
 import 'package:project_bekery/screen/user_order.dart';
 import 'package:project_bekery/screen/user_profire.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 
 class UserAppBar extends StatefulWidget {
   const UserAppBar({Key? key}) : super(key: key);
@@ -19,7 +22,7 @@ class UserAppBar extends StatefulWidget {
 }
 
 class _UserAppBarState extends State<UserAppBar> {
-  String? user_email;
+  String? user_email, user_id;
   List<User>? user = [];
   void initState() {
     super.initState();
@@ -49,11 +52,11 @@ class _UserAppBarState extends State<UserAppBar> {
                   color: Colors.white,
                 ),
                 accountName: user?.length != 0
-                    ? Text('${user?[0].user_name}',style: TextStyle(color: Colors.blue),)
-                    : Text('Loadding...',style: TextStyle(color: Colors.blue),),
+                    ? Text('${user?[0].user_name}',style: TextStyle(color: Colors.black),)
+                    : Text('Loadding...'),
                 accountEmail: user?.length != 0
-                    ? Text('${user?[0].user_email}',style: TextStyle(color: Colors.blue),)
-                    : Text('Loadding...',style: TextStyle(color: Colors.blue),),
+                    ? Text('${user?[0].user_email}',style: TextStyle(color: Colors.black),)
+                    : Text('Loadding...'),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Icon(
@@ -63,7 +66,6 @@ class _UserAppBarState extends State<UserAppBar> {
                   ),
                 ),
               ),
-              Divider(),
               ListTile(
                 title: Text(
                   'ร้านค้า',
@@ -73,6 +75,7 @@ class _UserAppBarState extends State<UserAppBar> {
                   Icons.shopping_bag,
                   color: Colors.blue,
                 ),
+                trailing: Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 15,) ,
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return Orderpage();
@@ -80,7 +83,7 @@ class _UserAppBarState extends State<UserAppBar> {
                 },
               ),
               Divider(
-                color: Color.fromARGB(255, 140, 140, 140),
+                
               ),
               ListTile(
                 title: Text(
@@ -91,9 +94,27 @@ class _UserAppBarState extends State<UserAppBar> {
                   Icons.map,
                   color: Colors.blue,
                 ),
+                trailing: Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 15,) ,
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_MapsPage();
+                  }));
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Text(
+                  'แผนที่ของฉัน',
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(
+                  Icons.maps_home_work,
+                  color: Colors.blue,
+                ),
+                trailing: Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 15,) ,
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return user_mymapspage();
                   }));
                 },
               ),
@@ -107,6 +128,7 @@ class _UserAppBarState extends State<UserAppBar> {
                   Icons.history,
                   color: Colors.blue,
                 ),
+                trailing: Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 15,) ,
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_order();
@@ -123,6 +145,7 @@ class _UserAppBarState extends State<UserAppBar> {
                   Icons.person,
                   color: Colors.blue,
                 ),
+                trailing: Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 15,) ,
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_profile();
@@ -139,9 +162,27 @@ class _UserAppBarState extends State<UserAppBar> {
                   Icons.key,
                   color: Colors.blue,
                 ),
+                trailing: Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 15,) ,
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return user_changepassword();
+                  }));
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Text(
+                  'ประวัติการเข้าใช้งาน',
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(
+                  Icons.work_history_outlined,
+                  color: Colors.blue,
+                ),
+                trailing: Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 15,) ,
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return user_logstatus();
                   }));
                 },
               ),
@@ -155,6 +196,7 @@ class _UserAppBarState extends State<UserAppBar> {
                   Icons.logout,
                   color: Colors.blue,
                 ),
+                trailing: Icon(Icons.arrow_forward_ios,color: Colors.blue,size: 15,) ,
                 onTap: () {
                   showDialog<bool>(
                       context: context,
@@ -168,7 +210,12 @@ class _UserAppBarState extends State<UserAppBar> {
                               child: const Text("ไม่"),
                             ),
                             ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                Utils(context).startLoading();
+                                await Art_Services().adduserlog(
+                                    'ล็อคเอาท์',
+                                    user?[0].user_id,
+                                    DateTime.now().toString());
                                 Navigator.of(context).pushAndRemoveUntil(
                                   CupertinoPageRoute(
                                       builder: (context) => LoginPage()),

@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -12,6 +13,7 @@ import 'package:project_bekery/widgets/app_icon.dart';
 import 'package:project_bekery/widgets/big_text.dart';
 import 'package:project_bekery/widgets/colors.dart';
 import 'package:project_bekery/widgets/exandable_text_widget.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 import 'dart:async';
 
 import '../login/profire_model/customer_model.dart';
@@ -65,7 +67,6 @@ class data_product_sqlState extends State<data_product_sql> {
         _filterproduct = product;
       });
       print("Length ${product.length}");
-      print(_product![0].import_price);
     });
   }
 
@@ -156,7 +157,7 @@ class _order_rice_sqlState extends State<order_rice_sql> {
             padding: const EdgeInsets.only(top: 10),
             child: Container(
               margin: EdgeInsets.only(left: 2, right: 2, top: 2),
-              height: 225,
+              height: 200,
               width: 150,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(20)),
@@ -169,11 +170,15 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                     ),
                   ),
                   Center(
-                    child: Image.network(
-                      widget.product_image,
+                    child: CachedNetworkImage(
                       width: 80,
                       height: 80,
-                      fit: BoxFit.fitWidth,
+                      imageUrl: widget.product_image,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   ),
                   Padding(
@@ -193,7 +198,7 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                           ),
                         ),
                         SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -218,13 +223,13 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                           ],
                         ),
                         SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 5, top: 5),
+                              padding: const EdgeInsets.only(bottom: 2, top: 5),
                               child: Container(
                                   height: 30,
                                   width: 145,
@@ -313,11 +318,15 @@ class _order_rice_sqlState extends State<order_rice_sql> {
                       ),
                     ),
                     Center(
-                      child: Image.network(
-                        widget.product_image,
+                      child: CachedNetworkImage(
                         width: 80,
                         height: 80,
-                        fit: BoxFit.fitWidth,
+                        imageUrl: widget.product_image,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),
                     Padding(
@@ -488,12 +497,12 @@ class _product_detail_sqlState extends State<product_detail_sql> {
         .then((promotion) {
       setState(() {
         _product_promotion = promotion;
-        promotionname = promotion[0].promotion_name;
       });
-
-      print('จำนวข้อมูล : ${promotion.length}');
-      print('ชื่อโปรโมชั้น : ${promotion[0].promotion_name}');
-      return promotion[0].promotion_name.toString();
+      if (promotion.isEmpty) {
+        promotionname = null;
+      } else {
+        promotionname = _product_promotion![0].promotion_name.toString();
+      }
     });
   }
 
@@ -504,7 +513,7 @@ class _product_detail_sqlState extends State<product_detail_sql> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        color: Colors.orangeAccent.withOpacity(0.5),
+        color: Color.fromARGB(255, 220, 231, 252),
         child: Stack(
           children: [
             Positioned(
@@ -513,10 +522,16 @@ class _product_detail_sqlState extends State<product_detail_sql> {
                 child: Container(
                   width: double.maxFinite,
                   height: height / 2.4,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(widget.product_image))),
+                  child: CachedNetworkImage(
+                    width: 80,
+                    height: 80,
+                    imageUrl: widget.product_image,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
                 )),
             Positioned(
                 top: height / 18.76,
@@ -587,7 +602,7 @@ class _product_detail_sqlState extends State<product_detail_sql> {
             left: height / 42.2,
             right: height / 42.2),
         decoration: BoxDecoration(
-            color: Colors.red[50],
+            color: Color.fromARGB(255, 220, 231, 252),
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(height / 42.2 * 2),
                 topRight: Radius.circular(height / 42.2 * 2))),
@@ -633,14 +648,18 @@ class _Import_quantityState extends State<Import_quantity> {
             DateFormat('yyyy-MM-d').format(DateTime.now()).toString())
         .then((promotion) {
       setState(() {
-        _product_promotion = promotion;
-        promotionname = promotion[0].promotion_name;
-        promotionvalue = int.parse(promotion[0].promotion_value.toString());
+        if (promotion.isEmpty) {
+          _product_promotion = promotion;
+          promotionname = null;
+          promotionvalue = 0;
+        } else {
+          _product_promotion = promotion;
+          promotionname = promotion[0].promotion_name;
+          promotionvalue = int.parse(promotion[0].promotion_value.toString());
+        }
       });
-
-      print('จำนวข้อมูล : ${promotion.length}');
-      print('ชื่อโปรโมชั้น : ${promotion[0].promotion_name}');
-      return promotion[0].promotion_name.toString();
+      print('----------> ${promotionname}');
+      return promotionname.toString();
     });
   }
 
@@ -693,12 +712,13 @@ class _Import_quantityState extends State<Import_quantity> {
         ),
         InkWell(
           onTap: () async {
+            Utils(context).startLoading();
             print('promotionของครั้งนี้ : ${promotionname}');
             print('valuepromotionของครั้งนี้ : ${promotionvalue}');
-
             String email = await SessionManager().get("email");
             Art_Services().checkuserbasket(widget.product_id).then((value) {
               if (value.isNotEmpty) {
+                Utils(context).stopLoading();
                 Fluttertoast.showToast(
                     msg: "มีสิ้นค้าในตระกร้าแล้ว",
                     toastLength: Toast.LENGTH_SHORT,
@@ -784,7 +804,7 @@ class _Import_quantityState extends State<Import_quantity> {
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(height / 42.2),
-                color: AppColors.MainColor,
+                color: Colors.blue,
               )),
         ),
       ],

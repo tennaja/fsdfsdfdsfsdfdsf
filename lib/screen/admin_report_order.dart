@@ -127,16 +127,11 @@ class _admin_reportState extends State<admin_report> {
                                       DataCell(Text(
                                           importorder.product_name.toString())),
                                       DataCell(Text(
-                                          importorder.sum_quantity.toString())),
+                                          '${importorder.sum_quantity.toString()}   ชิ้น')),
                                     ]),
                                   )
                                   .toList()),
                         )),
-                        Divider(),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 30),
-                          child: Text('ราคารวม : '),
-                        ),
                       ],
                     ),
                   )

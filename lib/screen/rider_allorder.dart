@@ -184,7 +184,10 @@ class _import_order_detailState extends State<user_order_detail> {
                   .rider_update_order(email.toString(), 'ของกำลังส่ง',
                       widget.import_order_id.toString())
                   .then((value) => {
-                        Navigator.pop(context),
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return rider_allorder();
+                        })),
                         Fluttertoast.showToast(
                             msg: "สั่งซื้อเสร็จสิ้น",
                             toastLength: Toast.LENGTH_SHORT,
@@ -195,7 +198,7 @@ class _import_order_detailState extends State<user_order_detail> {
                             fontSize: 16.0),
                       });
             },
-            label: Text("ยืนยันการส่ง"),
+            label: Text("รับออเดอร์นี้"),
             icon: Icon(Icons.near_me),
             backgroundColor: Colors.green,
           ),

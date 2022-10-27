@@ -9,6 +9,7 @@ import 'package:project_bekery/model/export_product.dart';
 import 'package:project_bekery/model/export_product_detail.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 
 class admin_orderpackgelist extends StatefulWidget {
   const admin_orderpackgelist({Key? key}) : super(key: key);
@@ -188,19 +189,43 @@ class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
               FloatingActionButton.extended(
                 heroTag: 2,
                 onPressed: () async {
-                  Art_Services().cancel_order(widget.order_id).then((value) => {
-                        Fluttertoast.showToast(
-                            msg: "ยกเลิกการสั่งเรียบร้อย",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Color.fromARGB(255, 255, 0, 0),
-                            textColor: Colors.white,
-                            fontSize: 16.0),
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return admin_orderpackgelist();
-                        }))
+                  showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('ยกเลิกออเดอร์'),
+                          content: const Text('ต้องการที่จะยกเลิกออเดอร์ไหม?'),
+                          actions: <Widget>[
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text("ไม่"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                Utils(context).startLoading();
+                                await Art_Services()
+                                    .cancel_order(widget.order_id)
+                                    .then((value) => {
+                                          Fluttertoast.showToast(
+                                              msg: "ยกเลิกการสั่งเรียบร้อย",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 255, 0, 0),
+                                              textColor: Colors.white,
+                                              fontSize: 16.0),
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return admin_orderpackgelist();
+                                          }))
+                                        });
+                              },
+                              child: const Text("ใช่"),
+                            ),
+                          ],
+                        );
                       });
                 },
                 label: Text("ยกเลิกออเดอร์"),

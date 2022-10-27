@@ -10,8 +10,10 @@ import 'package:project_bekery/model/product_promotion.dart';
 import 'package:project_bekery/model/producttype.dart';
 import 'package:project_bekery/model/promotion_model.dart';
 import 'package:project_bekery/model/user_basket.dart';
+import 'package:project_bekery/model/userlog.dart';
 import 'package:project_bekery/mysql/rider.dart';
 import '../model/source_model.dart';
+import '../model/user_maps.dart';
 import 'user.dart';
 
 class Art_Services {
@@ -92,6 +94,23 @@ class Art_Services {
 
       final response = await http.post(url, body: map);
       print("add_importproduct >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      print('error ${e}');
+      return 'error';
+    }
+  }
+
+  Future<String> add_source(sourcename, sourceaddress, sourcephone) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "_ADD_SOURCE";
+      map["sourcename"] = sourcename;
+      map["sourceaddress"] = sourceaddress;
+      map["sourcephone"] = sourcephone;
+
+      final response = await http.post(url, body: map);
+      print("add_source >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       print('error ${e}');
@@ -316,6 +335,27 @@ class Art_Services {
     }
   }
 
+  Future<List<User>> getonlyUserMap(where) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = 'GET_ONLY_USER_MAP';
+      map["where"] = where;
+      final response = await http.post(url, body: map);
+      print("getUsers >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<User> list = parseResponse(response.body);
+
+        return list;
+      } else {
+        print("getUsers >> Response:: ${response.statusCode}");
+        throw <User>[];
+      }
+    } catch (e) {
+      print(e);
+      return <User>[];
+    }
+  }
+
   Future<List<Rider>> getonlyRider(where) async {
     try {
       var map = <String, dynamic>{};
@@ -329,6 +369,26 @@ class Art_Services {
         return list;
       } else {
         print("getonlyRider >> Response:: ${response.statusCode}");
+        throw <Rider>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Rider>[];
+    }
+  }
+
+  Future<List<Rider>> getallRider() async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = 'GET_ALL_RIDER';
+      final response = await http.post(url, body: map);
+      print("getallRider >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Rider> list = parseResponseRider(response.body);
+
+        return list;
+      } else {
+        print("getallRider >> Response:: ${response.statusCode}");
         throw <Rider>[];
       }
     } catch (e) {
@@ -470,10 +530,36 @@ class Art_Services {
     }
   }
 
-  Future<List<Basket>> getadminbasket() async {
+  Future<List<source>> getonlySource(
+      sourcename, sourceaddress, sourcephone) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_ONLY_SOURCE";
+      map["sourcename"] = sourcename;
+      map["sourceaddress"] = sourceaddress;
+      map["sourcephone"] = sourcephone;
+
+      final response = await http.post(url, body: map);
+      print("getonlySource >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<source> list = parseResponsesource(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <source>[];
+      }
+    } catch (e) {
+      print(e);
+      return <source>[];
+    }
+  }
+
+  Future<List<Basket>> getadminbasket(source_id) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = "GET_ADMIN_BASKET";
+      map["where"] = source_id;
       final response = await http.post(url, body: map);
       print("getadminbasket >> Response:: ${response.body}");
       if (response.statusCode == 200) {
@@ -536,6 +622,55 @@ class Art_Services {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed
         .map<User_Basket>((json) => User_Basket.fromJson(json))
+        .toList();
+  }
+
+  Future<List<User_mymaps>> getusermaps(where) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_USER_MAPS";
+      map["where"] = where;
+      final response = await http.post(url, body: map);
+      print("getusermaps >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<User_mymaps> list = parseResponseusermaps(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <User_mymaps>[];
+      }
+    } catch (e) {
+      print(e);
+      return <User_mymaps>[];
+    }
+  }
+
+  Future<List<User_mymaps>> getlocation(where) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_USER_LOCATION";
+      map["where"] = where;
+      final response = await http.post(url, body: map);
+      print("getlocation >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<User_mymaps> list = parseResponseusermaps(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <User_mymaps>[];
+      }
+    } catch (e) {
+      print(e);
+      return <User_mymaps>[];
+    }
+  }
+
+  static List<User_mymaps> parseResponseusermaps(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed
+        .map<User_mymaps>((json) => User_mymaps.fromJson(json))
         .toList();
   }
 
@@ -612,6 +747,32 @@ class Art_Services {
         .map<Export_product_detail>(
             (json) => Export_product_detail.fromJson(json))
         .toList();
+  }
+
+  Future<List<Logstatus>> getuserlog(String where) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GET_USER_LOG";
+      map["where"] = where;
+      final response = await http.post(url, body: map);
+      print("getuserlog >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Logstatus> list = parseResponseuseruserlog(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Logstatus>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Logstatus>[];
+    }
+  }
+
+  static List<Logstatus> parseResponseuseruserlog(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Logstatus>((json) => Logstatus.fromJson(json)).toList();
   }
 
   Future<List<Export_product>> gatallExport_product(where) async {
@@ -847,6 +1008,24 @@ class Art_Services {
     }
   }
 
+  Future<String> addrider(String user_name, String user_surname,
+      String user_phone, String user_email, String user_password) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = 'ADD_RIDER';
+      map["user_name"] = user_name;
+      map["user_surname"] = user_surname;
+      map["user_phone"] = user_phone;
+      map["user_email"] = user_email;
+      map["user_password"] = user_password;
+      final response = await http.post(url, body: map);
+      print("addrider >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
   Future<String> AddProduct(
       product_name,
       product_detail,
@@ -897,7 +1076,7 @@ class Art_Services {
       map["user_email"] = user_email;
       map["user_password"] = user_password;
       final response = await http.post(url, body: map);
-      print("deleteUser >> Response:: ${response.body}");
+      print("updateUser >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       return 'error';
@@ -909,6 +1088,19 @@ class Art_Services {
       var map = <String, dynamic>{};
       map["action"] = _DELETE_EMP_ACTION;
       map["user_id"] = user_id;
+      final response = await http.post(url, body: map);
+      print("deleteUser >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> deletesource(String source_id) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = 'DELETE_SOURCE';
+      map["where"] = source_id;
       final response = await http.post(url, body: map);
       print("deleteUser >> Response:: ${response.body}");
       return response.body;
@@ -1071,6 +1263,25 @@ class Art_Services {
       // orderid
       final response = await http.post(url, body: map);
       print("Import_product_quantity_update >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> add_user_maps(user_email, user_maps_name, user_maps_detail,
+      user_latitude, user_longitude) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "ADD_USER_MAPS";
+      map["user_email"] = user_email; // rideremail
+      map["user_maps_name"] = user_maps_name;
+      map["user_maps_detail"] = user_maps_detail;
+      map["user_latitude"] = user_latitude;
+      map["user_longitude"] = user_longitude; // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("add_user_maps >> Response:: ${response.body}");
       return response.body;
     } catch (e) {
       return 'error';
@@ -1263,6 +1474,27 @@ class Art_Services {
     }
   }
 
+  Future<List<Producttype>> getonly_producttypename(where1) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "GETONLY_PRODUCTTYPE_2";
+      map["where"] = where1;
+      final response = await http.post(url, body: map);
+      print("getonly_producttypename >> Response:: ${response.body}");
+      if (response.statusCode == 200) {
+        List<Producttype> list = parseResponseall_producttype(response.body);
+        print("---------------------------------------------");
+        return list;
+      } else {
+        print("statusCode >> Response:: ${response.statusCode}");
+        throw <Producttype>[];
+      }
+    } catch (e) {
+      print(e);
+      return <Producttype>[];
+    }
+  }
+
   static List<Producttype> parseResponseall_producttype(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed
@@ -1314,12 +1546,47 @@ class Art_Services {
     }
   }
 
+  Future<String> adduserlog(log_status, log_userid, log_date) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "ADD_USER_LOGS";
+      map["log_status"] = log_status;
+      map["log_userid"] = log_userid;
+      map["log_date"] = log_date; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("adduserlog >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
   Future<String> editproducttype(where1, where2) async {
     try {
       var map = <String, dynamic>{};
       map["action"] = "EDITPRODUCTTYPE";
       map["where"] = where1;
       map["where2"] = where2; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("editproducttype >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> editsource(
+      where1, sourcename, sourceaddress, sourcephone) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "EDITSOURCE";
+      map["where"] = where1;
+      map["sourcename"] = sourcename;
+      map["sourceaddress"] = sourceaddress;
+      map["sourcephone"] = sourcephone;
+      // rideremail // status
       // orderid
       final response = await http.post(url, body: map);
       print("editproducttype >> Response:: ${response.body}");
@@ -1474,5 +1741,66 @@ class Art_Services {
     return parsed
         .map<Product_promotion>((json) => Product_promotion.fromJson(json))
         .toList();
+  }
+
+  Future<String> deleteusermap(usermapsid) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "DELETEUSERMAP";
+      map["where"] = usermapsid; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("deleteusermap >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> editusermap(
+      usermapsid, user_maps_name, user_maps_detail) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "EDITUSERMAP";
+      map["where"] = usermapsid;
+      map["user_maps_name"] = user_maps_name;
+      map["user_maps_detail"] = user_maps_detail; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("editusermap >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> updatestatususermap(usermapsid, usermap_status) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "UPDATE_STATUS_USERMAP";
+      map["where"] = usermapsid;
+      map["usermap_status"] = usermap_status; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("updatestatususermap >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  Future<String> updatestatususermapall(useremail) async {
+    try {
+      var map = <String, dynamic>{};
+      map["action"] = "UPDATE_STATUS_USERMAPALL";
+      map["where"] = useremail;
+      map["usermap_status"] = 'ยังไม่ถูกใช้งาน'; // rideremail // status
+      // orderid
+      final response = await http.post(url, body: map);
+      print("updatestatususermap >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
   }
 }

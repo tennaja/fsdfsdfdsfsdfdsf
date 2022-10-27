@@ -10,6 +10,7 @@ import 'package:project_bekery/model/producttype.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/admin_import_order.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 
 class addproducttype extends StatefulWidget {
   const addproducttype({Key? key}) : super(key: key);
@@ -44,7 +45,36 @@ class _addproducttypeState extends State<addproducttype> {
   }
 
   _updateproducttype(producttype_name) {
-    Art_Services().getonly_producttype(producttype_name).toString();
+    Art_Services().getonly_producttype(producttype_name).then((value) {
+      print('จำนวนขอมูลProducttype : ${value.length}');
+      if (value.length > 0) {
+        Utils(context).stopLoading();
+        Fluttertoast.showToast(
+            msg: "มีประเภทสินค้าดังกล่าวแล้ว",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color.fromARGB(255, 255, 0, 0),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        Art_Services()
+            .add_producttype(producttype_name.toString())
+            .then((value) => {
+                  Fluttertoast.showToast(
+                      msg: "เพิ่มประเภทสินค้าเรียบร้อย",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Color.fromARGB(255, 60, 255, 0),
+                      textColor: Colors.white,
+                      fontSize: 16.0),
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return addproducttype();
+                  })),
+                });
+      }
+    });
   }
 
   @override
@@ -95,6 +125,8 @@ class _addproducttypeState extends State<addproducttype> {
                                 children: [
                                   SizedBox(height: 20),
                                   TextFormField(
+                                    style: TextStyle(color: Colors.white),
+                                    cursorColor: Colors.white,
                                     validator: RequiredValidator(
                                         errorText: "กรุณาป้อนข้อมูล"),
                                     onSaved: (name) {
@@ -148,63 +180,13 @@ class _addproducttypeState extends State<addproducttype> {
                                           ),
                                           child: Text('เพิ่มประเภทสินค้า'),
                                           onPressed: () async {
-                                            print(producttype_name);
                                             if (fromKey.currentState!
                                                 .validate()) {
                                               fromKey.currentState!.save();
-                                              _updateproducttype(
-                                                      producttype_name)
-                                                  .then((value) => {
-                                                        print(
-                                                            'จำนวนขอมูลProducttype : ${value.length}'),
-                                                        if (value.length > 0)
-                                                          {
-                                                            Fluttertoast.showToast(
-                                                                msg:
-                                                                    "มีประเภทสินค้าดังกล่าวแล้ว",
-                                                                toastLength: Toast
-                                                                    .LENGTH_SHORT,
-                                                                gravity:
-                                                                    ToastGravity
-                                                                        .BOTTOM,
-                                                                timeInSecForIosWeb:
-                                                                    1,
-                                                                backgroundColor:
-                                                                    Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            255,
-                                                                            0,
-                                                                            0),
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fontSize: 16.0),
-                                                          }
-                                                        else
-                                                          {
-                                                            Art_Services()
-                                                                .add_producttype(
-                                                                    producttype_name
-                                                                        .toString())
-                                                                .then(
-                                                                    (value) => {
-                                                                          Fluttertoast.showToast(
-                                                                              msg: "เพิ่มประเภทสินค้าเรียบร้อย",
-                                                                              toastLength: Toast.LENGTH_SHORT,
-                                                                              gravity: ToastGravity.BOTTOM,
-                                                                              timeInSecForIosWeb: 1,
-                                                                              backgroundColor: Color.fromARGB(255, 60, 255, 0),
-                                                                              textColor: Colors.white,
-                                                                              fontSize: 16.0),
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(builder: (context) {
-                                                                            return addproducttype();
-                                                                          })),
-                                                                        })
-                                                          }
-                                                      });
+                                              print(producttype_name);
+                                              Utils(context).startLoading();
+                                              await _updateproducttype(
+                                                  producttype_name);
                                             }
                                           }),
                                     ),
@@ -439,6 +421,8 @@ class _addproducttypeState extends State<addproducttype> {
                                                                       ElevatedButton(
                                                                         onPressed:
                                                                             () {
+                                                                          Utils(context)
+                                                                              .startLoading();
                                                                           Art_Services().deleteproducttype(importorder.product_type_id.toString()).then((value) =>
                                                                               {
                                                                                 Fluttertoast.showToast(msg: "ลบ ${importorder.product_type_name.toString()} เรียบร้อย", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Color.fromARGB(255, 255, 0, 0), textColor: Colors.white, fontSize: 16.0),

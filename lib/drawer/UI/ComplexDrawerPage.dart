@@ -6,6 +6,7 @@ import 'package:project_bekery/drawer/Widgets/Widgets.dart';
 import 'package:project_bekery/login/login.dart';
 import 'package:project_bekery/screen/addproducttype.dart';
 import 'package:project_bekery/screen/addpromotion.dart';
+import 'package:project_bekery/screen/addsource.dart';
 import 'package:project_bekery/screen/admin_addproduct_promotion.dart';
 import 'package:project_bekery/screen/admin_import_order.dart';
 import 'package:project_bekery/screen/admin_import_product.dart';
@@ -16,6 +17,7 @@ import 'package:project_bekery/screen/admin_orderpackgelist.dart';
 import 'package:project_bekery/screen/admin_productall.dart';
 import 'package:project_bekery/screen/admin_report_order.dart';
 import 'package:project_bekery/screen/admin_userlist.dart';
+import 'package:project_bekery/screen/adminaddrider.dart';
 import 'package:project_bekery/screen/float_add_order.dart';
 
 class ComplexDrawerPage extends StatefulWidget {
@@ -153,7 +155,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                               }));
                             },
                             title: Text(
-                              'หน้าออเดอร์ถูกตีกลับ',
+                              'หน้าต่างรอการยกเลิก',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -170,6 +172,38 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         color: Colors.white,
                       ),
                       children: [
+                        Container(
+                          color: Color(0xFF5e548e),
+                          child: ListTile(
+                            leading: Icon(Icons.add, color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return adminaddrider();
+                              }));
+                            },
+                            title: Text(
+                              'เพิ่มข้อมูลพนักงาน',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xFF5e548e),
+                          child: ListTile(
+                            leading: Icon(Icons.add, color: Colors.white),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return addsource();
+                              }));
+                            },
+                            title: Text(
+                              'เพิ่มแหล่งที่มาของสินค้า',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
                         Container(
                           color: Color(0xFF5e548e),
                           child: ListTile(

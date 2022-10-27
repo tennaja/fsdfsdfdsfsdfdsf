@@ -14,6 +14,7 @@ import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/mysql/rider.dart';
 import 'package:project_bekery/screen/home.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 import 'package:project_bekery/widgets/riderAppbar.dart';
 import 'package:project_bekery/widgets/userAppbar.dart';
 
@@ -243,30 +244,6 @@ class _user_profileState extends State<rider_profire> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              TextFormField(
-                                readOnly: true,
-                                initialValue: "${rider![0].rider_password}",
-                                obscureText: _isObscure,
-                                decoration: InputDecoration(
-                                    prefixIcon: const Icon(
-                                      Icons.key,
-                                      color: Colors.blue,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    labelText: 'รหัสผ่าน',
-                                    // this button is used to toggle the password visibility
-                                    suffixIcon: IconButton(
-                                        icon: Icon(_isObscure
-                                            ? Icons.visibility
-                                            : Icons.visibility_off),
-                                        onPressed: () {
-                                          setState(() {
-                                            _isObscure = !_isObscure;
-                                          });
-                                        })),
-                              ),
                             ]))
                       ],
                     ),
@@ -285,39 +262,71 @@ class _user_profileState extends State<rider_profire> {
                         borderRadius: BorderRadius.circular(30),
                       )),
                       onPressed: () {
-                        if (fromKey.currentState!.validate()) {
-                          fromKey.currentState!.save();
-                          print(
-                              'ID : ${rider![0].rider_id}\n Name : ${rider![0].rider_name}\n Surname : ${rider![0].rider_surname} \n Email : ${rider![0].rider_email}\n Phone : ${rider![0].rider_phone}');
-                          Art_Services()
-                              .update_rider(rider![0].rider_id, username,
-                                  usersurname, useremail, 'rider', userphone)
-                              .then((value) => {
-                                    Fluttertoast.showToast(
-                                        msg: "แก้ไขข้อมูลเรียบร้อย",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor:
-                                            Color.fromARGB(255, 9, 255, 0),
-                                        textColor: Colors.white,
-                                        fontSize: 16.0),
-                                  });
-                          // ignore: avoid_print
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: "error",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0);
-                        }
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => rider_profire()));
+                        showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('แก้ไขโปรไฟล์'),
+                                content:
+                                    const Text('ต้องการแก้ไขโปรไฟล์ใช้ไหม?'),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text("ไม่"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      if (fromKey.currentState!.validate()) {
+                                        Utils(context).startLoading();
+                                        fromKey.currentState!.save();
+                                        print(
+                                            'ID : ${rider![0].rider_id}\n Name : ${rider![0].rider_name}\n Surname : ${rider![0].rider_surname} \n Email : ${rider![0].rider_email}\n Phone : ${rider![0].rider_phone}');
+                                        await Art_Services()
+                                            .update_rider(
+                                                rider![0].rider_id,
+                                                username,
+                                                usersurname,
+                                                useremail,
+                                                'rider',
+                                                userphone)
+                                            .then((value) => {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "แก้ไขข้อมูลเรียบร้อย",
+                                                      toastLength:
+                                                          Toast.LENGTH_SHORT,
+                                                      gravity:
+                                                          ToastGravity.BOTTOM,
+                                                      timeInSecForIosWeb: 1,
+                                                      backgroundColor:
+                                                          Color.fromARGB(
+                                                              255, 9, 255, 0),
+                                                      textColor: Colors.white,
+                                                      fontSize: 16.0),
+                                                });
+                                        // ignore: avoid_print
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "error",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                      }
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  rider_profire()));
+                                    },
+                                    child: const Text("ใช่"),
+                                  ),
+                                ],
+                              );
+                            });
                       },
                       child: Text('บันทึกข้อมูล'),
                     ),

@@ -23,6 +23,7 @@ class _admin_ordercancellistState extends State<admin_ordercancellist> {
   List<Export_product>? _filterImport_product;
   List<int> datalength = [];
   int? datadetaillength;
+  String title = 'รอการยกเลิกจากแอดมิน';
 
   void initState() {
     Intl.defaultLocale = 'th';
@@ -49,7 +50,32 @@ class _admin_ordercancellistState extends State<admin_ordercancellist> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Color(0xFF231942),
-          title: Text('รอการยกเลิกจากแอดมิน'),
+          title: Text(title),
+          actions: [
+            PopupMenuButton(
+              icon: Icon(
+                Icons.filter_alt_outlined,
+                color: Colors.white,
+              ),
+              onSelected: (value) {
+                print('สถานะ : ${value.toString()}');
+                _getImport_product(value);
+                title = value.toString();
+              },
+              itemBuilder: (BuildContext bc) {
+                return const [
+                  PopupMenuItem(
+                    child: Text("ยกเลิกโดยrider"),
+                    value: 'ยกเลิกโดยrider',
+                  ),
+                  PopupMenuItem(
+                    child: Text("ยกเลิกโดยuser"),
+                    value: 'ยกเลิกโดยuser',
+                  ),
+                ];
+              },
+            ),
+          ],
         ),
         drawer: /*AdminAppBar(),*/
             ComplexDrawer(),
@@ -133,20 +159,39 @@ class _admin_ordercancellistState extends State<admin_ordercancellist> {
                                         children: [
                                           ElevatedButton(
                                             onPressed: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return admin_oderlist_detail(
-                                                    _Export_product![index]
-                                                        .order_id
-                                                        .toString(),
-                                                    _Export_product![index]
-                                                        .total_price
-                                                        .toString(),
-                                                    _Export_product![index]
-                                                        .order_responsible_person
-                                                        .toString());
-                                              }));
+                                              if (_Export_product![index]
+                                                      .order_status ==
+                                                  'ยกเลิกโดยrider') {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return admin_oderlist_detail(
+                                                      _Export_product![index]
+                                                          .order_id
+                                                          .toString(),
+                                                      _Export_product![index]
+                                                          .total_price
+                                                          .toString(),
+                                                      _Export_product![index]
+                                                          .order_responsible_person
+                                                          .toString());
+                                                }));
+                                              } else {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return admin_oderlist_user_detail(
+                                                      _Export_product![index]
+                                                          .order_id
+                                                          .toString(),
+                                                      _Export_product![index]
+                                                          .total_price
+                                                          .toString(),
+                                                      _Export_product![index]
+                                                          .order_responsible_person
+                                                          .toString());
+                                                }));
+                                              }
                                             },
                                             child: const Text('รายละเอียด >'),
                                             style: ElevatedButton.styleFrom(
@@ -211,7 +256,6 @@ class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
         _orderdetail = value;
         datalenght = value.length;
       });
-
       print('จำนวข้อมูล : ${value.length}');
     });
   }
@@ -241,14 +285,29 @@ class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton.extended(
                 heroTag: 1,
                 onPressed: () async {
-                  Art_Services().rider_update_order('ยังไม่มีคนรับผิดชอบ',
-                      'ยังไม่มีใครรับ', widget.order_id.toString());
+                  Art_Services()
+                      .rider_update_order('ยังไม่มีคนรับผิดชอบ',
+                          'ยังไม่มีใครรับ', widget.order_id.toString())
+                      .then((value) {
+                    Fluttertoast.showToast(
+                        msg: "ส่งงานให้คนอื่นรับแทนเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 9, 255, 0),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return admin_ordercancellist();
+                    }));
+                  });
                 },
                 label: Text(
                   "มอบหมายงานให้คนอื่น",
@@ -256,6 +315,207 @@ class _admin_oderlist_detailState extends State<admin_oderlist_detail> {
                 ),
                 icon: Icon(Icons.near_me),
                 backgroundColor: Colors.green,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              FloatingActionButton.extended(
+                heroTag: 2,
+                onPressed: () async {
+                  for (var i = 0; i < datalenght; i++) {
+                    print('ชื่อสินค้า : ${_orderdetail![i].product_name}');
+                    print(
+                        'จำนวนของสินค้า : ${_orderdetail![i].product_amount}');
+                    _updateImport(
+                      _orderdetail![i].product_name.toString(),
+                      int.parse(_orderdetail![i].product_amount.toString()),
+                    );
+                  }
+                  Art_Services().cancel_order(widget.order_id).then((value) {
+                    Fluttertoast.showToast(
+                        msg: "คืนของเข้าคลังเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return admin_ordercancellist();
+                    }));
+                  });
+                },
+                label: Text("ยกเลิกออเดอร์"),
+                icon: Icon(Icons.near_me),
+                backgroundColor: Color(0xFFba181b),
+              ),
+            ],
+          ),
+        ),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('รายละเอียดการขาย'),
+          backgroundColor: Color(0xFF231942),
+        ),
+        backgroundColor: Colors.grey[100],
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Container(
+                  height: 600,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text('${widget.order_id}'),
+                        SizedBox(height: 20),
+                        Text(
+                            'คนรับผิดชอบงาน :  ${widget.order_responsible_person}'),
+                        SizedBox(height: 20),
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: _orderdetail != null
+                              ? (_orderdetail?.length ?? 0)
+                              : 0,
+                          itemBuilder: (_, index) => Container(
+                            margin: EdgeInsets.all(5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        'ชื่อสินค้า : ${_orderdetail![index].product_name}'),
+                                    Text(
+                                        'จำนวน : ${_orderdetail![index].product_amount}'),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                        'ราคาต่อชิ้น : ${_orderdetail![index].product_price}'),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('ราคารวม : ${widget.total_price}'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )),
+        ));
+  }
+}
+
+class admin_oderlist_user_detail extends StatefulWidget {
+  final String order_id, total_price, order_responsible_person;
+  const admin_oderlist_user_detail(
+      this.order_id, this.total_price, this.order_responsible_person,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  State<admin_oderlist_user_detail> createState() =>
+      _admin_oderlist_user_detailState();
+}
+
+class _admin_oderlist_user_detailState
+    extends State<admin_oderlist_user_detail> {
+  List<Export_product_detail>? _orderdetail;
+  int datalenght = 0;
+  @override
+  void initState() {
+    super.initState();
+    _orderdetail = [];
+    _getImport_product();
+  }
+
+  _getImport_product() {
+    print("function working");
+    Art_Services().getorder_detail(widget.order_id).then((value) {
+      setState(() {
+        _orderdetail = value;
+        datalenght = value.length;
+      });
+      print('จำนวข้อมูล : ${value.length}');
+    });
+  }
+
+  _updateImport(product_name, import_product) async {
+    print('UPDATE ACTIVATION');
+    print('ชื่อสินค้า : ${product_name}');
+    print('จำนวนการคืน : ${import_product}');
+    try {
+      var url = Uri.parse('https://projectart434.000webhostapp.com/');
+      print('funtion working....');
+      var map = <String, dynamic>{};
+      map["action"] = "ADD_PRODUCT";
+      map['sql'] =
+          "UPDATE product SET  product_quantity = product_quantity + ${import_product} WHERE product_name = '${product_name}'";
+      final response = await http.post(url, body: map);
+      print("AddProduct >> Response:: ${response.body}");
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton.extended(
+                heroTag: 1,
+                onPressed: () async {
+                  Art_Services()
+                      .waitcancel_order(widget.order_id, 'ยกเลิกโดยuser')
+                      .then((value) {
+                    Fluttertoast.showToast(
+                        msg: "ส่งงานให้คนอื่นรับแทนเรียบร้อย",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color.fromARGB(255, 9, 255, 0),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return admin_ordercancellist();
+                    }));
+                  });
+                },
+                label: Text(
+                  "ไม่อนุมัติให้ยกเลิก",
+                  style: TextStyle(fontSize: 12),
+                ),
+                icon: Icon(Icons.near_me),
+                backgroundColor: Colors.green,
+              ),
+              SizedBox(
+                height: 10,
               ),
               FloatingActionButton.extended(
                 heroTag: 2,

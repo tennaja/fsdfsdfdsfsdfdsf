@@ -14,6 +14,7 @@ import 'package:project_bekery/model/promotion_model.dart';
 import 'package:project_bekery/mysql/service.dart';
 import 'package:project_bekery/screen/admin_import_order.dart';
 import 'package:project_bekery/widgets/adminAppbar.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 
 class admin_addproductpromotion extends StatefulWidget {
   const admin_addproductpromotion({Key? key}) : super(key: key);
@@ -166,7 +167,15 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
           }));
         });
       } else {
-        print('มีข้อมูลซ้ำ');
+        Utils(context).stopLoading();
+        Fluttertoast.showToast(
+            msg: "ข้อมูลซ้ำ",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color.fromARGB(255, 255, 13, 0),
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     });
   }
@@ -415,9 +424,19 @@ class _admin_addproductpromotionState extends State<admin_addproductpromotion> {
                                     ),
                                     onPressed: () {
                                       if (fromKey.currentState!.validate()) {
+                                        Utils(context).startLoading();
                                         fromKey.currentState!.save();
                                         if (endDate.isBefore(startDate)) {
-                                          print('end before start');
+                                          Utils(context).stopLoading();
+                                          Fluttertoast.showToast(
+                                              msg: "รูปแบบเวลาไม่ถูกต้อง",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 255, 13, 0),
+                                              textColor: Colors.white,
+                                              fontSize: 16.0);
                                         } else {
                                           _addproduct_promotion();
                                         }
@@ -640,9 +659,11 @@ class _textstatusState extends State<textstatus> {
             DateFormat('yyyy-MM-d').format(DateTime.now()).toString())
         .then((promotion) {
       setState(() {
-        _product_promotion = promotion;
-        promotionname = _product_promotion![0].promotion_value.toString();
-        datalenght = promotion.length;
+        if (promotion.length != 0) {
+          _product_promotion = promotion;
+          promotionname = _product_promotion![0].promotion_value.toString();
+          datalenght = promotion.length;
+        } else {}
       });
     });
   }

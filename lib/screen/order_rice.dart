@@ -97,7 +97,7 @@ class _order_riceState extends State<order_rice> {
                         Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 5, top: 5),
+                              padding: const EdgeInsets.only(bottom: 60, top: 5),
                               child: Container(
                                   height: 30,
                                   width: 145,

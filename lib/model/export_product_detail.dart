@@ -12,6 +12,9 @@ class Export_product_detail {
   String? product_price;
   String? order_date;
   String? sum_quantity;
+  String? product_promotion_name;
+  String? product_promotion_value;
+  String? totalprice;
 
   Export_product_detail({
     required this.order_id,
@@ -25,6 +28,9 @@ class Export_product_detail {
     required this.product_price,
     required this.order_date,
     required this.sum_quantity,
+    required this.product_promotion_name,
+    required this.product_promotion_value,
+    required this.totalprice,
   });
 
   factory Export_product_detail.fromJson(Map<String, dynamic> json) {
@@ -40,6 +46,9 @@ class Export_product_detail {
       product_price: json['product_price'],
       order_date: json['order_date'],
       sum_quantity: json['SUM(user_order_detail.product_amount)'],
+      product_promotion_name: json['product_promotion_name'],
+      product_promotion_value: json['product_promotion_value'],
+      totalprice: json['totalprice'],
     );
   }
 

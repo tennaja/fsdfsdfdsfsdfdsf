@@ -1,14 +1,18 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:project_bekery/model/user_basket.dart';
+import 'package:project_bekery/model/user_maps.dart';
 import 'package:project_bekery/mysql/user.dart';
 import 'package:project_bekery/screen/user_order.dart';
 import 'package:project_bekery/screen/user_welcome.dart';
+import 'package:project_bekery/widgets/loadingscreen.dart';
 import 'package:uuid/uuid.dart';
 import 'package:project_bekery/mysql/service.dart';
 
@@ -23,6 +27,7 @@ class cart_order_add extends StatefulWidget {
 class _cart_order_addState extends State<cart_order_add> {
   List<User>? _user;
   List<User_Basket>? userbasket;
+  List<User_mymaps>? usermap;
   late int length;
   int simpletotal = 0;
   int disconttotal = 0;
@@ -32,6 +37,7 @@ class _cart_order_addState extends State<cart_order_add> {
     userbasket = [];
     _getBasket();
     _getonlyuser();
+    _getlocationuser();
   }
 
   _getBasket() {
@@ -53,13 +59,11 @@ class _cart_order_addState extends State<cart_order_add> {
       setState(() {
         _user = user;
       });
-      print("Length ${user.length}");
-      print(_user![0].user_latitude);
-      print(_user![0].user_longitude);
     });
   }
 
   _getImportorder(length) {
+    Utils(context).startLoading();
     int Import_totalprice = 0;
     var Import_order_id = Uuid().v1();
     print('length data for loop === ${length}');
@@ -95,8 +99,8 @@ class _cart_order_addState extends State<cart_order_add> {
     Art_Services().add_order(
         Import_order_id.toString(),
         widget.email.toString(),
-        _user![0].user_latitude.toString(),
-        _user![0].user_longitude.toString(),
+        usermap![0].user_latitude.toString(),
+        usermap![0].user_longitude.toString(),
         'ยังไม่มีคนรับผิดชอบ'.toString(),
         Import_totalprice.toString(),
         'รอการยืนยันจาก Admin',
@@ -140,6 +144,19 @@ class _cart_order_addState extends State<cart_order_add> {
     }
   }
 
+  _getlocationuser() async {
+    String user_email = await SessionManager().get("email");
+    await Art_Services().getlocation(user_email).then((value) {
+      setState(() {
+        if (value == null) {
+          usermap = null;
+        } else {
+          usermap = value;
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,8 +167,7 @@ class _cart_order_addState extends State<cart_order_add> {
             width: 250,
             child: FloatingActionButton.extended(
               onPressed: () {
-                if (_user![0].user_latitude == '0' ||
-                    _user![0].user_longitude == '0') {
+                if (usermap?.length == 0) {
                   Fluttertoast.showToast(
                       msg: "กรุณายืนยันตำแหน่งของคุณก่อน",
                       toastLength: Toast.LENGTH_SHORT,
@@ -169,11 +185,6 @@ class _cart_order_addState extends State<cart_order_add> {
                           content: Text('ยืนยันการสั่งซื้อใช้ไหม?'),
                           actions: <Widget>[
                             ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.orangeAccent),
-                              ),
                               onPressed: () => Navigator.of(context).pop(),
                               child: const Text(
                                 "ไม่",
@@ -181,17 +192,26 @@ class _cart_order_addState extends State<cart_order_add> {
                               ),
                             ),
                             ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.orangeAccent),
-                              ),
                               onPressed: () {
-                                _getImportorder(length);
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return Orderpage();
-                                }));
+                                print('USERMAP ==> ${usermap!.length}');
+                                if (usermap?.length == 0) {
+                                  Navigator.pop(context);
+                                  Fluttertoast.showToast(
+                                      msg: "โปรดยืนยันตำแหน่งก่อน",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor:
+                                          Color.fromARGB(255, 255, 0, 0),
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                } else {
+                                  _getImportorder(length);
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return Orderpage();
+                                  }));
+                                }
                               },
                               child: const Text("ใช่",
                                   style: TextStyle(color: Colors.black)),
@@ -203,7 +223,7 @@ class _cart_order_addState extends State<cart_order_add> {
               },
               label: Text("ราคารวม : ${simpletotal.toString()}"),
               icon: Icon(Icons.shopping_bag),
-              backgroundColor: Color.fromARGB(255, 248, 146, 13),
+              backgroundColor: Colors.red,
             ),
           ),
         ),
@@ -220,7 +240,7 @@ class _cart_order_addState extends State<cart_order_add> {
               }));
             },
           ),
-          backgroundColor: Color.fromARGB(255, 238, 238, 238),
+          backgroundColor: Colors.white,
           elevation: 0,
           title: Center(
               child: const Text(
@@ -240,175 +260,191 @@ class _cart_order_addState extends State<cart_order_add> {
             )
           ],
         ),
-        body: Container(
-          padding: EdgeInsets.only(top: 30),
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Card(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount:
-                          userbasket != null ? (userbasket?.length ?? 0) : 0,
-                      itemBuilder: (_, index) => Container(
-                        margin: EdgeInsets.all(5),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          leading: Image(
-                            image: NetworkImage(
-                                userbasket![index].product_image.toString()),
-                            width: 50,
-                            height: 50,
-                          ),
-                          title: Text(userbasket![index].product_name.toString()),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
-                            ],
-                          ),
-                          tileColor: Color.fromARGB(255, 255, 192, 111),
-                          trailing: IconButton(
-                              onPressed: () {
-                                showDialog<bool>(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('ยกเลิกการซื้อ'),
-                                        content: Text(
-                                            'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
-                                        actions: <Widget>[
-                                          ElevatedButton(
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(),
-                                            child: const Text(
-                                              "ไม่",
-                                              style:
-                                                  TextStyle(color: Colors.black),
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              Art_Services()
-                                                  .deleteonlybasket(
-                                                      userbasket![index]
-                                                          .user_basket_id)
-                                                  .then((value) => {
-                                                        Fluttertoast.showToast(
-                                                            msg:
-                                                                "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
-                                                            toastLength: Toast
-                                                                .LENGTH_SHORT,
-                                                            gravity: ToastGravity
-                                                                .BOTTOM,
-                                                            timeInSecForIosWeb: 1,
-                                                            backgroundColor:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    255,
-                                                                    0,
-                                                                    0),
-                                                            textColor:
-                                                                Colors.white,
-                                                            fontSize: 16.0),
-                                                        _getBasket(),
-                                                        Navigator.pop(context),
-                                                      });
-                                            },
-                                            child: const Text("ใช่",
-                                                style: TextStyle(
-                                                    color: Colors.black)),
-                                          ),
-                                        ],
-                                      );
-                                    });
-                              },
-                              icon: Icon(Icons.delete)),
-                          onTap: () {},
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Card(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount:
+                        userbasket != null ? (userbasket?.length ?? 0) : 0,
+                    itemBuilder: (_, index) => Container(
+                      margin: EdgeInsets.all(5),
+                      child: ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        leading: CachedNetworkImage(
+                          width: 50,
+                          height: 50,
+                          imageUrl: userbasket![index].product_image.toString(),
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
                         ),
+
+                        /*Image(
+                          image: NetworkImage(
+                              userbasket![index].product_image.toString()),
+                          width: 50,
+                          height: 50,
+                        ),*/
+                        title: Text(userbasket![index].product_name.toString()),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                'จำนวน : ${userbasket![index].user_basket_quantity.toString()}'),
+                          ],
+                        ),
+                        tileColor: Colors.yellow,
+                        trailing: IconButton(
+                            onPressed: () {
+                              showDialog<bool>(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('ยกเลิกการซื้อ'),
+                                      content: Text(
+                                          'ต้องการนำ ${userbasket![index].product_name.toString()} ออกใช้ไหม?'),
+                                      actions: <Widget>[
+                                        ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: const Text(
+                                            "ไม่",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Utils(context).startLoading();
+                                            Art_Services()
+                                                .deleteonlybasket(
+                                                    userbasket![index]
+                                                        .user_basket_id)
+                                                .then((value) => {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "ลบสินค้า ${userbasket![index].product_name} เรียบร้อย",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .BOTTOM,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  255,
+                                                                  0,
+                                                                  0),
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0),
+                                                      _getBasket(),
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return cart_order_add(
+                                                            widget.email);
+                                                      }))
+                                                    });
+                                          },
+                                          child: const Text("ใช่",
+                                              style: TextStyle(
+                                                  color: Colors.black)),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
+                            icon: Icon(Icons.delete)),
+                        onTap: () {},
                       ),
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 100),
-                child: Container(
-                  height: 90,
-                  child: Card(
-                    elevation: 20,
-                    color: Colors.greenAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      children: [
-                        ListTile(
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "รวมเบื้องต้น",
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                                Text(
-                                  "${simpletotal}",
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ],
-                            ),
-                            subtitle: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "ส่วนลด ",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    Text(
-                                      "- ${disconttotal}",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "ราคารวม ",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    Text(
-                                      "${simpletotal - disconttotal}",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )),
-                      ],
-                    ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: Container(
+                height: 90,
+                child: Card(
+                  elevation: 20,
+                  color: Colors.greenAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "รวมเบื้องต้น",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              Text(
+                                "${simpletotal}",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          subtitle: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "ส่วนลด ",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    "- ${disconttotal}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "ราคารวม ",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    "${simpletotal - disconttotal}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ));
   }
 }
